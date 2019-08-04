@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ТВ Программа</string>
+    <string name="tab_now">Сейчас</string>
+    <string name="tab_next">Следующее</string>
+    <string name="title_channels">Каналы...</string>
+    <string name="tab_favorites">Избранное</string>
+    <string name="tab_search">Поиск</string>
+    <string name="title_exit">Выход</string>
+    <string name="title_settings">Настройки...</string>
+    <string name="title_about">О программе...</string>
+    <string name="title_update">Обновить</string>
+    <string name="title_channels_win">Каналы</string>
+    <string name="tab_all">Все</string>
+    <string name="title_about_win">О программе</string>
+    <string name="title_settings_win">Настройки</string>
+    <string name="empty_list">Список пуст</string>
+</resources>

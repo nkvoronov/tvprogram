@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+
+    <group
+        android:id="@+id/gm_tb">
+        <item
+            android:id="@+id/mi_update"
+            android:enabled="true"
+            android:icon="@android:drawable/ic_popup_sync"
+            android:title="@string/title_update"
+            app:showAsAction="always" />
+    </group>
+    <group
+        android:id="@+id/gm_main">
+        <item
+            android:id="@+id/mi_channels"
+            android:enabled="true"
+            android:title="@string/title_channels" />
+        <item
+            android:id="@+id/mi_settings"
+            android:enabled="true"
+            android:title="@string/title_settings" />
+        <item
+            android:id="@+id/mi_about"
+            android:enabled="true"
+            android:title="@string/title_about" />
+    </group>
+
+    <group
+        android:id="@+id/gm_exit">
+        <item
+            android:id="@+id/mi_exit"
+            android:enabled="true"
+            android:title="@string/title_exit" />
+    </group>
+
+</menu>
