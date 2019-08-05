@@ -3,17 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginBottom="4dp"
     android:background="@drawable/rectangle">
 
     <ImageView
         android:id="@+id/channel_icon"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:cropToPadding="true"
-        android:focusable="true"
-        android:padding="8dp"
-        android:scaleType="centerInside"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_vertical"
+        android:background="@android:drawable/ic_menu_gallery"
+        android:scaleType="fitXY"
         app:srcCompat="@mipmap/ic_launcher_foreground" />
 
     <TextView
@@ -27,8 +28,8 @@
 
     <ImageView
         android:id="@+id/channel_status"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:padding="8dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_vertical"
         app:srcCompat="@drawable/favorites" />
 </LinearLayout>
