@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -82,11 +81,8 @@ public class ChannelList implements Runnable{
         org.jsoup.select.Elements elements = document.select(CHANNELS_SELECT);
         for (org.jsoup.nodes.Element element : elements){
             channel_name = element.text();
-            try {
-                flag = new String(channel_name.getBytes(), "UTF-8").endsWith("(на укр.)");
-            } catch (UnsupportedEncodingException e) {
-                e.fillInStackTrace();
-            }
+            Log.d(TAG, channel_name);
+            flag = channel_name.endsWith("(на укр.)");
             if ((!flag && mLang.equals("ru"))||(flag && mLang.equals("ua"))) {
                 channel_link = element.attr("value");
                 channel_index = channel_link.split("_")[1];

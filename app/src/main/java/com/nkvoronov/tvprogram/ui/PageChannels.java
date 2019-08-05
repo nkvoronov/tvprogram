@@ -2,6 +2,7 @@ package com.nkvoronov.tvprogram.ui;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,6 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.nkvoronov.tvprogram.R;
 import com.nkvoronov.tvprogram.common.Channel;
@@ -18,29 +18,35 @@ import com.nkvoronov.tvprogram.common.ChannelList;
 
 public class PageChannels extends Fragment {
     private static final String ARG_PAGE_NUMBER = "page_number";
+    private static final String TAG = "PAGE_CHANNEL";
 
+    private ChannelList mChannelList;
     private RecyclerView mChannelsView;
     private TextView mEmptyTextView;
     private ChannelAdapter mAdapter;
     private int mPageIndex;
 
     public static PageChannels newInstance(int index) {
-        PageChannels fragment = new PageChannels();
-        Bundle bundle = new Bundle();
-        bundle.putInt(ARG_PAGE_NUMBER, index);
-        fragment.setArguments(bundle);
-        return fragment;
-    }
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_PAGE_NUMBER, index);
+        Log.d(TAG, "PageIndex : " + index);
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(ARG_PAGE_NUMBER, mPageIndex);
+        PageChannels fragment = new PageChannels();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPageIndex = (int) getArguments().getSerializable(ARG_PAGE_NUMBER);
+        Log.d(TAG, "PageIndex : " + mPageIndex);
+        if (mPageIndex == 0) {
+            mChannelList = new ChannelList(getContext(), "ru", true);
+        } else {
+            mChannelList = new ChannelList(getContext(), "ua", false);
+        }
+        mChannelList.loadFromNet();
     }
 
     @Override
@@ -49,10 +55,6 @@ public class PageChannels extends Fragment {
         mChannelsView = root.findViewById(R.id.channel_view);
         mEmptyTextView = root.findViewById(R.id.empty_label);
         mChannelsView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        if (savedInstanceState != null) {
-            mPageIndex = savedInstanceState.getInt(ARG_PAGE_NUMBER);
-        }
 
         updateUI();
         return root;
@@ -67,10 +69,10 @@ public class PageChannels extends Fragment {
     public void updateUI() {
 
         if (mAdapter == null) {
-            mAdapter = new ChannelAdapter();
+            mAdapter = new ChannelAdapter(mChannelList);
             mChannelsView.setAdapter(mAdapter);
         } else {
-            //mAdapter.setCrimes(crimes);
+            mAdapter.setChannelList(mChannelList);
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -109,9 +111,8 @@ public class PageChannels extends Fragment {
     private class ChannelAdapter extends RecyclerView.Adapter<ChannelHolder> {
         private ChannelList mChannelList;
 
-        public ChannelAdapter() {
-            mChannelList = new ChannelList(getContext(), "ru", true);
-            mChannelList.loadFromNet();
+        public ChannelAdapter(ChannelList channelList) {
+            mChannelList = channelList;
         }
 
         @Override
@@ -134,6 +135,10 @@ public class PageChannels extends Fragment {
                 mEmptyTextView.setVisibility(View.INVISIBLE);
             }
             return mChannelList.getSize();
+        }
+
+        public void setChannelList(ChannelList channelList) {
+            mChannelList = channelList;
         }
     }
 
