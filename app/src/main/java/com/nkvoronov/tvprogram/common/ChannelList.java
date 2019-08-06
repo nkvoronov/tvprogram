@@ -1,6 +1,7 @@
 package com.nkvoronov.tvprogram.common;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -23,11 +24,13 @@ public class ChannelList implements Runnable{
     private Boolean mIndexSort;
     private List<Channel> mData;
     private Context mContext;
+    private SQLiteDatabase mDatabase;
 
     public ChannelList(Context context, String lang, Boolean indexSort) {
         mContext = context.getApplicationContext();
         mLang = lang;
         mIndexSort = indexSort;
+        mDatabase = TVProgramLab.get(context).getDatabase();
         mData = new ArrayList<>();
         Log.d(TAG, "ChannelList " + mData.size());
     }
@@ -87,8 +90,10 @@ public class ChannelList implements Runnable{
                 channel_link = element.attr("value");
                 channel_index = channel_link.split("_")[1];
                 channel_icon = ICONS_PRE + channel_index + ".gif";
-                Channel chn = new Channel(Integer.parseInt(channel_index), channel_name, channel_name, channel_icon, 120);
-                mData.add(chn);
+                Channel channel = new Channel(0, Integer.parseInt(channel_index), channel_name, channel_name, channel_icon, 120);
+                channel.setIsFav(false);
+                channel.setIsUpd(false);
+                mData.add(channel);
             }
         }
         if (mIndexSort) {
@@ -100,7 +105,7 @@ public class ChannelList implements Runnable{
     }
 
     public void loadFromDB() {
-        //
+        mData.clear();
     }
 
     public void loadFromFile(String fileName) {
@@ -119,7 +124,9 @@ public class ChannelList implements Runnable{
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] aline = line.split(Channel.SEPARATOR);
-                Channel channel = new Channel(Integer.parseInt(aline[0]), aline[1], aline[2], aline[3], Integer.parseInt(aline[4]));
+                Channel channel = new Channel(0, Integer.parseInt(aline[0]), aline[1], aline[2], aline[3], Integer.parseInt(aline[4]));
+                channel.setIsFav(false);
+                channel.setIsUpd(false);
                 mData.add(channel);
             }
         } catch (IOException e) {

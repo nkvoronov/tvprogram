@@ -1,6 +1,7 @@
 package com.nkvoronov.tvprogram.common;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import java.util.ArrayList;
@@ -14,9 +15,11 @@ public class ProgramList {
 
     private Context mContext;
     private List<Program> mData;
+    private SQLiteDatabase mDatabase;
 
     public ProgramList(Context context) {
         mContext = context.getApplicationContext();
+        mDatabase = TVProgramLab.get(context).getDatabase();
         mData = new ArrayList<>();
     }
 

@@ -3,16 +3,17 @@ package com.nkvoronov.tvprogram.common;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import java.util.Comparator;
-import java.util.UUID;
 
 public class Channel {
     public static final String SEPARATOR = ";";
 
-    private UUID mId;
+    private int mId;
     private int mIndex;
     private String mUName;
     private String mOName;
     private String mIcon;
+    private boolean mIsFav;
+    private boolean mIsUpd;
     private int mCorrection;
 
     public static Comparator<Channel> channelIndexComparator = new Comparator<Channel>() {
@@ -33,24 +34,22 @@ public class Channel {
         }
     };
 
-    public Channel(UUID id, int index, String oName, String uName, String icon, int correction) {
+    public Channel(int id, int index, String oName, String uName, String icon, int correction) {
         mId = id;
         mIndex = index;
         mOName = oName;
         mUName = uName;
         mIcon = icon;
+        mIsFav = false;
+        mIsUpd = false;
         mCorrection = correction;
     }
 
-    public Channel(int index, String oName, String uName, String icon, int correction) {
-        this(UUID.randomUUID(), index, oName, uName, icon, correction);
-    }
-
-    public UUID getId() {
+    public int getId() {
         return mId;
     }
 
-    public void setId(UUID id) {
+    public void setId(int id) {
         mId = mId;
     }
 
@@ -94,9 +93,25 @@ public class Channel {
         mCorrection = correction;
     }
 
+    public boolean isFav() {
+        return mIsFav;
+    }
+
+    public boolean isUpd() {
+        return mIsUpd;
+    }
+
+    public void setIsFav(boolean fav) {
+        mIsFav = fav;
+    }
+
+    public void setIsUpd(boolean upd) {
+        mIsUpd = upd;
+    }
+
     @Override
     public String toString() {
-        return Integer.toString(getIndex()) + SEPARATOR + getOName() + SEPARATOR + getUName() + SEPARATOR + getIcon() + SEPARATOR + Integer.toString(getCorrection());
+        return Integer.toString(getIndex()) + SEPARATOR + getOName() + SEPARATOR + getUName() + SEPARATOR + getIcon() + SEPARATOR + Integer.toString(getCorrection()) + SEPARATOR + Boolean.toString(isFav()) + SEPARATOR + Boolean.toString(isUpd());
     }
 
     public void getXML(Document document, Element element) {
