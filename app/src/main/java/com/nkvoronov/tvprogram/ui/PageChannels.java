@@ -15,10 +15,11 @@ import com.bumptech.glide.Glide;
 import com.nkvoronov.tvprogram.R;
 import com.nkvoronov.tvprogram.common.Channel;
 import com.nkvoronov.tvprogram.common.ChannelList;
+import com.nkvoronov.tvprogram.common.TVProgramLab;
+import static com.nkvoronov.tvprogram.common.TVProgramLab.TAG;
 
 public class PageChannels extends Fragment {
     private static final String ARG_PAGE_NUMBER = "page_number";
-    private static final String TAG = "PAGE_CHANNEL";
 
     private ChannelList mChannelList;
     private RecyclerView mChannelsView;
@@ -41,12 +42,6 @@ public class PageChannels extends Fragment {
         super.onCreate(savedInstanceState);
         mPageIndex = (int) getArguments().getSerializable(ARG_PAGE_NUMBER);
         Log.d(TAG, "PageIndex : " + mPageIndex);
-        if (mPageIndex == 0) {
-            mChannelList = new ChannelList(getContext(), "ru", true);
-        } else {
-            mChannelList = new ChannelList(getContext(), "ua", false);
-        }
-        mChannelList.loadFromNet();
     }
 
     @Override
@@ -67,6 +62,9 @@ public class PageChannels extends Fragment {
     }
 
     public void updateUI() {
+        Log.d(TAG, "UpdateUI " + mPageIndex);
+        mChannelList = new ChannelList(getContext(), TVProgramLab.get(getContext()).getLang(), TVProgramLab.get(getContext()).isIndexSort());
+        mChannelList.loadFromDB(mPageIndex == 1);
 
         if (mAdapter == null) {
             mAdapter = new ChannelAdapter(mChannelList);
@@ -100,6 +98,12 @@ public class PageChannels extends Fragment {
                     .fitCenter()
                     .into(mChannelIcon);
             //mChannelIcon.setImageURI(Uri.parse(mChannel.getIcon()));
+            if (channel.isFav()) {
+                mChannelStatus.setImageResource(R.drawable.favorites_on);
+            }
+            else {
+                mChannelStatus.setImageResource(R.drawable.favorites_off);
+            }
         }
 
         @Override

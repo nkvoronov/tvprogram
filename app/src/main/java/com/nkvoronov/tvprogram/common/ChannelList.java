@@ -1,5 +1,6 @@
 package com.nkvoronov.tvprogram.common;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -12,13 +13,20 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import com.nkvoronov.tvprogram.database.ChannelsAllCursorWrapper;
+import com.nkvoronov.tvprogram.database.TvChannelsCursorWrapper;
+import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsAllTable;
+import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsFavTable;
+import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsTvTable;
 import static com.nkvoronov.tvprogram.common.HttpContent.CHANNELS_PRE;
 import static com.nkvoronov.tvprogram.common.HttpContent.ICONS_PRE;
+import static com.nkvoronov.tvprogram.common.TVProgramLab.TAG;
+
 
 public class ChannelList implements Runnable{
     public static final String CHANNELS_SELECT = "option[value^=channel_]";
-    public static final String TAG = "CHANNEL_LIST";
 
     private String mLang;
     private Boolean mIndexSort;
@@ -32,7 +40,7 @@ public class ChannelList implements Runnable{
         mIndexSort = indexSort;
         mDatabase = TVProgramLab.get(context).getDatabase();
         mData = new ArrayList<>();
-        Log.d(TAG, "ChannelList " + mData.size());
+        //Log.d(TAG, "ChannelList " + mData.size());
     }
 
     public File getIconFile(Channel channel) {
@@ -72,7 +80,7 @@ public class ChannelList implements Runnable{
         return mData.size();
     }
 
-    public void loadFromNet() {
+    public void loadFromNetAndUpdate(boolean isUpdate) {
         String channel_index;
         String channel_name;
         String channel_link;
@@ -84,7 +92,6 @@ public class ChannelList implements Runnable{
         org.jsoup.select.Elements elements = document.select(CHANNELS_SELECT);
         for (org.jsoup.nodes.Element element : elements){
             channel_name = element.text();
-            Log.d(TAG, channel_name);
             flag = channel_name.endsWith("(на укр.)");
             if ((!flag && mLang.equals("ru"))||(flag && mLang.equals("ua"))) {
                 channel_link = element.attr("value");
@@ -94,6 +101,11 @@ public class ChannelList implements Runnable{
                 channel.setIsFav(false);
                 channel.setIsUpd(false);
                 mData.add(channel);
+                Log.d(TAG, channel.toString());
+                if (isUpdate) {
+                    saveChannelToDB(channel);
+                    saveChannelIcon(channel);
+                }
             }
         }
         if (mIndexSort) {
@@ -104,8 +116,37 @@ public class ChannelList implements Runnable{
 
     }
 
-    public void loadFromDB() {
+    public void loadFromDB(boolean isFav) {
+        String selection = null;
+        String[] selectionArg = null;
+        String orderBy = ChannelsTvTable.Cols.CHANNEL_INDEX;
         mData.clear();
+
+        if (isFav) {
+            selection = ChannelsTvTable.Cols.FAVORITE + " = ?";
+            selectionArg = new String[]{ "1" };
+            orderBy = ChannelsTvTable.Cols.USER_NAME;
+        }
+
+        TvChannelsCursorWrapper cursor = new TvChannelsCursorWrapper(mDatabase.query(
+                ChannelsTvTable.TABLE_NAME,
+                null,
+                selection,
+                selectionArg,
+                null,
+                null,
+                orderBy
+        ));
+
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                mData.add(cursor.getChannel());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
     }
 
     public void loadFromFile(String fileName) {
@@ -170,16 +211,83 @@ public class ChannelList implements Runnable{
         }
     }
 
-    public void saveChannelToDB(Channel channel, int index) {
+    public void saveChannelToDB(Channel channel) {
+        int typeUpdate = 0;
+        String oldName = "";
+        ChannelsAllCursorWrapper cursor = new ChannelsAllCursorWrapper(mDatabase.query(
+                ChannelsAllTable.TABLE_NAME,
+                null,
+                ChannelsAllTable.Cols.CHANNEL_INDEX + " = ?",
+                new String[]{String.valueOf(channel.getIndex())},
+                null,
+                null,
+                null
+        ));
+        Log.d(TAG, "saveChannelToDB : " + String.valueOf(channel.getIndex()));
+        try {
+            if (cursor.getCount() != 0) {
+                typeUpdate = 0;
+                cursor.moveToFirst();
+                oldName = cursor.getName();
+                if (!channel.getOName().equals(oldName)) {
+                    typeUpdate = 1;
+                }
+                Log.d(TAG, "saveChannelToDB update");
+            } else {
+                typeUpdate = 2;
+                Log.d(TAG, "saveChannelToDB insert");
+            }
+        } finally {
+            cursor.close();
+        }
+        if (typeUpdate == 1) {
+            updateChannel(channel);
+        }
+        if (typeUpdate == 2) {
+            insertChannel(channel);
+        }
+    }
+
+    private void insertChannel(Channel channel) {
+        mDatabase.insert(ChannelsAllTable.TABLE_NAME, null, getContentChannelsAllValues(channel));
+    }
+
+    private void updateChannel(Channel channel) {
+        mDatabase.update(ChannelsAllTable.TABLE_NAME, getContentChannelsAllValues(channel), ChannelsAllTable.Cols.CHANNEL_INDEX + " = ?", new String[]{String.valueOf(channel.getIndex())});
+    }
+
+    public void addFavorites(Channel channel) {
         //
     }
 
-    public void saveChannelIcon(Channel channel, int index) {
+    public void delFavorites(Channel channel) {
+        //
+    }
+
+    public void saveChannelIcon(Channel channel) {
         //
     }
 
     @Override
     public void run() {
         //
+    }
+
+    private ContentValues getContentChannelsAllValues(Channel channel) {
+        ContentValues values = new ContentValues();
+        Date date = new Date();
+        values.put(ChannelsAllTable.Cols.CHANNEL_INDEX, channel.getIndex());
+        values.put(ChannelsAllTable.Cols.NAME, channel.getOName());
+        values.put(ChannelsAllTable.Cols.ICON, channel.getIcon());
+        values.put(ChannelsAllTable.Cols.UPD_CHANNEL, date.getTime());
+        return values;
+    }
+
+    private ContentValues getContentChannelsFavValues(Channel channel) {
+        ContentValues values = new ContentValues();
+        values.put(ChannelsFavTable.Cols.CHANNEL_INDEX, channel.getIndex());
+        values.put(ChannelsFavTable.Cols.NAME, channel.getUName());
+        values.put(ChannelsFavTable.Cols.CORRECTION, channel.getCorrection());
+        return values;
     }
 }

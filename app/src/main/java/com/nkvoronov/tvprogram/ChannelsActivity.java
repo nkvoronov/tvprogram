@@ -5,14 +5,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
-import com.nkvoronov.tvprogram.ui.ChannelsPagerAdapter;
+import com.nkvoronov.tvprogram.common.ChannelList;
+import com.nkvoronov.tvprogram.common.TVProgramLab;
+import com.nkvoronov.tvprogram.ui.PageChannels;
 
 public class ChannelsActivity extends AppCompatActivity {
-    ChannelsPagerAdapter mChannelsPagerAdapter;
     ViewPager mViewPager;
     TabLayout mTabLayout;
 
@@ -34,7 +39,13 @@ public class ChannelsActivity extends AppCompatActivity {
     }
 
     private void onUpdate() {
-        //
+        PageChannels page;
+        ChannelList channelList = new ChannelList(this, TVProgramLab.get(this).getLang(), TVProgramLab.get(this).isIndexSort());
+        channelList.loadFromNetAndUpdate(true);
+//        for (int i = 0; i < mChannelsPagerAdapter.getCount(); i++) {
+//            page = (PageChannels) mChannelsPagerAdapter.getItem(i);
+//            page.updateUI();
+//        }
     }
 
     public static Intent newIntent(Context context) {
@@ -48,9 +59,32 @@ public class ChannelsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_channels);
         mTabLayout = findViewById(R.id.tabs);
         mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        mChannelsPagerAdapter = new ChannelsPagerAdapter(this, getSupportFragmentManager());
+
         mViewPager = findViewById(R.id.pager);
-        mViewPager.setAdapter(mChannelsPagerAdapter);
+        FragmentManager fragmentActivity = getSupportFragmentManager();
+
+
+        mViewPager.setAdapter(new FragmentPagerAdapter(fragmentActivity) {
+            @StringRes
+            private final int[] TAB_C_TITLES = new int[]{R.string.tab_all, R.string.tab_favorites};
+
+            @Override
+            public int getCount() {
+                return TAB_C_TITLES.length;
+            }
+
+            @Override
+            public CharSequence getPageTitle(int position) {
+                return getResources().getString(TAB_C_TITLES[position]);
+            }
+
+            @Override
+            public Fragment getItem(int position) {
+                PageChannels page = PageChannels.newInstance(position);
+                return page;
+            }
+        });
+
         mTabLayout.setupWithViewPager(mViewPager);
     }
 }

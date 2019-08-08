@@ -6,13 +6,13 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.io.IOException;
+import static com.nkvoronov.tvprogram.common.TVProgramLab.TAG;
 
 public class HttpContent {
     public static final String HOST = "http://www.vsetv.com/";
     public static final String ICONS_PRE = HOST + "pic/channel_logos/";
     public static final String CHANNELS_PRE = HOST + "channels.html";
     public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0";
-    public static final String TAG = "HTTPCONNECT";
 
     private String mUrl;
     private Document mDocument;
@@ -41,7 +41,6 @@ public class HttpContent {
     }
 
     public Document getDocument() {
-        Log.d(TAG, "getDocument");
         return mDocument;
     }
 

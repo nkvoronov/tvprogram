@@ -31,5 +31,5 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_gravity="center_vertical"
-        app:srcCompat="@drawable/favorites" />
+        app:srcCompat="@android:drawable/btn_star_big_on" />
 </LinearLayout>

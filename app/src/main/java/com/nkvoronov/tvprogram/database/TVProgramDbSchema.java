@@ -10,13 +10,13 @@ public class TVProgramDbSchema {
 
         public static final class Cols {
             public static final String ID = "id";
-            public static final String TYPE = "type";
-            public static final String NAME = "name";
-            public static final String VALUE = "value";
+            public static final String COUNT_DAYS = "count_days";
+            public static final String LANG = "lang";
+            public static final String INDEX_SORT = "index_sort";
         }
     }
 
-    public static final class ChannelsTable {
+    public static final class ChannelsAllTable {
         public static final String TABLE_NAME = "channels";
 
         public static final class Cols {
@@ -33,7 +33,7 @@ public class TVProgramDbSchema {
 
         public static final class Cols {
             public static final String ID = "id";
-            public static final String ID_CHANNEL = "id_channel";
+            public static final String CHANNEL_INDEX = "channel_index";
             public static final String NAME = "user_name";
             public static final String CORRECTION = "correction";
             public static final String UPD_PROGRAM = "upd_program";
