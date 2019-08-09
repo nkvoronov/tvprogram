@@ -10,6 +10,11 @@ import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ConfigsTable;
 
 public class TVProgramDataSource {
     private static final String DEF_ID = "1";
+
+    public static final String RUS_LANG = "rus";
+    public static final String UKR_LANG = "ukr";
+    public static final String ALL_LANG = "all";
+
     public static final String TAG = "TVPROGRAM";
 
     private static TVProgramDataSource sTVProgramLab;
@@ -28,7 +33,7 @@ public class TVProgramDataSource {
 
     private void initConfig() {
         mCoutDays = 7;
-        mLang = "ru";
+        mLang = RUS_LANG;
         mIndexSort = true;
         Log.d(TAG, "initConfig");
         ConfigCursorWrapper cursor = new ConfigCursorWrapper(mDatabase.query(

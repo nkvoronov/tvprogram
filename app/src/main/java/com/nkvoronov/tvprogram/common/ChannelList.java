@@ -93,7 +93,7 @@ public class ChannelList implements Runnable{
         for (org.jsoup.nodes.Element element : elements){
             channel_name = element.text();
             flag = channel_name.endsWith("(на укр.)");
-            if ((!flag && mLang.equals("ru"))||(flag && mLang.equals("ua"))) {
+            if ((!flag && mLang.equals("rus"))||(flag && mLang.equals("ukr"))) {
                 channel_link = element.attr("value");
                 channel_index = channel_link.split("_")[1];
                 channel_icon = ICONS_PRE + channel_index + ".gif";

@@ -15,6 +15,10 @@
     <string name="title_settings_win">Settings</string>
     <string name="empty_list">List Is Empty</string>
     <string name="lab_countday">Count day</string>
-    <string name="lab_langprogram">Lang program</string>
+    <string name="lab_langprogram">Lang tv program</string>
     <string name="lab_indexsort">Sort index</string>
+    <string name="set_sep_main">Main</string>
+    <string name="lang_rus">Russian</string>
+    <string name="lang_ukr">Ukrainian</string>
+    <string name="lang_all">All</string>
 </resources>
