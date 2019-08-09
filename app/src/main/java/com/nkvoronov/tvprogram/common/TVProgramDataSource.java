@@ -4,16 +4,15 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-
 import com.nkvoronov.tvprogram.database.ConfigCursorWrapper;
 import com.nkvoronov.tvprogram.database.TVProgramBaseHelper;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ConfigsTable;
 
-public class TVProgramLab {
+public class TVProgramDataSource {
     private static final String DEF_ID = "1";
     public static final String TAG = "TVPROGRAM";
 
-    private static TVProgramLab sTVProgramLab;
+    private static TVProgramDataSource sTVProgramLab;
     private Context mContext;
     private SQLiteDatabase mDatabase;
 
@@ -21,7 +20,7 @@ public class TVProgramLab {
     private String mLang;
     private boolean mIndexSort;
 
-    public TVProgramLab(Context context) {
+    public TVProgramDataSource(Context context) {
         mContext = context.getApplicationContext();
         mDatabase = new TVProgramBaseHelper(mContext).getWritableDatabase();
         initConfig();
@@ -73,9 +72,9 @@ public class TVProgramLab {
         return values;
     }
 
-    public static TVProgramLab get(Context context) {
+    public static TVProgramDataSource get(Context context) {
         if (sTVProgramLab == null) {
-            sTVProgramLab = new TVProgramLab(context);
+            sTVProgramLab = new TVProgramDataSource(context);
         }
         return sTVProgramLab;
     }

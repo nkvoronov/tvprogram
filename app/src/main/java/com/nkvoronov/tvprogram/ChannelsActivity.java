@@ -14,12 +14,13 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.nkvoronov.tvprogram.common.ChannelList;
-import com.nkvoronov.tvprogram.common.TVProgramLab;
+import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import com.nkvoronov.tvprogram.ui.PageChannels;
 
 public class ChannelsActivity extends AppCompatActivity {
-    ViewPager mViewPager;
-    TabLayout mTabLayout;
+    private ViewPager mViewPager;
+    private TabLayout mTabLayout;
+    private TVProgramDataSource mDataSource;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -40,7 +41,7 @@ public class ChannelsActivity extends AppCompatActivity {
 
     private void onUpdate() {
         PageChannels page;
-        ChannelList channelList = new ChannelList(this, TVProgramLab.get(this).getLang(), TVProgramLab.get(this).isIndexSort());
+        ChannelList channelList = new ChannelList(this, mDataSource.getLang(), mDataSource.isIndexSort());
         channelList.loadFromNetAndUpdate(true);
 //        for (int i = 0; i < mChannelsPagerAdapter.getCount(); i++) {
 //            page = (PageChannels) mChannelsPagerAdapter.getItem(i);
@@ -57,6 +58,9 @@ public class ChannelsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_channels);
+
+        mDataSource = TVProgramDataSource.get(this);
+
         mTabLayout = findViewById(R.id.tabs);
         mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 

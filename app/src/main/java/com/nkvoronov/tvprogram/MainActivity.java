@@ -12,14 +12,16 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
+import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import com.nkvoronov.tvprogram.ui.PageFavoritesProgram;
 import com.nkvoronov.tvprogram.ui.PageNextProgram;
 import com.nkvoronov.tvprogram.ui.PageNowProgram;
 import com.nkvoronov.tvprogram.ui.PageSearchProgram;
 
 public class MainActivity extends AppCompatActivity {
-    ViewPager mMainViewPager;
-    TabLayout mMainTabLayout;
+    private ViewPager mMainViewPager;
+    private TabLayout mMainTabLayout;
+    private TVProgramDataSource mDataSource;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -77,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mDataSource = TVProgramDataSource.get(this);
 
         mMainTabLayout = findViewById(R.id.main_tabs);
         mMainTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);

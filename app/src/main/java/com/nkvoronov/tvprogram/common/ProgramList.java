@@ -19,7 +19,7 @@ public class ProgramList {
 
     public ProgramList(Context context) {
         mContext = context.getApplicationContext();
-        mDatabase = TVProgramLab.get(context).getDatabase();
+        mDatabase = TVProgramDataSource.get(context).getDatabase();
         mData = new ArrayList<>();
     }
 

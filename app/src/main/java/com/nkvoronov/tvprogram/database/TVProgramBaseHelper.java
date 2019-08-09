@@ -3,13 +3,11 @@ package com.nkvoronov.tvprogram.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ConfigsTable;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsAllTable;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsFavTable;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsTvTable;
-import static com.nkvoronov.tvprogram.common.TVProgramLab.TAG;
 
 public class TVProgramBaseHelper extends SQLiteOpenHelper {
     private static final int VERSION = 1;

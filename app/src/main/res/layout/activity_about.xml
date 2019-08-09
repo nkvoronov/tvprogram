@@ -13,5 +13,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="@string/title_about_win" />
+        android:text="@string/title_about_win"
+        android:textSize="36sp" />
 </LinearLayout>

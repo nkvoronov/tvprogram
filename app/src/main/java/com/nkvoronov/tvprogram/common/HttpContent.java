@@ -6,7 +6,7 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.io.IOException;
-import static com.nkvoronov.tvprogram.common.TVProgramLab.TAG;
+import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 
 public class HttpContent {
     public static final String HOST = "http://www.vsetv.com/";

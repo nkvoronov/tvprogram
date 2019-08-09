@@ -14,4 +14,7 @@
     <string name="title_about_win">About</string>
     <string name="title_settings_win">Settings</string>
     <string name="empty_list">List Is Empty</string>
+    <string name="lab_countday">Count day</string>
+    <string name="lab_langprogram">Lang program</string>
+    <string name="lab_indexsort">Sort index</string>
 </resources>

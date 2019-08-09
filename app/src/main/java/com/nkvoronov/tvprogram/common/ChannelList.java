@@ -22,7 +22,7 @@ import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsFavTable;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsTvTable;
 import static com.nkvoronov.tvprogram.common.HttpContent.CHANNELS_PRE;
 import static com.nkvoronov.tvprogram.common.HttpContent.ICONS_PRE;
-import static com.nkvoronov.tvprogram.common.TVProgramLab.TAG;
+import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 
 
 public class ChannelList implements Runnable{
@@ -38,7 +38,7 @@ public class ChannelList implements Runnable{
         mContext = context.getApplicationContext();
         mLang = lang;
         mIndexSort = indexSort;
-        mDatabase = TVProgramLab.get(context).getDatabase();
+        mDatabase = TVProgramDataSource.get(context).getDatabase();
         mData = new ArrayList<>();
         //Log.d(TAG, "ChannelList " + mData.size());
     }

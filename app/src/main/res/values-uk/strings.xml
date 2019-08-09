@@ -15,4 +15,7 @@
     <string name="title_about_win">О программе</string>
     <string name="title_settings_win">Настройки</string>
     <string name="empty_list">Список пуст</string>
+    <string name="lab_countday">Количество дней</string>
+    <string name="lab_langprogram">Язык програмы</string>
+    <string name="lab_indexsort">Сортировать по индексу</string>
 </resources>

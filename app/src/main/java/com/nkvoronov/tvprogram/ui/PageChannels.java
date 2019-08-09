@@ -15,8 +15,8 @@ import com.bumptech.glide.Glide;
 import com.nkvoronov.tvprogram.R;
 import com.nkvoronov.tvprogram.common.Channel;
 import com.nkvoronov.tvprogram.common.ChannelList;
-import com.nkvoronov.tvprogram.common.TVProgramLab;
-import static com.nkvoronov.tvprogram.common.TVProgramLab.TAG;
+import com.nkvoronov.tvprogram.common.TVProgramDataSource;
+import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 
 public class PageChannels extends Fragment {
     private static final String ARG_PAGE_NUMBER = "page_number";
@@ -26,6 +26,8 @@ public class PageChannels extends Fragment {
     private TextView mEmptyTextView;
     private ChannelAdapter mAdapter;
     private int mPageIndex;
+
+    private TVProgramDataSource mDataSource;
 
     public static PageChannels newInstance(int index) {
         Bundle args = new Bundle();
@@ -47,6 +49,9 @@ public class PageChannels extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.page_channels, container, false);
+
+        mDataSource = TVProgramDataSource.get(getContext());
+
         mChannelsView = root.findViewById(R.id.channel_view);
         mEmptyTextView = root.findViewById(R.id.empty_label);
         mChannelsView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -63,7 +68,7 @@ public class PageChannels extends Fragment {
 
     public void updateUI() {
         Log.d(TAG, "UpdateUI " + mPageIndex);
-        mChannelList = new ChannelList(getContext(), TVProgramLab.get(getContext()).getLang(), TVProgramLab.get(getContext()).isIndexSort());
+        mChannelList = new ChannelList(getContext(), mDataSource.getLang(), mDataSource.isIndexSort());
         mChannelList.loadFromDB(mPageIndex == 1);
 
         if (mAdapter == null) {
