@@ -1,4 +1,4 @@
-package com.nkvoronov.tvprogram.common;
+package com.nkvoronov.tvprogram.tvprogram;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-public class Program {
+public class TVProgram {
     public static final String SEPARATOR = ";";
     public static final String SEPARATOR_LIST = ",";
 
@@ -55,7 +55,7 @@ public class Program {
         return zn + addZero(crh) + sep + addZero(crm);
     }
 
-    public Program(UUID id, int index, Date start, Date stop, String title) {
+    public TVProgram(UUID id, int index, Date start, Date stop, String title) {
         mId = id;
         mIndex = index;
         mStart = start;
@@ -75,7 +75,7 @@ public class Program {
         mStarRating = null;
     }
 
-    public Program(int index, Date start, Date stop, String title) {
+    public TVProgram(int index, Date start, Date stop, String title) {
         this(UUID.randomUUID(), index, start, stop, title);
     }
 

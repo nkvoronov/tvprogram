@@ -1,15 +1,12 @@
 package com.nkvoronov.tvprogram.parser;
 
 import android.content.Context;
-
-import com.nkvoronov.tvprogram.common.Channel;
-
+import com.nkvoronov.tvprogram.tvchannels.TVChannel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.Date;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -37,7 +34,7 @@ public class ParserVseTV extends Parser {
             Element rootElement = document.createElement("tv");
             rootElement.setAttribute("generator-info-name", "vsetv");
             document.appendChild(rootElement);
-            getChannels().getXML(document, rootElement);
+            //getChannels().getXML(document, rootElement);
             getPrograms().getXML(document, rootElement);
             try {
                 Transformer transformer = TransformerFactory.newInstance().newTransformer();
@@ -63,7 +60,7 @@ public class ParserVseTV extends Parser {
     }
 
     @Override
-    public void getContentDay(Channel channel, Date date) {
+    public void getContentDay(TVChannel channel, Date date) {
         super.getContentDay(channel, date);
     }
 

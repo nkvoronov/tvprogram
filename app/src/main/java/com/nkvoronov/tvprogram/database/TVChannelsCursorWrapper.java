@@ -4,8 +4,8 @@ import android.database.Cursor;
 import android.database.CursorWrapper;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsAllTable;
 
-public class ChannelsAllCursorWrapper extends CursorWrapper {
-    public ChannelsAllCursorWrapper(Cursor cursor) {
+public class TVChannelsCursorWrapper extends CursorWrapper {
+    public TVChannelsCursorWrapper(Cursor cursor) {
         super(cursor);
     }
 

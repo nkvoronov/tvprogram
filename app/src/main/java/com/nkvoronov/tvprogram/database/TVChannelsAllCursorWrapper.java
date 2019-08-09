@@ -2,17 +2,16 @@ package com.nkvoronov.tvprogram.database;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
-import com.nkvoronov.tvprogram.common.Channel;
+import com.nkvoronov.tvprogram.tvchannels.TVChannel;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsTvTable;
 
-public class TvChannelsCursorWrapper extends CursorWrapper {
+public class TVChannelsAllCursorWrapper extends CursorWrapper {
 
-    public TvChannelsCursorWrapper(Cursor cursor) {
+    public TVChannelsAllCursorWrapper(Cursor cursor) {
         super(cursor);
     }
 
-    public Channel getChannel() {
-        int id = getInt(getColumnIndex(ChannelsTvTable.Cols.ID));
+    public TVChannel getChannel() {
         int index = getInt(getColumnIndex(ChannelsTvTable.Cols.CHANNEL_INDEX));
         String original_name = getString(getColumnIndex(ChannelsTvTable.Cols.ORIGINAL_NAME));
         String user_name = getString(getColumnIndex(ChannelsTvTable.Cols.USER_NAME));
@@ -21,7 +20,7 @@ public class TvChannelsCursorWrapper extends CursorWrapper {
         int favorite = getInt(getColumnIndex(ChannelsTvTable.Cols.FAVORITE));
         int upd_program = getInt(getColumnIndex(ChannelsTvTable.Cols.UPD_PROGRAM));
 
-        Channel channel = new Channel(id, index, original_name, user_name, icon, correction);
+        TVChannel channel = new TVChannel(index, original_name, user_name, icon, correction);
         channel.setIsFav(favorite == 1);
         channel.setIsUpd(upd_program == 1);
 

@@ -1,14 +1,13 @@
 package com.nkvoronov.tvprogram.parser;
 
 import android.content.Context;
-import com.nkvoronov.tvprogram.common.Channel;
-import com.nkvoronov.tvprogram.common.ChannelList;
-import com.nkvoronov.tvprogram.common.ProgramList;
+import com.nkvoronov.tvprogram.tvchannels.TVChannel;
+import com.nkvoronov.tvprogram.tvprogram.TVProgramList;
 import java.util.Date;
 
 public class Parser  implements Runnable{
-    private ChannelList mChannels;
-    private ProgramList mPrograms;
+    //private ChannelList mChannels;
+    private TVProgramList mPrograms;
     private int mCountDay;
     private Boolean mFullDesc;
     private String mLang;
@@ -21,8 +20,8 @@ public class Parser  implements Runnable{
         mCountDay = countDay;
         mFullDesc = fullDesc;
         mLang = lang;
-        mChannels = new ChannelList(mContext, mLang, true);
-        mPrograms = new ProgramList(mContext);
+        //mChannels = new ChannelList(mContext, mLang, true);
+        mPrograms = new TVProgramList(mContext);
     }
 
     public int getCountDay() {
@@ -57,11 +56,11 @@ public class Parser  implements Runnable{
         mLang = lang;
     }
 
-    public ChannelList getChannels() {
-        return mChannels;
-    }
+//    public ChannelList getChannels() {
+//        return mChannels;
+//    }
 
-    public ProgramList getPrograms() {
+    public TVProgramList getPrograms() {
         return mPrograms;
     }
 
@@ -73,7 +72,7 @@ public class Parser  implements Runnable{
 
     }
 
-    public void getContentDay(Channel channel, Date date) {
+    public void getContentDay(TVChannel channel, Date date) {
 
     }
 

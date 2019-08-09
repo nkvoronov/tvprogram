@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ChannelsActivity"
+            android:name=".tvchannels.TVChannelsActivity"
             android:label="@string/title_channels_win"
             android:parentActivityName=".MainActivity">
         </activity>

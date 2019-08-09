@@ -1,4 +1,4 @@
-package com.nkvoronov.tvprogram.ui;
+package com.nkvoronov.tvprogram.tvchannels;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,15 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.nkvoronov.tvprogram.R;
-import com.nkvoronov.tvprogram.common.Channel;
-import com.nkvoronov.tvprogram.common.ChannelList;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
+import java.util.List;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 
-public class PageChannels extends Fragment {
+public class TVChannelsFragment extends Fragment {
     private static final String ARG_PAGE_NUMBER = "page_number";
 
-    private ChannelList mChannelList;
     private RecyclerView mChannelsView;
     private TextView mEmptyTextView;
     private ChannelAdapter mAdapter;
@@ -29,12 +27,12 @@ public class PageChannels extends Fragment {
 
     private TVProgramDataSource mDataSource;
 
-    public static PageChannels newInstance(int index) {
+    public static TVChannelsFragment newInstance(int index) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_PAGE_NUMBER, index);
         Log.d(TAG, "PageIndex : " + index);
 
-        PageChannels fragment = new PageChannels();
+        TVChannelsFragment fragment = new TVChannelsFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -48,7 +46,7 @@ public class PageChannels extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.page_channels, container, false);
+        View root = inflater.inflate(R.layout.page_tvchannels, container, false);
 
         mDataSource = TVProgramDataSource.get(getContext());
 
@@ -68,20 +66,20 @@ public class PageChannels extends Fragment {
 
     public void updateUI() {
         Log.d(TAG, "UpdateUI " + mPageIndex);
-        mChannelList = new ChannelList(getContext(), mDataSource.getLang(), mDataSource.isIndexSort());
-        mChannelList.loadFromDB(mPageIndex == 1);
+
+        List<TVChannel> channelList = mDataSource.getChannels(mPageIndex == 1);
 
         if (mAdapter == null) {
-            mAdapter = new ChannelAdapter(mChannelList);
+            mAdapter = new ChannelAdapter(channelList);
             mChannelsView.setAdapter(mAdapter);
         } else {
-            mAdapter.setChannelList(mChannelList);
+            mAdapter.setChannelList(channelList);
             mAdapter.notifyDataSetChanged();
         }
     }
 
     private class ChannelHolder extends RecyclerView.ViewHolder implements  View.OnClickListener{
-        private Channel mChannel;
+        private TVChannel mChannel;
         private ImageView mChannelIcon;
         private TextView mChannelName;
         private ImageView mChannelStatus;
@@ -94,7 +92,7 @@ public class PageChannels extends Fragment {
             mChannelStatus = itemView.findViewById(R.id.channel_status);
         }
 
-        public void bind(Channel channel) {
+        public void bind(TVChannel channel) {
             mChannel = channel;
             mChannelName.setText(mChannel.getOName());
             Glide
@@ -118,9 +116,9 @@ public class PageChannels extends Fragment {
     }
 
     private class ChannelAdapter extends RecyclerView.Adapter<ChannelHolder> {
-        private ChannelList mChannelList;
+        private List<TVChannel> mChannelList;
 
-        public ChannelAdapter(ChannelList channelList) {
+        public ChannelAdapter(List<TVChannel> channelList) {
             mChannelList = channelList;
         }
 
@@ -132,21 +130,21 @@ public class PageChannels extends Fragment {
 
         @Override
         public void onBindViewHolder(ChannelHolder holder, int position) {
-            Channel channel = mChannelList.getChannel(position);
+            TVChannel channel = mChannelList.get(position);
             holder.bind(channel);
         }
 
         @Override
         public int getItemCount() {
-            if (mChannelList.getSize() == 0) {
+            if (mChannelList.size() == 0) {
                 mEmptyTextView.setVisibility(View.VISIBLE);
             } else {
                 mEmptyTextView.setVisibility(View.INVISIBLE);
             }
-            return mChannelList.getSize();
+            return mChannelList.size();
         }
 
-        public void setChannelList(ChannelList channelList) {
+        public void setChannelList(List<TVChannel> channelList) {
             mChannelList = channelList;
         }
     }

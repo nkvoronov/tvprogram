@@ -1,13 +1,13 @@
-package com.nkvoronov.tvprogram.common;
+package com.nkvoronov.tvprogram.tvchannels;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import java.util.Comparator;
+import static com.nkvoronov.tvprogram.common.TVProgramDataSource.ALL_LANG;
 
-public class Channel {
+public class TVChannel {
     public static final String SEPARATOR = ";";
 
-    private int mId;
     private int mIndex;
     private String mUName;
     private String mOName;
@@ -15,27 +15,27 @@ public class Channel {
     private boolean mIsFav;
     private boolean mIsUpd;
     private int mCorrection;
+    private String mLang;
 
-    public static Comparator<Channel> channelIndexComparator = new Comparator<Channel>() {
+    public static Comparator<TVChannel> channelIndexComparator = new Comparator<TVChannel>() {
         @Override
-        public int compare(Channel c1, Channel c2) {
+        public int compare(TVChannel c1, TVChannel c2) {
             int channelIndex1 = c1.getIndex();
             int channelIndex2 = c2.getIndex();
             return channelIndex1 - channelIndex2;
         }
     };
 
-    public static Comparator<Channel> channelNameComparator = new Comparator<Channel>() {
+    public static Comparator<TVChannel> channelNameComparator = new Comparator<TVChannel>() {
         @Override
-        public int compare(Channel c1, Channel c2) {
+        public int compare(TVChannel c1, TVChannel c2) {
             String channelName1 = c1.getOName().toUpperCase();
             String channelName2 = c2.getOName().toUpperCase();
             return channelName1.compareTo(channelName2);
         }
     };
 
-    public Channel(int id, int index, String oName, String uName, String icon, int correction) {
-        mId = id;
+    public TVChannel(int index, String oName, String uName, String icon, int correction) {
         mIndex = index;
         mOName = oName;
         mUName = uName;
@@ -43,14 +43,7 @@ public class Channel {
         mIsFav = false;
         mIsUpd = false;
         mCorrection = correction;
-    }
-
-    public int getId() {
-        return mId;
-    }
-
-    public void setId(int id) {
-        mId = mId;
+        mLang = ALL_LANG;
     }
 
     public int getIndex() {
@@ -93,6 +86,14 @@ public class Channel {
         mCorrection = correction;
     }
 
+    public String getLang() {
+        return mLang;
+    }
+
+    public void setLang(String mLang) {
+        this.mLang = mLang;
+    }
+
     public boolean isFav() {
         return mIsFav;
     }
@@ -111,7 +112,7 @@ public class Channel {
 
     @Override
     public String toString() {
-        return Integer.toString(getIndex()) + SEPARATOR + getOName() + SEPARATOR + getUName() + SEPARATOR + getIcon() + SEPARATOR + Integer.toString(getCorrection()) + SEPARATOR + Boolean.toString(isFav()) + SEPARATOR + Boolean.toString(isUpd());
+        return Integer.toString(getIndex()) + SEPARATOR + getOName() + SEPARATOR + getUName() + SEPARATOR + getIcon() + SEPARATOR + Integer.toString(getCorrection()) + SEPARATOR + getLang() + SEPARATOR + Boolean.toString(isFav()) + SEPARATOR + Boolean.toString(isUpd());
     }
 
     public void getXML(Document document, Element element) {
