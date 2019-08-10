@@ -1,27 +1,26 @@
 package com.nkvoronov.tvprogram.parser;
 
-import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import com.nkvoronov.tvprogram.tvchannels.TVChannel;
+import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
 import com.nkvoronov.tvprogram.tvprogram.TVProgramList;
 import java.util.Date;
 
 public class Parser  implements Runnable{
-    //private ChannelList mChannels;
+    private TVChannelsList mChannels;
     private TVProgramList mPrograms;
     private int mCountDay;
     private Boolean mFullDesc;
-    private String mLang;
     private String mOutXML;
-    private Context mContext;
+    private SQLiteDatabase mDatabase;
 
-    public Parser(Context context, String outXML, String lang, int countDay, Boolean fullDesc) {
-        mContext = context.getApplicationContext();
+    public Parser(SQLiteDatabase database, String outXML, int countDay, Boolean fullDesc) {
         mOutXML = outXML;
         mCountDay = countDay;
         mFullDesc = fullDesc;
-        mLang = lang;
-        //mChannels = new ChannelList(mContext, mLang, true);
-        mPrograms = new TVProgramList(mContext);
+        mDatabase = database;
+        mChannels = new TVChannelsList(database, true);
+        mPrograms = new TVProgramList(database);
     }
 
     public int getCountDay() {
@@ -48,17 +47,9 @@ public class Parser  implements Runnable{
         mOutXML = outXML;
     }
 
-    public String getLang() {
-        return mLang;
+    public TVChannelsList getChannels() {
+        return mChannels;
     }
-
-    public void setLang(String lang) {
-        mLang = lang;
-    }
-
-//    public ChannelList getChannels() {
-//        return mChannels;
-//    }
 
     public TVProgramList getPrograms() {
         return mPrograms;

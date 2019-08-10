@@ -14,13 +14,11 @@ public class TVProgramList {
     public static final String STR_ELMDOCTITLE = "div[class~=(?:pastprname2|prname2)]";
     public static final String STR_ELMDOCDESC = "div[class~=(?:pastdesc|prdesc)]";
 
-    private Context mContext;
     private List<TVProgram> mData;
     private SQLiteDatabase mDatabase;
 
-    public TVProgramList(Context context) {
-        mContext = context.getApplicationContext();
-        mDatabase = TVProgramDataSource.get(context).getDatabase();
+    public TVProgramList(SQLiteDatabase database) {
+        mDatabase = database;
         mData = new ArrayList<>();
     }
 

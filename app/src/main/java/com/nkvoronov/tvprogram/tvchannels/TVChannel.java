@@ -9,13 +9,12 @@ public class TVChannel {
     public static final String SEPARATOR = ";";
 
     private int mIndex;
-    private String mUName;
-    private String mOName;
+    private String mName;
     private String mIcon;
     private boolean mIsFavorites;
     private boolean mIsUpdate;
-    private int mCorrection;
     private String mLang;
+    private TVChannelsList mParent;
 
     public static Comparator<TVChannel> channelIndexComparator = new Comparator<TVChannel>() {
         @Override
@@ -29,21 +28,20 @@ public class TVChannel {
     public static Comparator<TVChannel> channelNameComparator = new Comparator<TVChannel>() {
         @Override
         public int compare(TVChannel c1, TVChannel c2) {
-            String channelName1 = c1.getOName().toUpperCase();
-            String channelName2 = c2.getOName().toUpperCase();
+            String channelName1 = c1.getName().toUpperCase();
+            String channelName2 = c2.getName().toUpperCase();
             return channelName1.compareTo(channelName2);
         }
     };
 
-    public TVChannel(int index, String oName, String uName, String icon, int correction) {
+    public TVChannel(int index, String name, String icon) {
         mIndex = index;
-        mOName = oName;
-        mUName = uName;
+        mName = name;
         mIcon = icon;
         mIsFavorites = false;
         mIsUpdate = false;
-        mCorrection = correction;
         mLang = ALL_LANG;
+        mParent = null;
     }
 
     public int getIndex() {
@@ -54,20 +52,12 @@ public class TVChannel {
         mIndex = index;
     }
 
-    public String getUName() {
-        return mUName;
+    public String getName() {
+        return mName;
     }
 
-    public void setUName(String uName) {
-        mUName = uName;
-    }
-
-    public String getOName() {
-        return mOName;
-    }
-
-    public void setOName(String oName) {
-        mOName = oName;
+    public void setName(String name) {
+        mName = name;
     }
 
     public String getIcon() {
@@ -76,14 +66,6 @@ public class TVChannel {
 
     public void setIcon(String icon) {
         mIcon = icon;
-    }
-
-    public int getCorrection() {
-        return mCorrection;
-    }
-
-    public void setCorrection(int correction) {
-        mCorrection = correction;
     }
 
     public String getLang() {
@@ -106,13 +88,22 @@ public class TVChannel {
         mIsFavorites = favorites;
     }
 
+    public void changeFavorites() {
+        mParent.channelChangeFavorites(this);
+        mIsFavorites = !mIsFavorites;
+    }
+
     public void setIsUpdate(boolean update) {
         mIsUpdate = update;
     }
 
+    public void setParent(TVChannelsList parent) {
+        mParent = parent;
+    }
+
     @Override
     public String toString() {
-        return Integer.toString(getIndex()) + SEPARATOR + getOName() + SEPARATOR + getUName() + SEPARATOR + getIcon() + SEPARATOR + Integer.toString(getCorrection()) + SEPARATOR + getLang() + SEPARATOR + Boolean.toString(isFavorites()) + SEPARATOR + Boolean.toString(isUpdate());
+        return Integer.toString(getIndex()) + SEPARATOR + getName() + SEPARATOR + getIcon() + SEPARATOR + getLang() + SEPARATOR + Boolean.toString(isFavorites()) + SEPARATOR + Boolean.toString(isUpdate());
     }
 
     public void getXML(Document document, Element element) {
@@ -120,11 +111,7 @@ public class TVChannel {
         xml_channel.setAttribute("id", Integer.toString(getIndex()));
         Element xml_display_name = document.createElement("display-name");
         xml_display_name.setAttribute("lang", "ru");
-        if (getUName().equals("None")) {
-            xml_display_name.appendChild(document.createTextNode(getOName()));
-        } else {
-            xml_display_name.appendChild(document.createTextNode(getUName()));
-        }
+        xml_display_name.appendChild(document.createTextNode(getName()));
         xml_channel.appendChild(xml_display_name);
         if (!getIcon().equals("")) {
             Element xml_icon_link = document.createElement("icon");

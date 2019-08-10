@@ -1,5 +1,6 @@
 package com.nkvoronov.tvprogram.tvchannels;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,14 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.nkvoronov.tvprogram.R;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
-import java.util.List;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 
 public class TVChannelsFragment extends Fragment{
@@ -25,11 +24,23 @@ public class TVChannelsFragment extends Fragment{
     private TextView mEmptyTextView;
     private ChannelAdapter mAdapter;
     private int mPageIndex;
-
+    private ChangesChannels mChangesChannels;
     private TVProgramDataSource mDataSource;
 
-    public void getMessage() {
-        Toast.makeText(getActivity(), "Message page : " + Integer.toString(mPageIndex), Toast.LENGTH_SHORT).show();
+    public interface ChangesChannels {
+        void onUpdatePages(TVChannel channel);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mChangesChannels = (ChangesChannels) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mChangesChannels = null;
     }
 
     public static TVChannelsFragment newInstance(int index) {
@@ -59,7 +70,6 @@ public class TVChannelsFragment extends Fragment{
         mEmptyTextView = root.findViewById(R.id.empty_label);
         mChannelsView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        updateUI();
         return root;
     }
 
@@ -69,10 +79,14 @@ public class TVChannelsFragment extends Fragment{
         updateUI();
     }
 
+    public boolean isFavorites() {
+        return mPageIndex == 0;
+    }
+
     public void updateUI() {
         Log.d(TAG, "UpdateUI " + mPageIndex);
 
-        List<TVChannel> channelList = mDataSource.getChannels(mPageIndex == 1);
+        TVChannelsList channelList = mDataSource.getChannels(isFavorites());
 
         if (mAdapter == null) {
             mAdapter = new ChannelAdapter(channelList);
@@ -95,11 +109,18 @@ public class TVChannelsFragment extends Fragment{
             mChannelIcon = itemView.findViewById(R.id.channel_icon);
             mChannelName = itemView.findViewById(R.id.channel_name);
             mChannelStatus = itemView.findViewById(R.id.channel_status);
+            mChannelStatus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mChannel.changeFavorites();
+                    mChangesChannels.onUpdatePages(mChannel);
+                }
+            });
         }
 
         public void bind(TVChannel channel) {
             mChannel = channel;
-            mChannelName.setText(mChannel.getOName());
+            mChannelName.setText(mChannel.getName());
             Glide
                     .with(getContext())
                     .load(Uri.parse(mChannel.getIcon()))
@@ -116,21 +137,14 @@ public class TVChannelsFragment extends Fragment{
 
         @Override
         public void onClick(View view) {
-            if (mChannel.isFavorites()) {
-                mChannel.setIsFavorites(false);
-                mDataSource.delChannelFromFavorites(mChannel);
-            } else {
-                mChannel.setIsFavorites(true);
-                mDataSource.addChannelToFavorites(mChannel);
-            }
-            updateUI();
+            //
         }
     }
 
     private class ChannelAdapter extends RecyclerView.Adapter<ChannelHolder> {
-        private List<TVChannel> mChannelList;
+        private TVChannelsList mChannelList;
 
-        public ChannelAdapter(List<TVChannel> channelList) {
+        public ChannelAdapter(TVChannelsList channelList) {
             mChannelList = channelList;
         }
 
@@ -156,7 +170,7 @@ public class TVChannelsFragment extends Fragment{
             return mChannelList.size();
         }
 
-        public void setChannelList(List<TVChannel> channelList) {
+        public void setChannelList(TVChannelsList channelList) {
             mChannelList = channelList;
         }
     }

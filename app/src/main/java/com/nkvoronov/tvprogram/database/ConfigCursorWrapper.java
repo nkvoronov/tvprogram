@@ -13,10 +13,6 @@ public class ConfigCursorWrapper extends CursorWrapper {
         return getInt(getColumnIndex(ConfigsTable.Cols.COUNT_DAYS));
     }
 
-    public String getLang() {
-        return getString(getColumnIndex(ConfigsTable.Cols.LANG));
-    }
-
     public boolean getIndexSort() {
         return getInt(getColumnIndex(ConfigsTable.Cols.INDEX_SORT)) == 1;
     }

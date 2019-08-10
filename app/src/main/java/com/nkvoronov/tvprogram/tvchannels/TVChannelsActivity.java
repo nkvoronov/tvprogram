@@ -12,7 +12,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.nkvoronov.tvprogram.R;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 
-public class TVChannelsActivity extends AppCompatActivity{
+public class TVChannelsActivity extends AppCompatActivity implements TVChannelsFragment.ChangesChannels {
     private TVChannelsPageAdapter mPageAdapter;
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
@@ -35,15 +35,9 @@ public class TVChannelsActivity extends AppCompatActivity{
         return super.onOptionsItemSelected(item);
     }
 
-    private void updatePages() {
-        for (int i = 0; i < mPageAdapter.getCount(); i++) {
-            ((TVChannelsFragment) mPageAdapter.instantiateItem(mViewPager, i)).updateUI();
-        }
-    }
-
     private void onUpdate() {
-        mDataSource.getChannelsFromNetAndUpdate(true);
-        updatePages();
+        mDataSource.updateChannels();
+        onUpdatePages(null);
     }
 
     public static Intent newIntent(Context context) {
@@ -66,5 +60,12 @@ public class TVChannelsActivity extends AppCompatActivity{
         mViewPager.setAdapter(mPageAdapter);
 
         mTabLayout.setupWithViewPager(mViewPager);
+    }
+
+    @Override
+    public void onUpdatePages(TVChannel channel) {
+        for (int i = 0; i < mPageAdapter.getCount(); i++) {
+            ((TVChannelsFragment) mPageAdapter.instantiateItem(mViewPager, i)).updateUI();
+        }
     }
 }
