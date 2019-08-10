@@ -16,7 +16,7 @@ public class TVProgramDbSchema {
         }
     }
 
-    public static final class ChannelsAllTable {
+    public static final class ChannelsTable {
         public static final String TABLE_NAME = "channels";
 
         public static final class Cols {
@@ -28,7 +28,7 @@ public class TVProgramDbSchema {
         }
     }
 
-    public static final class ChannelsFavTable {
+    public static final class ChannelsFavoritesTable {
         public static final String TABLE_NAME = "fav_channels";
 
         public static final class Cols {
@@ -40,7 +40,7 @@ public class TVProgramDbSchema {
         }
     }
 
-    public static final class ChannelsTvTable {
+    public static final class ChannelsAllTable {
         public static final String TABLE_NAME = "tv_channels";
 
         public static final class Cols {

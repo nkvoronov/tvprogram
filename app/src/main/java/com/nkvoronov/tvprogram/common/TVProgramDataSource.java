@@ -2,6 +2,7 @@ package com.nkvoronov.tvprogram.common;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import java.io.BufferedReader;
@@ -136,8 +137,8 @@ public class TVProgramDataSource {
                 channel_index = channel_link.split("_")[1];
                 channel_icon = ICONS_PRE + channel_index + ".gif";
                 TVChannel channel = new TVChannel(Integer.parseInt(channel_index), channel_name, channel_name, channel_icon, DEF_CORRECTION);
-                channel.setIsFav(false);
-                channel.setIsUpd(false);
+                channel.setIsFavorites(false);
+                channel.setIsUpdate(false);
                 channels.add(channel);
                 Log.d(TAG, channel.toString());
                 if (isUpdate) {
@@ -156,27 +157,19 @@ public class TVProgramDataSource {
 
     public List<TVChannel> getChannels(boolean isFavorites) {
         List<TVChannel> channels = new ArrayList<>();
-        String selection = null;
-        String[] selectionArg = null;
-        String orderBy = ChannelsTvTable.Cols.CHANNEL_INDEX;
+        TVChannelsAllCursorWrapper cursor;
 
         if (isFavorites) {
-            selection = ChannelsTvTable.Cols.FAVORITE + " = ?";
-            selectionArg = new String[]{ "1" };
-            orderBy = ChannelsTvTable.Cols.USER_NAME;
+            // Where args problem !!!!
+            cursor = queryChannels(ChannelsAllTable.Cols.FAVORITE + " = 1", null, ChannelsAllTable.Cols.USER_NAME);
+            Log.d(TAG, "FAV");
+        } else {
+            cursor = queryChannels(null,null, ChannelsAllTable.Cols.CHANNEL_INDEX);
+            Log.d(TAG, "ALL");
         }
 
-        TVChannelsAllCursorWrapper cursor = new TVChannelsAllCursorWrapper(mDatabase.query(
-                ChannelsTvTable.TABLE_NAME,
-                null,
-                selection,
-                selectionArg,
-                null,
-                null,
-                orderBy
-        ));
-
         try {
+            Log.d(TAG, Integer.toString(cursor.getCount()));
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 channels.add(cursor.getChannel());
@@ -189,14 +182,27 @@ public class TVProgramDataSource {
         return channels;
     }
 
+    private TVChannelsAllCursorWrapper queryChannels(String whereClause, String[] whereArgs, String orderBy) {
+        Cursor cursor = mDatabase.query(
+                ChannelsAllTable.TABLE_NAME,
+                null,
+                whereClause,
+                whereArgs,
+                null,
+                null,
+                orderBy
+        );
+        return new TVChannelsAllCursorWrapper(cursor);
+    }
+
     public void saveChannelToDB(TVChannel channel) {
         int typeUpdate = 0;
         String oldName = "";
 
         TVChannelsCursorWrapper cursor = new TVChannelsCursorWrapper(mDatabase.query(
-                ChannelsAllTable.TABLE_NAME,
+                ChannelsTable.TABLE_NAME,
                 null,
-                ChannelsAllTable.Cols.CHANNEL_INDEX + " = ?",
+                ChannelsTable.Cols.CHANNEL_INDEX + " = ?",
                 new String[]{String.valueOf(channel.getIndex())},
                 null,
                 null,
@@ -228,11 +234,11 @@ public class TVProgramDataSource {
     }
 
     public void addChannelToFavorites(TVChannel channel) {
-        //
+        mDatabase.insert(ChannelsFavoritesTable.TABLE_NAME, null, getContentChannelsFavValues(channel));
     }
 
     public void delChannelFromFavorites(TVChannel channel) {
-        //
+        mDatabase.delete(ChannelsFavoritesTable.TABLE_NAME, ChannelsFavoritesTable.Cols.CHANNEL_INDEX + " = ?", new String[]{String.valueOf(channel.getIndex())});
     }
 
     public void saveChannelIcon(TVChannel channel) {
@@ -264,8 +270,8 @@ public class TVProgramDataSource {
             while ((line = bufferedReader.readLine()) != null) {
                 String[] aline = line.split(TVChannel.SEPARATOR);
                 TVChannel channel = new TVChannel(Integer.parseInt(aline[0]), aline[1], aline[2], aline[3], Integer.parseInt(aline[4]));
-                channel.setIsFav(false);
-                channel.setIsUpd(false);
+                channel.setIsFavorites(false);
+                channel.setIsUpdate(false);
                 channels.add(channel);
             }
         } catch (IOException e) {
@@ -306,11 +312,11 @@ public class TVProgramDataSource {
     }
 
     private void insertChannel(TVChannel channel) {
-        mDatabase.insert(ChannelsAllTable.TABLE_NAME, null, getContentChannelsAllValues(channel));
+        mDatabase.insert(ChannelsTable.TABLE_NAME, null, getContentChannelsAllValues(channel));
     }
 
     private void updateChannel(TVChannel channel) {
-        mDatabase.update(ChannelsAllTable.TABLE_NAME, getContentChannelsAllValues(channel), ChannelsAllTable.Cols.CHANNEL_INDEX + " = ?", new String[]{String.valueOf(channel.getIndex())});
+        mDatabase.update(ChannelsTable.TABLE_NAME, getContentChannelsAllValues(channel), ChannelsTable.Cols.CHANNEL_INDEX + " = ?", new String[]{String.valueOf(channel.getIndex())});
     }
 
     private ContentValues getConfigValues(boolean withID) {
@@ -327,18 +333,18 @@ public class TVProgramDataSource {
     private ContentValues getContentChannelsAllValues(TVChannel channel) {
         ContentValues values = new ContentValues();
         Date date = new Date();
-        values.put(ChannelsAllTable.Cols.CHANNEL_INDEX, channel.getIndex());
-        values.put(ChannelsAllTable.Cols.NAME, channel.getOName());
-        values.put(ChannelsAllTable.Cols.ICON, channel.getIcon());
-        values.put(ChannelsAllTable.Cols.UPD_CHANNEL, date.getTime());
+        values.put(ChannelsTable.Cols.CHANNEL_INDEX, channel.getIndex());
+        values.put(ChannelsTable.Cols.NAME, channel.getOName());
+        values.put(ChannelsTable.Cols.ICON, channel.getIcon());
+        values.put(ChannelsTable.Cols.UPD_CHANNEL, date.getTime());
         return values;
     }
 
     private ContentValues getContentChannelsFavValues(TVChannel channel) {
         ContentValues values = new ContentValues();
-        values.put(ChannelsFavTable.Cols.CHANNEL_INDEX, channel.getIndex());
-        values.put(ChannelsFavTable.Cols.NAME, channel.getUName());
-        values.put(ChannelsFavTable.Cols.CORRECTION, channel.getCorrection());
+        values.put(ChannelsFavoritesTable.Cols.CHANNEL_INDEX, channel.getIndex());
+        values.put(ChannelsFavoritesTable.Cols.NAME, channel.getUName());
+        values.put(ChannelsFavoritesTable.Cols.CORRECTION, channel.getCorrection());
         return values;
     }
 }

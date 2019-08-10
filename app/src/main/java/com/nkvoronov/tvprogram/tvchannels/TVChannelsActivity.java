@@ -35,8 +35,15 @@ public class TVChannelsActivity extends AppCompatActivity{
         return super.onOptionsItemSelected(item);
     }
 
+    private void updatePages() {
+        for (int i = 0; i < mPageAdapter.getCount(); i++) {
+            ((TVChannelsFragment) mPageAdapter.instantiateItem(mViewPager, i)).updateUI();
+        }
+    }
+
     private void onUpdate() {
         mDataSource.getChannelsFromNetAndUpdate(true);
+        updatePages();
     }
 
     public static Intent newIntent(Context context) {

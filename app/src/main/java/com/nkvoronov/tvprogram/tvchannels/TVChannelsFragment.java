@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,7 +18,7 @@ import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import java.util.List;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 
-public class TVChannelsFragment extends Fragment {
+public class TVChannelsFragment extends Fragment{
     private static final String ARG_PAGE_NUMBER = "page_number";
 
     private RecyclerView mChannelsView;
@@ -26,6 +27,10 @@ public class TVChannelsFragment extends Fragment {
     private int mPageIndex;
 
     private TVProgramDataSource mDataSource;
+
+    public void getMessage() {
+        Toast.makeText(getActivity(), "Message page : " + Integer.toString(mPageIndex), Toast.LENGTH_SHORT).show();
+    }
 
     public static TVChannelsFragment newInstance(int index) {
         Bundle args = new Bundle();
@@ -101,7 +106,7 @@ public class TVChannelsFragment extends Fragment {
                     .fitCenter()
                     .into(mChannelIcon);
             //mChannelIcon.setImageURI(Uri.parse(mChannel.getIcon()));
-            if (channel.isFav()) {
+            if (channel.isFavorites()) {
                 mChannelStatus.setImageResource(R.drawable.favorites_on);
             }
             else {
@@ -111,7 +116,14 @@ public class TVChannelsFragment extends Fragment {
 
         @Override
         public void onClick(View view) {
-            //
+            if (mChannel.isFavorites()) {
+                mChannel.setIsFavorites(false);
+                mDataSource.delChannelFromFavorites(mChannel);
+            } else {
+                mChannel.setIsFavorites(true);
+                mDataSource.addChannelToFavorites(mChannel);
+            }
+            updateUI();
         }
     }
 

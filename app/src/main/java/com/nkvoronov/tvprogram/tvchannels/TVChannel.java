@@ -12,8 +12,8 @@ public class TVChannel {
     private String mUName;
     private String mOName;
     private String mIcon;
-    private boolean mIsFav;
-    private boolean mIsUpd;
+    private boolean mIsFavorites;
+    private boolean mIsUpdate;
     private int mCorrection;
     private String mLang;
 
@@ -40,8 +40,8 @@ public class TVChannel {
         mOName = oName;
         mUName = uName;
         mIcon = icon;
-        mIsFav = false;
-        mIsUpd = false;
+        mIsFavorites = false;
+        mIsUpdate = false;
         mCorrection = correction;
         mLang = ALL_LANG;
     }
@@ -94,25 +94,25 @@ public class TVChannel {
         this.mLang = mLang;
     }
 
-    public boolean isFav() {
-        return mIsFav;
+    public boolean isFavorites() {
+        return  mIsFavorites;
     }
 
-    public boolean isUpd() {
-        return mIsUpd;
+    public boolean isUpdate() {
+        return mIsUpdate;
     }
 
-    public void setIsFav(boolean fav) {
-        mIsFav = fav;
+    public void setIsFavorites(boolean favorites) {
+        mIsFavorites = favorites;
     }
 
-    public void setIsUpd(boolean upd) {
-        mIsUpd = upd;
+    public void setIsUpdate(boolean update) {
+        mIsUpdate = update;
     }
 
     @Override
     public String toString() {
-        return Integer.toString(getIndex()) + SEPARATOR + getOName() + SEPARATOR + getUName() + SEPARATOR + getIcon() + SEPARATOR + Integer.toString(getCorrection()) + SEPARATOR + getLang() + SEPARATOR + Boolean.toString(isFav()) + SEPARATOR + Boolean.toString(isUpd());
+        return Integer.toString(getIndex()) + SEPARATOR + getOName() + SEPARATOR + getUName() + SEPARATOR + getIcon() + SEPARATOR + Integer.toString(getCorrection()) + SEPARATOR + getLang() + SEPARATOR + Boolean.toString(isFavorites()) + SEPARATOR + Boolean.toString(isUpdate());
     }
 
     public void getXML(Document document, Element element) {
