@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <Spinner
-        android:id="@+id/tvchannel_filter"
+    <EditText
+        android:id="@+id/edt_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
@@ -14,11 +14,10 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="1dp"
         android:background="@drawable/rectangle_control"
-        android:entries="@array/langs"
-        android:fadingEdge="horizontal|vertical"
-        android:fadingEdgeLength="1dp"
-        android:isScrollContainer="true"
-        android:spinnerMode="dialog" />
+        android:hint="@string/search_hint"
+        android:inputType="text"
+        android:autofillHints=""
+        tools:targetApi="o"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -26,7 +25,7 @@
         android:layout_marginTop="2dp">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/tvchannel_view"
+            android:id="@+id/tvprogram_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"
@@ -35,12 +34,13 @@
         </androidx.recyclerview.widget.RecyclerView>
 
         <TextView
-            android:id="@+id/tvchannel_empty"
+            android:id="@+id/tvprogram_empty_search"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="@string/empty_list"
+            android:text="@string/not_found"
             tools:layout_editor_absoluteY="688dp" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

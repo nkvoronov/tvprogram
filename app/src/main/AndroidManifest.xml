@@ -20,12 +20,12 @@
         </activity>
         <activity
             android:name=".tvchannels.TVChannelsActivity"
-            android:label="@string/title_channels_win"
+            android:label="@string/title_tvchannels_win"
             android:parentActivityName=".MainActivity">
         </activity>
         <activity
             android:name=".tvprogram.TVProgramChannelActivity"
-            android:label="Channel"
+            android:label="@string/title_tvchannel_win"
             android:parentActivityName=".tvchannels.TVChannelsActivity">
         </activity>
         <activity

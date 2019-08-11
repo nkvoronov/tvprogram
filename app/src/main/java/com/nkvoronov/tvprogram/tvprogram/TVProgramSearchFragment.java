@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,7 +13,6 @@ import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 
 public class TVProgramSearchFragment extends Fragment {
     private static final String ARG_PAGE_NUMBER = "page_number";
-    private Spinner mSpinnerFilter;
     private RecyclerView mProgramView;
     private TextView mEmptyTextView;
     private int mPageIndex;
@@ -37,24 +34,10 @@ public class TVProgramSearchFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.page_tvprogram, container, false);
+        View root = inflater.inflate(R.layout.page_tvprogram_search, container, false);
         mDataSource = TVProgramDataSource.get(getContext());
-        mSpinnerFilter = root.findViewById(R.id.tvprogram_filter);
-        mSpinnerFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                //
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                //
-            }
-        });
-        mSpinnerFilter.setVisibility(View.GONE);
         mProgramView = root.findViewById(R.id.tvprogram_view);
-        mEmptyTextView = root.findViewById(R.id.tvprogram_empty);
+        mEmptyTextView = root.findViewById(R.id.tvprogram_empty_search);
         mProgramView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return root;

@@ -52,7 +52,6 @@ public class TVProgramNowFragment extends Fragment {
                 //
             }
         });
-        mSpinnerFilter.setVisibility(View.GONE);
         mProgramView = root.findViewById(R.id.tvprogram_view);
         mEmptyTextView = root.findViewById(R.id.tvprogram_empty);
         mProgramView.setLayoutManager(new LinearLayoutManager(getActivity()));

@@ -18,7 +18,7 @@
         app:tabIndicatorFullWidth="true"
         app:tabIndicatorGravity="bottom"
         app:tabIndicatorHeight="5dp"
-        app:tabMode="scrollable"
+        app:tabMode="fixed"
         app:tabSelectedTextColor="@android:color/holo_orange_dark"
         app:tabTextColor="@android:color/black" />
 

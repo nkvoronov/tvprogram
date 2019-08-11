@@ -23,7 +23,7 @@ public class TVProgramChannelActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tvchannels);
+        setContentView(R.layout.activity_tvprogramchannel);
         mDataSource = TVProgramDataSource.get(this);
         mTabLayout = findViewById(R.id.tvprogramchannels_tabs);
         mViewPager = findViewById(R.id.tvprogramchannels_pager);

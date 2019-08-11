@@ -18,7 +18,7 @@
         <item
             android:id="@+id/mi_channels"
             android:enabled="true"
-            android:title="@string/title_channels" />
+            android:title="@string/title_tvchannels" />
         <item
             android:id="@+id/mi_settings"
             android:enabled="true"
