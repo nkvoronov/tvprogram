@@ -1,6 +1,7 @@
 package com.nkvoronov.tvprogram.tvchannels;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.nkvoronov.tvprogram.R;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
+import com.nkvoronov.tvprogram.tvprogram.TVProgramChannelActivity;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 
 public class TVChannelsFragment extends Fragment{
@@ -68,13 +70,15 @@ public class TVChannelsFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.page_tvchannels, container, false);
         mDataSource = TVProgramDataSource.get(getContext());
-        mSpinnerFilter = root.findViewById(R.id.spn_filter);
+        mSpinnerFilter = root.findViewById(R.id.tvchannel_filter);
         mSpinnerFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
 
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                mFilterIndex = i;
-                updateUI();
+                if (mFilterIndex != i) {
+                    mFilterIndex = i;
+                    updateUI();
+                }
             }
 
             @Override
@@ -85,8 +89,8 @@ public class TVChannelsFragment extends Fragment{
         if (isFavorites()) {
             mSpinnerFilter.setVisibility(View.GONE);
         }
-        mChannelsView = root.findViewById(R.id.channel_view);
-        mEmptyTextView = root.findViewById(R.id.empty_label);
+        mChannelsView = root.findViewById(R.id.tvchannel_view);
+        mEmptyTextView = root.findViewById(R.id.tvchannel_empty);
         mChannelsView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return root;
@@ -123,7 +127,7 @@ public class TVChannelsFragment extends Fragment{
         private ImageView mChannelFavorites;
 
         public ChannelHolder(LayoutInflater inflater, ViewGroup parent) {
-            super(inflater.inflate(R.layout.list_item_channels, parent, false));
+            super(inflater.inflate(R.layout.list_item_tvchannels, parent, false));
             itemView.setOnClickListener(this);
             mChannelIcon = itemView.findViewById(R.id.channel_icon);
             mChannelName = itemView.findViewById(R.id.channel_name);
@@ -167,7 +171,8 @@ public class TVChannelsFragment extends Fragment{
 
         @Override
         public void onClick(View view) {
-            //
+            Intent intent = TVProgramChannelActivity.newIntent(getActivity());
+            startActivity(intent);
         }
     }
 

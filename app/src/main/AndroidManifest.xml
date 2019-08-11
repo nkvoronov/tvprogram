@@ -24,6 +24,11 @@
             android:parentActivityName=".MainActivity">
         </activity>
         <activity
+            android:name=".tvprogram.TVProgramChannelActivity"
+            android:label="Channel"
+            android:parentActivityName=".tvchannels.TVChannelsActivity">
+        </activity>
+        <activity
             android:name=".SettingsActivity"
             android:label="@string/title_settings_win"
             android:parentActivityName=".MainActivity">

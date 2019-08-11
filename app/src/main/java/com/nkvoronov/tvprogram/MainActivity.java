@@ -75,8 +75,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mDataSource = TVProgramDataSource.get(this);
-        mMainTabLayout = findViewById(R.id.main_tabs);
-        mMainViewPager = findViewById(R.id.main_pager);
+        mMainTabLayout = findViewById(R.id.tvprogram_tabs);
+        mMainViewPager = findViewById(R.id.tvprogram_pager);
         mPageAdapter = new TVProgramPageAdapter(this, getSupportFragmentManager());
         mMainViewPager.setAdapter(mPageAdapter);
         mMainTabLayout.setupWithViewPager(mMainViewPager);

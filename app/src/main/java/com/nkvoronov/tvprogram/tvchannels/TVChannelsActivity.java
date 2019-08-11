@@ -50,8 +50,8 @@ public class TVChannelsActivity extends AppCompatActivity implements TVChannelsF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tvchannels);
         mDataSource = TVProgramDataSource.get(this);
-        mTabLayout = findViewById(R.id.tabs);
-        mViewPager = findViewById(R.id.pager);
+        mTabLayout = findViewById(R.id.tvprogramchannels_tabs);
+        mViewPager = findViewById(R.id.tvprogramchannels_pager);
         mPageAdapter = new TVChannelsPageAdapter(this, getSupportFragmentManager());
         mViewPager.setAdapter(mPageAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
