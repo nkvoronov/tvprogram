@@ -46,13 +46,13 @@ public class TVProgramDataSource {
     }
 
     public TVChannelsList getChannels(boolean isFavorites, int filter) {
-        TVChannelsList channels = new TVChannelsList(mDatabase, isIndexSort());
+        TVChannelsList channels = new TVChannelsList(mContext, mDatabase, isIndexSort());
         channels.loadFromDB(isFavorites, filter);
         return channels;
     };
 
     public void updateChannels() {
-        TVChannelsList channels = new TVChannelsList(mDatabase, isIndexSort());
+        TVChannelsList channels = new TVChannelsList(mContext, mDatabase, isIndexSort());
         channels.loadFromNetAndUpdate(true);
     }
 }

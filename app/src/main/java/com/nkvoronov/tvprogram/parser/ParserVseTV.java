@@ -1,5 +1,6 @@
 package com.nkvoronov.tvprogram.parser;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import com.nkvoronov.tvprogram.tvchannels.TVChannel;
 import org.w3c.dom.Document;
@@ -20,8 +21,8 @@ import javax.xml.transform.stream.StreamResult;
 
 public class ParserVseTV extends Parser {
 
-    public ParserVseTV(SQLiteDatabase database, String outXML, int countDay, Boolean fullDesc) {
-        super(database, outXML, countDay, fullDesc);
+    public ParserVseTV(Context context, SQLiteDatabase database, String outXML, int countDay, Boolean fullDesc) {
+        super(context, database, outXML, countDay, fullDesc);
     }
 
     @Override

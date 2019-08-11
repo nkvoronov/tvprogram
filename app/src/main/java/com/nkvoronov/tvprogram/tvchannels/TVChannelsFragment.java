@@ -154,13 +154,13 @@ public class TVChannelsFragment extends Fragment{
             mChannelName.setText(mChannel.getName());
             Glide
                     .with(getContext())
-                    .load(Uri.parse(mChannel.getIcon()))
+                    .load(mChannel.getIconFile())
                     .fitCenter()
                     .into(mChannelIcon);
 
-            if (mChannel.isUpdate()) {
-                mChannelUpdate.setVisibility(View.VISIBLE);
-            }
+//            if (mChannel.isUpdate()) {
+//                mChannelUpdate.setVisibility(View.VISIBLE);
+//            }
             if (channel.isFavorites()) {
                 mChannelFavorites.setImageResource(R.drawable.favorites_on);
             }

@@ -1,6 +1,7 @@
 package com.nkvoronov.tvprogram.tvchannels;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -36,11 +37,13 @@ public class TVChannelsList {
 
     private Boolean mIndexSort;
     private List<TVChannel> mData;
+    private Context mContext;
     private SQLiteDatabase mDatabase;
 
-    public TVChannelsList(SQLiteDatabase database, boolean indexSort) {
+    public TVChannelsList(Context context, SQLiteDatabase database, boolean indexSort) {
         mIndexSort = indexSort;
         mData = new ArrayList<>();
+        mContext = context;
         mDatabase = database;
     }
 
@@ -62,6 +65,10 @@ public class TVChannelsList {
 
     public int size() {
         return mData.size();
+    }
+
+    public Context getContext() {
+        return mContext;
     }
 
     @Override
@@ -102,7 +109,7 @@ public class TVChannelsList {
             Log.d(TAG, channel.toString());
             if (isUpdate) {
                 saveChannelToDB(channel);
-                saveChannelIcon(channel);
+                channel.saveIconToFile();
             }
 
         }
@@ -235,10 +242,6 @@ public class TVChannelsList {
         if (typeUpdate == 2) {
             insertChannel(channel);
         }
-    }
-
-    public void saveChannelIcon(TVChannel channel) {
-        //
     }
 
     public void channelChangeFavorites(TVChannel channel) {

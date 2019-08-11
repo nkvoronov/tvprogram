@@ -1,5 +1,6 @@
 package com.nkvoronov.tvprogram.parser;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import com.nkvoronov.tvprogram.tvchannels.TVChannel;
 import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
@@ -12,14 +13,16 @@ public class Parser  implements Runnable{
     private int mCountDay;
     private Boolean mFullDesc;
     private String mOutXML;
+    private Context mContext;
     private SQLiteDatabase mDatabase;
 
-    public Parser(SQLiteDatabase database, String outXML, int countDay, Boolean fullDesc) {
+    public Parser(Context context, SQLiteDatabase database, String outXML, int countDay, Boolean fullDesc) {
         mOutXML = outXML;
         mCountDay = countDay;
         mFullDesc = fullDesc;
         mDatabase = database;
-        mChannels = new TVChannelsList(database, true);
+        mContext = context;
+        mChannels = new TVChannelsList(context, database, true);
         mPrograms = new TVProgramList(database);
     }
 
@@ -53,6 +56,10 @@ public class Parser  implements Runnable{
 
     public TVProgramList getPrograms() {
         return mPrograms;
+    }
+
+    public Context getContext() {
+        return mContext;
     }
 
     public void saveXML() {

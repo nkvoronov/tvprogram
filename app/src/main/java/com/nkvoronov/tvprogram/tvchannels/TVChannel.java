@@ -1,9 +1,15 @@
 package com.nkvoronov.tvprogram.tvchannels;
 
 import android.util.Log;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Comparator;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.ALL_LANG;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
@@ -76,7 +82,6 @@ public class TVChannel {
     }
 
     public void setLang(String lang) {
-        Log.d(TAG, "LANG : " + lang);
         mLang = lang;
     }
 
@@ -86,6 +91,33 @@ public class TVChannel {
 
     public boolean isUpdate() {
         return mIsUpdate;
+    }
+
+    public File getIconFile() {
+        File filesDir = mParent.getContext().getFilesDir();
+        return new File(filesDir, "IMG_" + Integer.toString(getIndex()) + ".gif");
+    }
+
+    public void saveIconToFile() {
+        try {
+            if (!getIconFile().exists()) {
+                URL url = new URL(getIcon());
+                InputStream inputStream = url.openStream();
+                DataInputStream dataInputStream = new DataInputStream(inputStream);
+                FileOutputStream fileOutputStream = new FileOutputStream(getIconFile());
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = dataInputStream.read(buffer)) > 0) {
+                    fileOutputStream.write(buffer, 0, length);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            Log.d(TAG, e.getMessage());
+            e.fillInStackTrace();
+        } catch (IOException e) {
+            Log.d(TAG, e.getMessage());
+            e.fillInStackTrace();
+        }
     }
 
     public void setIsFavorites(boolean favorites) {
@@ -123,9 +155,5 @@ public class TVChannel {
             xml_display_name.appendChild(xml_icon_link);
         }
         element.appendChild(xml_display_name);
-    }
-
-    public String getIconFilename() {
-        return "";
     }
 }
