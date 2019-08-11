@@ -49,16 +49,11 @@ public class TVChannelsActivity extends AppCompatActivity implements TVChannelsF
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tvchannels);
-
         mDataSource = TVProgramDataSource.get(this);
-
         mTabLayout = findViewById(R.id.tabs);
-        mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-
         mViewPager = findViewById(R.id.pager);
         mPageAdapter = new TVChannelsPageAdapter(this, getSupportFragmentManager());
         mViewPager.setAdapter(mPageAdapter);
-
         mTabLayout.setupWithViewPager(mViewPager);
     }
 

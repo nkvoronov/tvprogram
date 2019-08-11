@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 import static com.nkvoronov.tvprogram.common.HttpContent.CHANNELS_PRE;
 import static com.nkvoronov.tvprogram.common.HttpContent.ICONS_PRE;
+import static com.nkvoronov.tvprogram.common.TVProgramDataSource.ALL_LANG;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.RUS_LANG;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.UKR_LANG;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
@@ -77,21 +78,23 @@ public class TVChannelsList {
         String channel_name;
         String channel_link;
         String channel_icon;
+        String lang = ALL_LANG;
         Boolean flag = false;
         mData.clear();
         org.jsoup.nodes.Document document = new HttpContent(CHANNELS_PRE).getDocument();
         org.jsoup.select.Elements elements = document.select(CHANNELS_SELECT);
         for (org.jsoup.nodes.Element element : elements){
             channel_name = element.text();
+            if (channel_name.endsWith("(на укр.)")) {
+                lang = UKR_LANG;
+            } else {
+                lang = RUS_LANG;
+            }
             channel_link = element.attr("value");
             channel_index = channel_link.split("_")[1];
             channel_icon = ICONS_PRE + channel_index + ".gif";
             TVChannel channel = new TVChannel(Integer.parseInt(channel_index), channel_name, channel_icon);
-            if (channel_name.endsWith("(на укр.)")) {
-                channel.setLang(UKR_LANG);
-            } else {
-                channel.setLang(RUS_LANG);
-            }
+            channel.setLang(lang);
             channel.setIsFavorites(false);
             channel.setIsUpdate(false);
             mData.add(channel);
@@ -110,7 +113,7 @@ public class TVChannelsList {
         }
     }
 
-    public void loadFromDB(boolean isFavorites) {
+    public void loadFromDB(boolean isFavorites, int filter) {
         TVChannelsAllCursorWrapper cursor;
         mData.clear();
 
@@ -118,7 +121,7 @@ public class TVChannelsList {
             cursor = queryChannels(getSQLFavoritesChannels(TVProgramDataSource.get(null).getCoutDays()),null);
             Log.d(TAG, "FAV");
         } else {
-            cursor = queryChannels(getSQLChannels(),null);
+            cursor = queryChannels(getSQLChannels(filter),null);
             Log.d(TAG, "ALL");
         }
 
@@ -261,6 +264,7 @@ public class TVChannelsList {
         values.put(ChannelsTable.Cols.CHANNEL_INDEX, channel.getIndex());
         values.put(ChannelsTable.Cols.NAME, channel.getName());
         values.put(ChannelsTable.Cols.ICON, channel.getIcon());
+        values.put(ChannelsTable.Cols.LANG, channel.getLang());
         values.put(ChannelsTable.Cols.UPD_CHANNEL, date.getTime());
         return values;
     }

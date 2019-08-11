@@ -7,7 +7,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,13 +21,14 @@ import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 
 public class TVChannelsFragment extends Fragment{
     private static final String ARG_PAGE_NUMBER = "page_number";
-
+    private Spinner mSpinnerFilter;
     private RecyclerView mChannelsView;
     private TextView mEmptyTextView;
     private ChannelAdapter mAdapter;
     private int mPageIndex;
     private ChangesChannels mChangesChannels;
     private TVProgramDataSource mDataSource;
+    private int mFilterIndex;
 
     public interface ChangesChannels {
         void onUpdatePages(TVChannel channel);
@@ -57,15 +60,31 @@ public class TVChannelsFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPageIndex = (int) getArguments().getSerializable(ARG_PAGE_NUMBER);
+        mFilterIndex = 0;
         Log.d(TAG, "PageIndex : " + mPageIndex);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.page_tvchannels, container, false);
-
         mDataSource = TVProgramDataSource.get(getContext());
+        mSpinnerFilter = root.findViewById(R.id.spn_filter);
+        mSpinnerFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
 
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                mFilterIndex = i;
+                updateUI();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                //
+            }
+        });
+        if (isFavorites()) {
+            mSpinnerFilter.setVisibility(View.GONE);
+        }
         mChannelsView = root.findViewById(R.id.channel_view);
         mEmptyTextView = root.findViewById(R.id.empty_label);
         mChannelsView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -85,8 +104,7 @@ public class TVChannelsFragment extends Fragment{
 
     public void updateUI() {
         Log.d(TAG, "UpdateUI " + mPageIndex);
-
-        TVChannelsList channelList = mDataSource.getChannels(isFavorites());
+        TVChannelsList channelList = mDataSource.getChannels(isFavorites(), mFilterIndex);
 
         if (mAdapter == null) {
             mAdapter = new ChannelAdapter(channelList);
@@ -101,15 +119,24 @@ public class TVChannelsFragment extends Fragment{
         private TVChannel mChannel;
         private ImageView mChannelIcon;
         private TextView mChannelName;
-        private ImageView mChannelStatus;
+        private ImageView mChannelUpdate;
+        private ImageView mChannelFavorites;
 
         public ChannelHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_channels, parent, false));
             itemView.setOnClickListener(this);
             mChannelIcon = itemView.findViewById(R.id.channel_icon);
             mChannelName = itemView.findViewById(R.id.channel_name);
-            mChannelStatus = itemView.findViewById(R.id.channel_status);
-            mChannelStatus.setOnClickListener(new View.OnClickListener() {
+            mChannelUpdate = itemView.findViewById(R.id.channel_update);
+            mChannelUpdate.setVisibility(View.GONE);
+            mChannelUpdate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //
+                }
+            });
+            mChannelFavorites = itemView.findViewById(R.id.channel_favorites);
+            mChannelFavorites.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     mChannel.changeFavorites();
@@ -126,12 +153,15 @@ public class TVChannelsFragment extends Fragment{
                     .load(Uri.parse(mChannel.getIcon()))
                     .fitCenter()
                     .into(mChannelIcon);
-            //mChannelIcon.setImageURI(Uri.parse(mChannel.getIcon()));
+
+            if (mChannel.isUpdate()) {
+                mChannelUpdate.setVisibility(View.VISIBLE);
+            }
             if (channel.isFavorites()) {
-                mChannelStatus.setImageResource(R.drawable.favorites_on);
+                mChannelFavorites.setImageResource(R.drawable.favorites_on);
             }
             else {
-                mChannelStatus.setImageResource(R.drawable.favorites_off);
+                mChannelFavorites.setImageResource(R.drawable.favorites_off);
             }
         }
 

@@ -1,9 +1,12 @@
 package com.nkvoronov.tvprogram.tvchannels;
 
+import android.util.Log;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import java.util.Comparator;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.ALL_LANG;
+import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 
 public class TVChannel {
     public static final String SEPARATOR = ";";
@@ -72,8 +75,9 @@ public class TVChannel {
         return mLang;
     }
 
-    public void setLang(String mLang) {
-        this.mLang = mLang;
+    public void setLang(String lang) {
+        Log.d(TAG, "LANG : " + lang);
+        mLang = lang;
     }
 
     public boolean isFavorites() {

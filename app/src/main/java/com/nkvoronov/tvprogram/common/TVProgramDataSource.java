@@ -45,9 +45,9 @@ public class TVProgramDataSource {
         mAppConfig.setIndexSort(indexSort);
     }
 
-    public TVChannelsList getChannels(boolean isFavorites) {
+    public TVChannelsList getChannels(boolean isFavorites, int filter) {
         TVChannelsList channels = new TVChannelsList(mDatabase, isIndexSort());
-        channels.loadFromDB(isFavorites);
+        channels.loadFromDB(isFavorites, filter);
         return channels;
     };
 

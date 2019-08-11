@@ -15,10 +15,12 @@ public class TVChannelsAllCursorWrapper extends CursorWrapper {
         int index = getInt(getColumnIndex(ChannelsAllTable.Cols.CHANNEL_INDEX));
         String name = getString(getColumnIndex(ChannelsAllTable.Cols.CHANNEL_NAME));
         String icon = getString(getColumnIndex(ChannelsAllTable.Cols.CHANNEL_ICON));
+        String lang = getString(getColumnIndex(ChannelsAllTable.Cols.LANG));
         int favorite = getInt(getColumnIndex(ChannelsAllTable.Cols.FAVORITE));
         int upd_program = getInt(getColumnIndex(ChannelsAllTable.Cols.UPD_PROGRAM));
 
         TVChannel channel = new TVChannel(index, name, icon);
+        channel.setLang(lang);
         channel.setIsFavorites(favorite == 1);
         channel.setIsUpdate(upd_program == 1);
 

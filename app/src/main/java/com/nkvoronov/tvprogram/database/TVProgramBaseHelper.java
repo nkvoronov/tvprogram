@@ -3,10 +3,14 @@ package com.nkvoronov.tvprogram.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ConfigsTable;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsTable;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsFavoritesTable;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsAllTable;
+import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
+import static com.nkvoronov.tvprogram.common.TVProgramDataSource.RUS_LANG;
+import static com.nkvoronov.tvprogram.common.TVProgramDataSource.UKR_LANG;
 
 public class TVProgramBaseHelper extends SQLiteOpenHelper {
     private static final int VERSION = 1;
@@ -56,7 +60,15 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public static String getSQLChannels() {
+    public static String getSQLChannels(int filter) {
+        String sql_filter = "";
+        if (filter == 1) {
+            sql_filter = "WHERE ca." + ChannelsTable.Cols.LANG + "=\"" + RUS_LANG + "\" ";
+        }
+        if (filter == 2) {
+            sql_filter = "WHERE ca." + ChannelsTable.Cols.LANG + "=\"" + UKR_LANG + "\" ";
+        }
+
         String sql =
                 "SELECT " +
                 "ca." + ChannelsTable.Cols.CHANNEL_INDEX + " AS " + ChannelsAllTable.Cols.CHANNEL_INDEX + ", " +
@@ -67,9 +79,10 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
                 "0 AS " +  ChannelsAllTable.Cols.UPD_PROGRAM + " " +
                 "FROM " +
                 ChannelsTable.TABLE_NAME + " ca " +
+                sql_filter +
                 "ORDER BY " +
-                ChannelsTable.Cols.CHANNEL_INDEX;
-                //"WHERE " + ChannelsAllTable.Cols.LANG + "=? " + !!!!!!!!!!!
+                "ca." + ChannelsTable.Cols.CHANNEL_INDEX;
+        Log.d(TAG, sql);
         return sql;
     }
 
