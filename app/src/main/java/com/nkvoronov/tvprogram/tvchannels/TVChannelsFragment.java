@@ -158,9 +158,6 @@ public class TVChannelsFragment extends Fragment{
                     .fitCenter()
                     .into(mChannelIcon);
 
-//            if (mChannel.isUpdate()) {
-//                mChannelUpdate.setVisibility(View.VISIBLE);
-//            }
             if (channel.isFavorites()) {
                 mChannelFavorites.setImageResource(R.drawable.favorites_on);
             }
@@ -171,7 +168,7 @@ public class TVChannelsFragment extends Fragment{
 
         @Override
         public void onClick(View view) {
-            Intent intent = TVProgramChannelActivity.newIntent(getActivity());
+            Intent intent = TVProgramChannelActivity.newIntent(getActivity(), mChannel.getIndex());
             startActivity(intent);
         }
     }

@@ -2,6 +2,7 @@ package com.nkvoronov.tvprogram.tvchannels;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,7 +37,7 @@ public class TVChannelsActivity extends AppCompatActivity implements TVChannelsF
     }
 
     private void onUpdate() {
-        mDataSource.updateChannels();
+        new updateChannelsTask().execute();
         onUpdatePages(null);
     }
 
@@ -61,6 +62,15 @@ public class TVChannelsActivity extends AppCompatActivity implements TVChannelsF
     public void onUpdatePages(TVChannel channel) {
         for (int i = 0; i < mPageAdapter.getCount(); i++) {
             ((TVChannelsFragment) mPageAdapter.instantiateItem(mViewPager, i)).updateUI();
+        }
+    }
+
+    public class updateChannelsTask extends AsyncTask<Void,Void,Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            mDataSource.updateChannels();
+            return null;
         }
     }
 }
