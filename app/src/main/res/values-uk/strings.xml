@@ -24,4 +24,5 @@
     <string name="category_all">Все категории</string>
     <string name="not_found">Ничего не найдено</string>
     <string name="search_hint">Поиск в названиях и описаниях</string>
+    <string name="channel_progress_msg">Kаналы обновляются, пожалуйста, подождите.</string>
 </resources>

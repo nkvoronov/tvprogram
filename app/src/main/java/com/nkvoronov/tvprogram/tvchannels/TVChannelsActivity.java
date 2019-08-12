@@ -72,7 +72,7 @@ public class TVChannelsActivity extends AppCompatActivity implements TVChannelsF
 
         @Override
         protected void onPreExecute() {
-            mProgressDialog.setMessage("Doing something, please wait.");
+            mProgressDialog.setMessage(getString(R.string.channel_progress_msg));
             mProgressDialog.show();
         }
 
