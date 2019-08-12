@@ -1,5 +1,6 @@
 package com.nkvoronov.tvprogram.tvchannels;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -17,6 +18,7 @@ public class TVChannelsActivity extends AppCompatActivity implements TVChannelsF
     private TVChannelsPageAdapter mPageAdapter;
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
+    ProgressDialog mProgressDialog;
     private TVProgramDataSource mDataSource;
 
     @Override
@@ -56,6 +58,7 @@ public class TVChannelsActivity extends AppCompatActivity implements TVChannelsF
         mPageAdapter = new TVChannelsPageAdapter(this, getSupportFragmentManager());
         mViewPager.setAdapter(mPageAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
+        mProgressDialog = new ProgressDialog(this);
     }
 
     @Override
@@ -66,6 +69,19 @@ public class TVChannelsActivity extends AppCompatActivity implements TVChannelsF
     }
 
     public class updateChannelsTask extends AsyncTask<Void,Void,Void> {
+
+        @Override
+        protected void onPreExecute() {
+            mProgressDialog.setMessage("Doing something, please wait.");
+            mProgressDialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if (mProgressDialog.isShowing()) {
+                mProgressDialog.dismiss();
+            }
+        }
 
         @Override
         protected Void doInBackground(Void... voids) {
