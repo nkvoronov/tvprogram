@@ -11,13 +11,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginTop="2dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="1dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="2dp"
+        android:autofillHints=""
         android:background="@drawable/rectangle_control"
         android:hint="@string/search_hint"
         android:inputType="text"
-        android:autofillHints=""
-        tools:targetApi="o"/>
+        tools:targetApi="o" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -37,6 +37,7 @@
             android:id="@+id/tvprogram_empty_search"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/colorItemBackground"
             android:gravity="center"
             android:text="@string/not_found"
             tools:layout_editor_absoluteY="688dp" />

@@ -10,7 +10,7 @@
             android:id="@+id/mi_update"
             android:enabled="true"
             android:icon="@android:drawable/ic_popup_sync"
-            android:title="@string/title_update"
+            android:title="@string/title_update_program"
             app:showAsAction="always" />
     </group>
     <group

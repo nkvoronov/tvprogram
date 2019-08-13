@@ -15,6 +15,8 @@ import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import com.nkvoronov.tvprogram.tvchannels.TVChannel;
 import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
 
+import java.util.Date;
+
 public class TVProgramChannelActivity extends AppCompatActivity {
     private static final String EXTRA_TVCHANNEL_INDEX = "tvchannel_index";
     private TVProgramChannelPageAdapter mPageAdapter;
@@ -67,19 +69,14 @@ public class TVProgramChannelActivity extends AppCompatActivity {
         });
         mTabLayout = findViewById(R.id.tvprogramchannels_tabs);
         mViewPager = findViewById(R.id.tvprogramchannels_pager);
-        mPageAdapter = new TVProgramChannelPageAdapter(this, getSupportFragmentManager());
+        mPageAdapter = new TVProgramChannelPageAdapter(this, getSupportFragmentManager(), new Date(), mDataSource.getCoutDays());
         mViewPager.setAdapter(mPageAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
     private void getChannel(int index) {
         TVChannelsList channelList = mDataSource.getChannels(false, 0);
-        for (int i = 0; i < channelList.size(); i++) {
-            if (channelList.get(i).getIndex() == index) {
-                mChannel = channelList.get(i);
-                break;
-            }
-        }
+        mChannel = channelList.getForIndex(index);
     }
 
     private void setFavorites() {

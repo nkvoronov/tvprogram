@@ -56,6 +56,17 @@ public class TVChannelsList {
         return mData.get(position);
     }
 
+    public TVChannel getForIndex(int index) {
+        TVChannel channel = null;
+        for (int i = 0; i < mData.size(); i++) {
+            if (mData.get(i).getIndex() == index) {
+                channel = mData.get(i);
+                break;
+            }
+        }
+        return channel;
+    }
+
     public int size() {
         return mData.size();
     }
@@ -191,12 +202,8 @@ public class TVChannelsList {
         Log.d(TAG, "saveChannelToDB : " + String.valueOf(channel.getIndex()));
         try {
             if (cursor.getCount() != 0) {
-                typeUpdate = 0;
                 cursor.moveToFirst();
-                oldName = cursor.getName();
-                if (!channel.getName().equals(oldName)) {
-                    typeUpdate = 1;
-                }
+                typeUpdate = 1;
                 Log.d(TAG, "saveChannelToDB update");
             } else {
                 typeUpdate = 2;
@@ -237,7 +244,7 @@ public class TVChannelsList {
         values.put(ChannelsTable.Cols.NAME, channel.getName());
         values.put(ChannelsTable.Cols.ICON, channel.getIcon());
         values.put(ChannelsTable.Cols.LANG, channel.getLang());
-        values.put(ChannelsTable.Cols.UPD_CHANNEL, date.getTime());
+        values.put(ChannelsTable.Cols.UPD_CHANNEL, date.toString());
         return values;
     }
 
