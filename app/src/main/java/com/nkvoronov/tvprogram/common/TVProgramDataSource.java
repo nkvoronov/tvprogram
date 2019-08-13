@@ -50,9 +50,4 @@ public class TVProgramDataSource {
         channels.loadFromDB(isFavorites, filter);
         return channels;
     };
-
-    public void updateChannels() {
-        TVChannelsList channels = new TVChannelsList(mContext, mDatabase, isIndexSort());
-        channels.loadFromNetAndUpdate(true);
-    }
 }

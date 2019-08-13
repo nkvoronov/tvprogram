@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import com.nkvoronov.tvprogram.common.HttpContent;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import com.nkvoronov.tvprogram.database.TVChannelsAllCursorWrapper;
 import com.nkvoronov.tvprogram.database.TVChannelsCursorWrapper;
@@ -22,18 +21,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import static com.nkvoronov.tvprogram.common.HttpContent.CHANNELS_PRE;
-import static com.nkvoronov.tvprogram.common.HttpContent.ICONS_PRE;
-import static com.nkvoronov.tvprogram.common.TVProgramDataSource.ALL_LANG;
-import static com.nkvoronov.tvprogram.common.TVProgramDataSource.RUS_LANG;
-import static com.nkvoronov.tvprogram.common.TVProgramDataSource.UKR_LANG;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 import static com.nkvoronov.tvprogram.database.TVProgramBaseHelper.getSQLChannels;
 import static com.nkvoronov.tvprogram.database.TVProgramBaseHelper.getSQLFavoritesChannels;
 
 public class TVChannelsList {
     private static final int DEF_CORRECTION = 120;
-    private static final String CHANNELS_SELECT = "option[value^=channel_]";
 
     private Boolean mIndexSort;
     private List<TVChannel> mData;
@@ -67,6 +60,22 @@ public class TVChannelsList {
         return mData.size();
     }
 
+    public void clear() {
+        mData.clear();
+    }
+
+    public void add(TVChannel channel) {
+        mData.add(channel);
+    }
+
+    public void sort(boolean indexSort) {
+        if (mIndexSort) {
+            Collections.sort(mData, TVChannel.channelIndexComparator);
+        } else {
+            Collections.sort(mData, TVChannel.channelNameComparator);
+        }
+    }
+
     public Context getContext() {
         return mContext;
     }
@@ -78,46 +87,6 @@ public class TVChannelsList {
             result += channel.toString() + "\n";
         }
         return result;
-    }
-
-    public void loadFromNetAndUpdate(boolean isUpdate) {
-        String channel_index;
-        String channel_name;
-        String channel_link;
-        String channel_icon;
-        String lang = ALL_LANG;
-        Boolean flag = false;
-        mData.clear();
-        org.jsoup.nodes.Document document = new HttpContent(CHANNELS_PRE).getDocument();
-        org.jsoup.select.Elements elements = document.select(CHANNELS_SELECT);
-        for (org.jsoup.nodes.Element element : elements){
-            channel_name = element.text();
-            if (channel_name.endsWith("(на укр.)")) {
-                lang = UKR_LANG;
-            } else {
-                lang = RUS_LANG;
-            }
-            channel_link = element.attr("value");
-            channel_index = channel_link.split("_")[1];
-            channel_icon = ICONS_PRE + channel_index + ".gif";
-            TVChannel channel = new TVChannel(Integer.parseInt(channel_index), channel_name, channel_icon);
-            channel.setLang(lang);
-            channel.setIsFavorites(false);
-            channel.setIsUpdate(false);
-            mData.add(channel);
-            channel.setParent(this);
-            Log.d(TAG, channel.toString());
-            if (isUpdate) {
-                saveChannelToDB(channel);
-                channel.saveIconToFile();
-            }
-
-        }
-        if (mIndexSort) {
-            Collections.sort(mData, TVChannel.channelIndexComparator);
-        } else {
-            Collections.sort(mData, TVChannel.channelNameComparator);
-        }
     }
 
     public void loadFromDB(boolean isFavorites, int filter) {
