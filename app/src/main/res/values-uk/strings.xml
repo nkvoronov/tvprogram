@@ -26,4 +26,8 @@
     <string name="search_hint">Поиск в названиях и описаниях</string>
     <string name="channel_progress_msg">Kаналы обновляются, пожалуйста, подождите.</string>
     <string name="title_update_channels">Обновить каналы</string>
+    <string name="prg_update_caption">Обновление</string>
+    <string name="bt_yes">Да</string>
+    <string name="bt_no">Нет</string>
+    <string name="program_not_date">Програма для %1$s не найдена, обновить ?</string>
 </resources>

@@ -4,13 +4,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.UUID;
 
 public class TVProgram {
     public static final String SEPARATOR = ";";
     public static final String SEPARATOR_LIST = ",";
 
-    private UUID mId;
+    private int mId;
     private int mIndex;
     private Date mStart;
     private Date mStop;
@@ -18,8 +17,7 @@ public class TVProgram {
     private String mTitle;
     private String mDescription;
     private String mUrlFullDesc;
-    private String mCategoryLangEN;
-    private String mCategoryLangRU;
+    private String mCategory;
     private String mGenres;
     private String mDirectors;
     private String mActors;
@@ -55,7 +53,7 @@ public class TVProgram {
         return zn + addZero(crh) + sep + addZero(crm);
     }
 
-    public TVProgram(UUID id, int index, Date start, Date stop, String title) {
+    public TVProgram(int id, int index, Date start, Date stop, String title) {
         mId = id;
         mIndex = index;
         mStart = start;
@@ -64,8 +62,7 @@ public class TVProgram {
         mTitle = title;
         mDescription = null;
         mUrlFullDesc = null;
-        mCategoryLangEN = null;
-        mCategoryLangRU = null;
+        mCategory = null;
         mGenres = null;
         mDirectors = null;
         mActors = null;
@@ -75,16 +72,12 @@ public class TVProgram {
         mStarRating = null;
     }
 
-    public TVProgram(int index, Date start, Date stop, String title) {
-        this(UUID.randomUUID(), index, start, stop, title);
-    }
-
-    public UUID getId() {
+    public int getId() {
         return mId;
     }
 
-    public void setId(UUID id) {
-        mId = mId;
+    public void setId(int id) {
+        mId = id;
     }
 
     public int getIndex() {
@@ -139,20 +132,12 @@ public class TVProgram {
         mUrlFullDesc = urlFullDesc;
     }
 
-    public String getCategoryLangEN() {
-        return mCategoryLangEN;
+    public String getCategory() {
+        return mCategory;
     }
 
-    public void setCategoryLangEN(String category) {
-        mCategoryLangEN = category;
-    }
-
-    public String getCategoryLangRU() {
-        return mCategoryLangRU;
-    }
-
-    public void setCategoryLangRU(String category) {
-        mCategoryLangRU = category;
+    public void setCategory(String category) {
+        mCategory = category;
     }
 
     public String getGenres() {
@@ -265,16 +250,10 @@ public class TVProgram {
             xml_date.appendChild(document.createTextNode(getDate()));
             xml_program.appendChild(xml_date);
         }
-        if (getCategoryLangEN() != null) {
-            Element xml_category1 = document.createElement("category");
-            xml_category1.setAttribute("lang", "en");
-            xml_category1.appendChild(document.createTextNode(getCategoryLangEN()));
-            xml_program.appendChild(xml_category1);
-        }
-        if (getCategoryLangRU() != null) {
+        if (getCategory() != null) {
             Element xml_category2 = document.createElement("category");
             xml_category2.setAttribute("lang", "ru");
-            xml_category2.appendChild(document.createTextNode(getCategoryLangRU()));
+            xml_category2.appendChild(document.createTextNode(getCategory()));
             xml_program.appendChild(xml_category2);
         }
         if (getGenres() != null) {

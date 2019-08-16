@@ -20,6 +20,10 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 public class ParserVseTV extends Parser {
+    public static final String STR_SCHEDULECHANNEL = "schedule_channel_%d_day_%s.html";
+    public static final String STR_ELMDOCSELECT = "div[class~=(?:pasttime|onair|time)]";
+    public static final String STR_ELMDOCTITLE = "div[class~=(?:pastprname2|prname2)]";
+    public static final String STR_ELMDOCDESC = "div[class~=(?:pastdesc|prdesc)]";
 
     public ParserVseTV(Context context, SQLiteDatabase database, String outXML, int countDay, Boolean fullDesc) {
         super(context, database, outXML, countDay, fullDesc);

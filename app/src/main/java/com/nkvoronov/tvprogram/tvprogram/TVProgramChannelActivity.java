@@ -14,7 +14,6 @@ import com.nkvoronov.tvprogram.R;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import com.nkvoronov.tvprogram.tvchannels.TVChannel;
 import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
-
 import java.util.Date;
 
 public class TVProgramChannelActivity extends AppCompatActivity {
@@ -69,7 +68,7 @@ public class TVProgramChannelActivity extends AppCompatActivity {
         });
         mTabLayout = findViewById(R.id.tvprogramchannels_tabs);
         mViewPager = findViewById(R.id.tvprogramchannels_pager);
-        mPageAdapter = new TVProgramChannelPageAdapter(this, getSupportFragmentManager(), new Date(), mDataSource.getCoutDays());
+        mPageAdapter = new TVProgramChannelPageAdapter(this, getSupportFragmentManager(), mChannel.getIndex(), new Date(), mDataSource.getCoutDays());
         mViewPager.setAdapter(mPageAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
     }

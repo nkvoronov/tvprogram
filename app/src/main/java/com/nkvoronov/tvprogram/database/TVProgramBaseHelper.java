@@ -7,7 +7,12 @@ import android.util.Log;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ConfigsTable;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsTable;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsFavoritesTable;
+import com.nkvoronov.tvprogram.database.TVProgramDbSchema.SchedulesTable;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsAllTable;
+
+import java.util.Date;
+
+import static com.nkvoronov.tvprogram.common.DateUtils.*;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.RUS_LANG;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.UKR_LANG;
@@ -53,6 +58,26 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL("CREATE UNIQUE INDEX IDX_FAV_CHN_ID ON " + ChannelsFavoritesTable.TABLE_NAME + " (" + ChannelsFavoritesTable.Cols.ID + " ASC)");
         sqLiteDatabase.execSQL("CREATE INDEX IDX_FAV_CHN_CHANNEL ON " + ChannelsFavoritesTable.TABLE_NAME + " (" + ChannelsFavoritesTable.Cols.CHANNEL_INDEX + " ASC)");
+
+
+        sqLiteDatabase.execSQL("CREATE TABLE " + SchedulesTable.TABLE_NAME + "(" +
+                SchedulesTable.Cols.ID + " INTEGER CONSTRAINT PK_SCH PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                SchedulesTable.Cols.CHANNEL + " INTEGER CONSTRAINT FK_CHN_SCH REFERENCES " + ChannelsTable.TABLE_NAME + " (" + ChannelsTable.Cols.CHANNEL_INDEX + ") ON DELETE CASCADE NOT NULL, " +
+                SchedulesTable.Cols.CATEGORY + " INTEGER DEFAULT (0), " +
+                SchedulesTable.Cols.START + " DATETIME, " +
+                SchedulesTable.Cols.END + " DATETIME, " +
+                SchedulesTable.Cols.TITLE + " VARCHAR " +
+                ")"
+        );
+
+        sqLiteDatabase.execSQL("CREATE UNIQUE INDEX IDX_SCH_ID ON " + SchedulesTable.TABLE_NAME + " (" + SchedulesTable.Cols.ID + " ASC)");
+        sqLiteDatabase.execSQL("CREATE INDEX IDX_SCH_CHANNEL ON " + SchedulesTable.TABLE_NAME + " (" + SchedulesTable.Cols.CHANNEL + " ASC)");
+        sqLiteDatabase.execSQL("CREATE INDEX IDX_SCH_CATEGORY ON " + SchedulesTable.TABLE_NAME + " (" + SchedulesTable.Cols.CATEGORY + " ASC)");
+        sqLiteDatabase.execSQL("CREATE INDEX IDX_SCH_START ON " + SchedulesTable.TABLE_NAME + " (" + SchedulesTable.Cols.START + " ASC)");
+        sqLiteDatabase.execSQL("CREATE INDEX IDX_SCH_END ON " + SchedulesTable.TABLE_NAME + " (" + SchedulesTable.Cols.END + " ASC)");
+        sqLiteDatabase.execSQL("CREATE INDEX IDX_SCH_TITLE ON " + SchedulesTable.TABLE_NAME + " (" + SchedulesTable.Cols.TITLE + " ASC)");
+
+
     }
 
     @Override
@@ -63,10 +88,10 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
     public static String getSQLChannels(int filter) {
         String sql_filter = "";
         if (filter == 1) {
-            sql_filter = "WHERE ca." + ChannelsTable.Cols.LANG + "=\"" + RUS_LANG + "\" ";
+            sql_filter = "WHERE ca." + ChannelsTable.Cols.LANG + "='" + RUS_LANG + "' ";
         }
         if (filter == 2) {
-            sql_filter = "WHERE ca." + ChannelsTable.Cols.LANG + "=\"" + UKR_LANG + "\" ";
+            sql_filter = "WHERE ca." + ChannelsTable.Cols.LANG + "='" + UKR_LANG + "' ";
         }
 
         String sql =
@@ -100,6 +125,32 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
                 "JOIN " + ChannelsTable.TABLE_NAME + " ca ON (cf." + ChannelsFavoritesTable.Cols.CHANNEL_INDEX + "=ca." + ChannelsTable.Cols.CHANNEL_INDEX + ") " +
                 "ORDER BY " +
                 "ca." + ChannelsTable.Cols.NAME;
+        return sql;
+    }
+
+    public static String getSQLProgramsForChannelToDate(int channel, Date date) {
+        String sql_filter = "";
+        String sChannel = String.valueOf(channel);
+        sql_filter = "WHERE " + SchedulesTable.Cols.CHANNEL + "=" + sChannel;
+        if (date != null) {
+            String sDate1 = getFormatDate(date, "yyyy-MM-dd");
+            String sDate2 = getFormatDate(addDays(date, 1), "yyyy-MM-dd");
+            sql_filter = sql_filter + " and (" + SchedulesTable.Cols.START + ">='" + sDate1 + "' and " + SchedulesTable.Cols.START + "<'" + sDate2 + "')";
+        }
+
+        String sql =
+                "SELECT " +
+                SchedulesTable.Cols.ID + ", " +
+                SchedulesTable.Cols.CHANNEL + ", " +
+                SchedulesTable.Cols.CATEGORY + ", " +
+                SchedulesTable.Cols.START + ", " +
+                SchedulesTable.Cols.END + ", " +
+                SchedulesTable.Cols.TITLE + " " +
+                "FROM " +
+                SchedulesTable.TABLE_NAME + " " +
+                sql_filter + " " +
+                "ORDER BY " +
+                SchedulesTable.Cols.START;
         return sql;
     }
 }

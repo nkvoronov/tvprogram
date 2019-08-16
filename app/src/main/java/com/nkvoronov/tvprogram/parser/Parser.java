@@ -4,12 +4,12 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import com.nkvoronov.tvprogram.tvchannels.TVChannel;
 import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
-import com.nkvoronov.tvprogram.tvprogram.TVProgramList;
+import com.nkvoronov.tvprogram.tvprogram.TVProgramsList;
 import java.util.Date;
 
 public class Parser  implements Runnable{
     private TVChannelsList mChannels;
-    private TVProgramList mPrograms;
+    private TVProgramsList mPrograms;
     private int mCountDay;
     private Boolean mFullDesc;
     private String mOutXML;
@@ -23,7 +23,7 @@ public class Parser  implements Runnable{
         mDatabase = database;
         mContext = context;
         mChannels = new TVChannelsList(context, database, true);
-        mPrograms = new TVProgramList(database);
+        mPrograms = new TVProgramsList(context, database);
     }
 
     public int getCountDay() {
@@ -54,7 +54,7 @@ public class Parser  implements Runnable{
         return mChannels;
     }
 
-    public TVProgramList getPrograms() {
+    public TVProgramsList getPrograms() {
         return mPrograms;
     }
 

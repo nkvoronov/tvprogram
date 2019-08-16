@@ -8,7 +8,6 @@ import android.util.Log;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import com.nkvoronov.tvprogram.database.TVChannelsAllCursorWrapper;
 import com.nkvoronov.tvprogram.database.TVChannelsCursorWrapper;
-import com.nkvoronov.tvprogram.database.TVProgramDbSchema;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -105,7 +104,7 @@ public class TVChannelsList {
         mData.clear();
 
         if (isFavorites) {
-            cursor = queryChannels(getSQLFavoritesChannels(TVProgramDataSource.get(null).getCoutDays()),null);
+            cursor = queryChannels(getSQLFavoritesChannels(TVProgramDataSource.get(mContext).getCoutDays()),null);
             Log.d(TAG, "FAV");
         } else {
             cursor = queryChannels(getSQLChannels(filter),null);
@@ -222,9 +221,9 @@ public class TVChannelsList {
 
     public void channelChangeFavorites(TVChannel channel) {
         if (channel.isFavorites()) {
-            mDatabase.delete(TVProgramDbSchema.ChannelsFavoritesTable.TABLE_NAME, TVProgramDbSchema.ChannelsFavoritesTable.Cols.CHANNEL_INDEX + " = ?", new String[]{String.valueOf(channel.getIndex())});
+            mDatabase.delete(ChannelsFavoritesTable.TABLE_NAME, ChannelsFavoritesTable.Cols.CHANNEL_INDEX + " = ?", new String[]{String.valueOf(channel.getIndex())});
         } else {
-            mDatabase.insert(TVProgramDbSchema.ChannelsFavoritesTable.TABLE_NAME, null, getContentChannelsFavValues(channel));
+            mDatabase.insert(ChannelsFavoritesTable.TABLE_NAME, null, getContentChannelsFavValues(channel));
         }
     }
 
@@ -236,6 +235,16 @@ public class TVChannelsList {
         mDatabase.update(ChannelsTable.TABLE_NAME, getContentChannelsAllValues(channel), ChannelsTable.Cols.CHANNEL_INDEX + " = ?", new String[]{String.valueOf(channel.getIndex())});
     }
 
+    public void preUpdateChannel() {
+        final ContentValues values = new ContentValues();
+        values.putNull(ChannelsTable.Cols.UPD_CHANNEL);
+        mDatabase.update(ChannelsTable.TABLE_NAME, values, null, null);
+    }
+
+    public void postUpdateChannel() {
+        mDatabase.delete(ChannelsTable.TABLE_NAME, ChannelsTable.Cols.UPD_CHANNEL + " is null", null);
+    }
+
 
     private ContentValues getContentChannelsAllValues(TVChannel channel) {
         ContentValues values = new ContentValues();
@@ -244,13 +253,13 @@ public class TVChannelsList {
         values.put(ChannelsTable.Cols.NAME, channel.getName());
         values.put(ChannelsTable.Cols.ICON, channel.getIcon());
         values.put(ChannelsTable.Cols.LANG, channel.getLang());
-        values.put(ChannelsTable.Cols.UPD_CHANNEL, date.toString());
+        values.put(ChannelsTable.Cols.UPD_CHANNEL, date.getTime());
         return values;
     }
 
     private ContentValues getContentChannelsFavValues(TVChannel channel) {
         ContentValues values = new ContentValues();
-        values.put(TVProgramDbSchema.ChannelsFavoritesTable.Cols.CHANNEL_INDEX, channel.getIndex());
+        values.put(ChannelsFavoritesTable.Cols.CHANNEL_INDEX, channel.getIndex());
         return values;
     }
 }

@@ -1,8 +1,9 @@
 package com.nkvoronov.tvprogram.tvchannels;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +24,7 @@ import com.nkvoronov.tvprogram.tvprogram.TVProgramChannelActivity;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 
 public class TVChannelsFragment extends Fragment{
-    private static final String ARG_PAGE_NUMBER = "page_number";
+    private static final String ARG_TVCHANNELS_PAGE_NUMBER = "com.nkvoronov.tvprogram.tvchannels.page_number";
     private Spinner mSpinnerFilter;
     private RecyclerView mChannelsView;
     private TextView mEmptyTextView;
@@ -50,7 +52,7 @@ public class TVChannelsFragment extends Fragment{
 
     public static TVChannelsFragment newInstance(int index) {
         Bundle args = new Bundle();
-        args.putSerializable(ARG_PAGE_NUMBER, index);
+        args.putSerializable(ARG_TVCHANNELS_PAGE_NUMBER, index);
         Log.d(TAG, "PageIndex : " + index);
 
         TVChannelsFragment fragment = new TVChannelsFragment();
@@ -61,7 +63,7 @@ public class TVChannelsFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPageIndex = (int) getArguments().getSerializable(ARG_PAGE_NUMBER);
+        mPageIndex = (int) getArguments().getSerializable(ARG_TVCHANNELS_PAGE_NUMBER);
         mFilterIndex = 0;
         Log.d(TAG, "PageIndex : " + mPageIndex);
     }
@@ -108,13 +110,13 @@ public class TVChannelsFragment extends Fragment{
 
     public void updateUI() {
         Log.d(TAG, "UpdateUI " + mPageIndex);
-        TVChannelsList channelList = mDataSource.getChannels(isFavorites(), mFilterIndex);
+        TVChannelsList channels = mDataSource.getChannels(isFavorites(), mFilterIndex);
 
         if (mAdapter == null) {
-            mAdapter = new ChannelAdapter(channelList);
+            mAdapter = new ChannelAdapter(channels);
             mChannelsView.setAdapter(mAdapter);
         } else {
-            mAdapter.setChannelList(channelList);
+            mAdapter.setChannelList(channels);
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -168,16 +170,40 @@ public class TVChannelsFragment extends Fragment{
 
         @Override
         public void onClick(View view) {
-            Intent intent = TVProgramChannelActivity.newIntent(getActivity(), mChannel.getIndex());
-            startActivity(intent);
+            if (mDataSource.checkUpdateProgram(mChannel.getIndex())) {
+                Intent intent = TVProgramChannelActivity.newIntent(getActivity(), mChannel.getIndex());
+                startActivity(intent);
+            } else {
+                updateProgramForChannel();
+            }
+        }
+
+        public void updateProgramForChannel() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(getActivity().getString(R.string.prg_update_caption));
+            builder.setMessage(getActivity().getString(R.string.program_not_date, mChannel.getName()));
+            builder.setPositiveButton(getActivity().getString(R.string.bt_yes), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Toast.makeText(getContext(), getActivity().getString(R.string.prg_update_caption), Toast.LENGTH_LONG).show();
+                }
+            });
+            builder.setNegativeButton(getActivity().getString(R.string.bt_no), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Toast.makeText(getContext(), getActivity().getString(R.string.bt_no), Toast.LENGTH_LONG).show();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
     }
 
     private class ChannelAdapter extends RecyclerView.Adapter<ChannelHolder> {
         private TVChannelsList mChannelList;
 
-        public ChannelAdapter(TVChannelsList channelList) {
-            mChannelList = channelList;
+        public ChannelAdapter(TVChannelsList channels) {
+            mChannelList = channels;
         }
 
         @Override
@@ -202,8 +228,8 @@ public class TVChannelsFragment extends Fragment{
             return mChannelList.size();
         }
 
-        public void setChannelList(TVChannelsList channelList) {
-            mChannelList = channelList;
+        public void setChannelList(TVChannelsList channels) {
+            mChannelList = channels;
         }
     }
 

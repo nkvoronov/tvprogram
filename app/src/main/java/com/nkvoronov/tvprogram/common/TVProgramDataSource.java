@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import com.nkvoronov.tvprogram.database.TVProgramBaseHelper;
 import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
+import com.nkvoronov.tvprogram.tvprogram.TVProgramsList;
+import java.util.Date;
 
 public class TVProgramDataSource {
     public static final String RUS_LANG = "rus";
@@ -50,4 +52,15 @@ public class TVProgramDataSource {
         channels.loadFromDB(isFavorites, filter);
         return channels;
     };
+
+    public TVProgramsList getPrograms(int type, int channel, Date date) {
+        TVProgramsList programs = new TVProgramsList(mContext, mDatabase);
+        programs.loadFromDB(type, channel, date);
+        return programs;
+    };
+
+    public boolean checkUpdateProgram(int channel) {
+        return false;
+    }
+
 }

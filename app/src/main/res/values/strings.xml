@@ -25,4 +25,8 @@
     <string name="search_hint">Search in titles and descriptions</string>
     <string name="channel_progress_msg">Update channels, please wait.</string>
     <string name="title_update_channels">Update channels</string>
+    <string name="prg_update_caption">Update</string>
+    <string name="bt_yes">Yes</string>
+    <string name="bt_no">No</string>
+    <string name="program_not_date">Program for %1$s not found, update ?</string>
 </resources>

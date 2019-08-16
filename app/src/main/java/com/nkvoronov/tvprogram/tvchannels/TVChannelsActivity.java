@@ -71,7 +71,7 @@ public class TVChannelsActivity extends AppCompatActivity implements TVChannelsF
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setIndeterminate(false);
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        mProgressDialog.setTitle(getString(R.string.title_update_channels));
+        mProgressDialog.setTitle(getString(R.string.prg_update_caption));
     }
 
     @Override
@@ -106,6 +106,7 @@ public class TVChannelsActivity extends AppCompatActivity implements TVChannelsF
             Boolean flag = false;
             TVChannelsList channels = mDataSource.getChannels(false, 0);
             channels.clear();
+            channels.preUpdateChannel();
             org.jsoup.nodes.Document document = new HttpContent(CHANNELS_PRE).getDocument();
             org.jsoup.select.Elements elements = document.select(CHANNELS_SELECT);
             int i = 0;
@@ -136,6 +137,7 @@ public class TVChannelsActivity extends AppCompatActivity implements TVChannelsF
                 i++;
             }
             channels.sort(true);
+            channels.postUpdateChannel();
             return null;
         }
 
