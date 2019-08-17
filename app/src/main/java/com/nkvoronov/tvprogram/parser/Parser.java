@@ -7,22 +7,20 @@ import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
 import com.nkvoronov.tvprogram.tvprogram.TVProgramsList;
 import java.util.Date;
 
-public class Parser  implements Runnable{
+public class Parser {
     private TVChannelsList mChannels;
     private TVProgramsList mPrograms;
     private int mCountDay;
     private Boolean mFullDesc;
-    private String mOutXML;
     private Context mContext;
     private SQLiteDatabase mDatabase;
 
-    public Parser(Context context, SQLiteDatabase database, String outXML, int countDay, Boolean fullDesc) {
-        mOutXML = outXML;
+    public Parser(Context context, SQLiteDatabase database, int countDay, Boolean fullDesc) {
         mCountDay = countDay;
         mFullDesc = fullDesc;
         mDatabase = database;
         mContext = context;
-        mChannels = new TVChannelsList(context, database, true);
+        mChannels = new TVChannelsList(context, database);
         mPrograms = new TVProgramsList(context, database);
     }
 
@@ -42,14 +40,6 @@ public class Parser  implements Runnable{
         mFullDesc = fullDesc;
     }
 
-    public String getOutXML() {
-        return mOutXML;
-    }
-
-    public void setOutXML(String outXML) {
-        mOutXML = outXML;
-    }
-
     public TVChannelsList getChannels() {
         return mChannels;
     }
@@ -62,24 +52,15 @@ public class Parser  implements Runnable{
         return mContext;
     }
 
-    public void saveXML() {
-
-    }
-
     public void getContent() {
-
+        //
     }
 
     public void getContentDay(TVChannel channel, Date date) {
-
+        //
     }
 
     public void runParser() {
-
-    }
-
-    @Override
-    public void run() {
-        runParser();
+        //
     }
 }

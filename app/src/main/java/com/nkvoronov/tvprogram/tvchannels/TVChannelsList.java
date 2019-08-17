@@ -9,15 +9,7 @@ import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import com.nkvoronov.tvprogram.database.TVChannelsAllCursorWrapper;
 import com.nkvoronov.tvprogram.database.TVChannelsCursorWrapper;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
@@ -25,26 +17,14 @@ import static com.nkvoronov.tvprogram.database.TVProgramBaseHelper.getSQLChannel
 import static com.nkvoronov.tvprogram.database.TVProgramBaseHelper.getSQLFavoritesChannels;
 
 public class TVChannelsList {
-    private static final int DEF_CORRECTION = 120;
-
-    private Boolean mIndexSort;
     private List<TVChannel> mData;
     private Context mContext;
     private SQLiteDatabase mDatabase;
 
-    public TVChannelsList(Context context, SQLiteDatabase database, boolean indexSort) {
-        mIndexSort = indexSort;
+    public TVChannelsList(Context context, SQLiteDatabase database) {
         mData = new ArrayList<>();
         mContext = context;
         mDatabase = database;
-    }
-
-    public Boolean isIndexSort() {
-        return mIndexSort;
-    }
-
-    public void setIndexSort(Boolean indexSort) {
-        mIndexSort = indexSort;
     }
 
     public List<TVChannel> getData() {
@@ -78,25 +58,8 @@ public class TVChannelsList {
         mData.add(channel);
     }
 
-    public void sort(boolean indexSort) {
-        if (mIndexSort) {
-            Collections.sort(mData, TVChannel.channelIndexComparator);
-        } else {
-            Collections.sort(mData, TVChannel.channelNameComparator);
-        }
-    }
-
     public Context getContext() {
         return mContext;
-    }
-
-    @Override
-    public String toString() {
-        String result = "";
-        for (TVChannel channel : getData()) {
-            result += channel.toString() + "\n";
-        }
-        return result;
     }
 
     public void loadFromDB(boolean isFavorites, int filter) {
@@ -128,61 +91,6 @@ public class TVChannelsList {
     private TVChannelsAllCursorWrapper queryChannels(String sql, String[] selectionArgs) {
         Cursor cursor = mDatabase.rawQuery(sql, selectionArgs);
         return new TVChannelsAllCursorWrapper(cursor);
-    }
-
-    public void loadFromFile(String fileName) {
-        mData.clear();
-        File file = new File(fileName);
-        try {
-            if(!file.exists()) {
-                try {
-                    file.createNewFile();
-                } catch (IOException e) {
-                    Log.d(TAG, e.getMessage());
-                    e.fillInStackTrace();
-                }
-            }
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file.getAbsoluteFile()));
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] aline = line.split(TVChannel.SEPARATOR);
-                TVChannel channel = new TVChannel(Integer.parseInt(aline[0]), aline[1], aline[2]);
-                channel.setLang(aline[3]);
-                channel.setIsFavorites(Boolean.getBoolean(aline[4]));
-                channel.setIsUpdate(Boolean.getBoolean(aline[5]));
-                mData.add(channel);
-                channel.setParent(this);
-            }
-        } catch (IOException e) {
-            Log.d(TAG, e.getMessage());
-            e.fillInStackTrace();
-        }
-    }
-
-    public void saveToFile(String fileName) {
-        File file = new File(fileName);
-        try {
-            if(!file.exists()) {
-                try {
-                    file.createNewFile();
-                } catch (IOException e) {
-                    Log.d(TAG, e.getMessage());
-                    e.fillInStackTrace();
-                }
-            }
-            PrintWriter printWriter = new PrintWriter(file.getAbsoluteFile());
-            for (TVChannel channel : getData()) {
-                printWriter.println(channel.toString());
-            }
-        } catch (IOException e) {
-            e.fillInStackTrace();
-        }
-    }
-
-    public void getXML(Document document, Element element) {
-        for (TVChannel channel : getData()) {
-            channel.getXML(document, element);
-        }
     }
 
     public void saveChannelToDB(TVChannel channel) {
@@ -244,7 +152,6 @@ public class TVChannelsList {
     public void postUpdateChannel() {
         mDatabase.delete(ChannelsTable.TABLE_NAME, ChannelsTable.Cols.UPD_CHANNEL + " is null", null);
     }
-
 
     private ContentValues getContentChannelsAllValues(TVChannel channel) {
         ContentValues values = new ContentValues();

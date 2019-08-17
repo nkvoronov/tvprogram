@@ -17,14 +17,13 @@ import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
 import java.util.Date;
 
 public class TVProgramChannelActivity extends AppCompatActivity {
-    private static final String EXTRA_TVCHANNEL_INDEX = "tvchannel_index";
+    private static final String EXTRA_TVCHANNEL_INDEX = "com.nkvoronov.tvprogram.tvprogram.tvchannel_index";
     private TVProgramChannelPageAdapter mPageAdapter;
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
     TVChannel mChannel;
     private ImageView mChannelIcon;
     private TextView mChannelName;
-    private ImageView mChannelUpdate;
     private ImageView mChannelFavorites;
     private TVProgramDataSource mDataSource;
 
@@ -49,14 +48,6 @@ public class TVProgramChannelActivity extends AppCompatActivity {
                 .into(mChannelIcon);
         mChannelName = findViewById(R.id.channel_name_own);
         mChannelName.setText(mChannel.getName());
-        mChannelUpdate = findViewById(R.id.channel_update_own);
-        mChannelUpdate.setVisibility(View.GONE);
-        mChannelUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //
-            }
-        });
         mChannelFavorites = findViewById(R.id.channel_favorites_own);
         setFavorites();
         mChannelFavorites.setOnClickListener(new View.OnClickListener() {

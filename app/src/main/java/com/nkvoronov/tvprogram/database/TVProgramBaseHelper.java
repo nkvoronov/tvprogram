@@ -9,9 +9,7 @@ import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsTable;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsFavoritesTable;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.SchedulesTable;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsAllTable;
-
 import java.util.Date;
-
 import static com.nkvoronov.tvprogram.common.DateUtils.*;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.RUS_LANG;
@@ -30,8 +28,7 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL("CREATE TABLE " + ConfigsTable.TABLE_NAME + "(" +
                 ConfigsTable.Cols.ID + " INTEGER PRIMARY KEY NOT NULL, " +
-                ConfigsTable.Cols.COUNT_DAYS + " INTEGER NOT NULL DEFAULT (7), " +
-                ConfigsTable.Cols.INDEX_SORT + " INTEGER NOT NULL DEFAULT (1) " +
+                ConfigsTable.Cols.COUNT_DAYS + " INTEGER NOT NULL DEFAULT (7) " +
                 ")"
         );
 
@@ -51,8 +48,7 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL("CREATE TABLE " + ChannelsFavoritesTable.TABLE_NAME + "(" +
                 ChannelsFavoritesTable.Cols.ID + " INTEGER CONSTRAINT PK_FAV_CHN PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                ChannelsFavoritesTable.Cols.CHANNEL_INDEX + " INTEGER CONSTRAINT FK_CHN_FAV REFERENCES " + ChannelsTable.TABLE_NAME + " (" + ChannelsTable.Cols.CHANNEL_INDEX + ") ON DELETE CASCADE NOT NULL, " +
-                ChannelsFavoritesTable.Cols.UPD_PROGRAM + " DATETIME DEFAULT NULL " +
+                ChannelsFavoritesTable.Cols.CHANNEL_INDEX + " INTEGER CONSTRAINT FK_CHN_FAV REFERENCES " + ChannelsTable.TABLE_NAME + " (" + ChannelsTable.Cols.CHANNEL_INDEX + ") ON DELETE CASCADE NOT NULL " +
                 ")"
         );
 
@@ -100,8 +96,7 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
                 "ca." + ChannelsTable.Cols.NAME + " AS " + ChannelsAllTable.Cols.CHANNEL_NAME + ", " +
                 "ca." + ChannelsTable.Cols.ICON + " AS " + ChannelsAllTable.Cols.CHANNEL_ICON + ", " +
                 "ca." + ChannelsTable.Cols.LANG + " AS " + ChannelsAllTable.Cols.LANG + ", " +
-                "CASE WHEN (SELECT cf." + ChannelsFavoritesTable.Cols.ID + " FROM " + ChannelsFavoritesTable.TABLE_NAME + " cf WHERE cf." + ChannelsFavoritesTable.Cols.CHANNEL_INDEX + "=ca." + ChannelsTable.Cols.CHANNEL_INDEX + ") IS NULL THEN 0 ELSE 1 END AS " + ChannelsAllTable.Cols.FAVORITE + ", " +
-                "0 AS " +  ChannelsAllTable.Cols.UPD_PROGRAM + " " +
+                "CASE WHEN (SELECT cf." + ChannelsFavoritesTable.Cols.ID + " FROM " + ChannelsFavoritesTable.TABLE_NAME + " cf WHERE cf." + ChannelsFavoritesTable.Cols.CHANNEL_INDEX + "=ca." + ChannelsTable.Cols.CHANNEL_INDEX + ") IS NULL THEN 0 ELSE 1 END AS " + ChannelsAllTable.Cols.FAVORITE + " " +
                 "FROM " +
                 ChannelsTable.TABLE_NAME + " ca " +
                 sql_filter +
@@ -118,8 +113,7 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
                 "ca." + ChannelsTable.Cols.NAME + " AS " + ChannelsAllTable.Cols.CHANNEL_NAME + ", " +
                 "ca." + ChannelsTable.Cols.ICON + " AS " + ChannelsAllTable.Cols.CHANNEL_ICON + ", " +
                 "ca." + ChannelsTable.Cols.LANG + " AS " + ChannelsAllTable.Cols.LANG + ", " +
-                "1 AS " + ChannelsAllTable.Cols.FAVORITE + ", " +
-                "CASE WHEN ((JULIANDAY('now')-JULIANDAY(cf."+ ChannelsFavoritesTable.Cols.UPD_PROGRAM +"))>" + Integer.toString(countDay) +") OR (cf." + ChannelsFavoritesTable.Cols.UPD_PROGRAM + " IS NULL) THEN 1 ELSE 0 END AS " + ChannelsAllTable.Cols.UPD_PROGRAM + " " +
+                "1 AS " + ChannelsAllTable.Cols.FAVORITE + " " +
                 "FROM " +
                 ChannelsFavoritesTable.TABLE_NAME + " cf " +
                 "JOIN " + ChannelsTable.TABLE_NAME + " ca ON (cf." + ChannelsFavoritesTable.Cols.CHANNEL_INDEX + "=ca." + ChannelsTable.Cols.CHANNEL_INDEX + ") " +

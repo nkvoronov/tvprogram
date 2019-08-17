@@ -13,7 +13,6 @@ public class TVProgramDbSchema {
         public static final class Cols {
             public static final String ID = "id";
             public static final String COUNT_DAYS = "count_days";
-            public static final String INDEX_SORT = "index_sort";
         }
     }
 
@@ -36,7 +35,6 @@ public class TVProgramDbSchema {
         public static final class Cols {
             public static final String ID = "id";
             public static final String CHANNEL_INDEX = "channel_index";
-            public static final String UPD_PROGRAM = "upd_program";
         }
     }
 
@@ -63,7 +61,6 @@ public class TVProgramDbSchema {
             public static final String CHANNEL_ICON = "cicon";
             public static final String LANG = "clang";
             public static final String FAVORITE = "favorite";
-            public static final String UPD_PROGRAM = "upd_program";
         }
     }
 }

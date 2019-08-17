@@ -1,17 +1,22 @@
 package com.nkvoronov.tvprogram.common;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import com.nkvoronov.tvprogram.database.TVProgramBaseHelper;
 import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
 import com.nkvoronov.tvprogram.tvprogram.TVProgramsList;
 import java.util.Date;
+import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
+import static com.nkvoronov.tvprogram.common.DateUtils.getFormatDate;
 
 public class TVProgramDataSource {
     public static final String RUS_LANG = "rus";
     public static final String UKR_LANG = "ukr";
     public static final String ALL_LANG = "all";
     public static final String TAG = "TVPROGRAM";
+    public static final int DEF_CORRECTION = 120;
 
     private static TVProgramDataSource sTVProgramLab;
     private Context mContext;
@@ -39,16 +44,8 @@ public class TVProgramDataSource {
         mAppConfig.setCoutDays(coutDays);
     }
 
-    public boolean isIndexSort() {
-        return mAppConfig.isIndexSort();
-    }
-
-    public void setIndexSort(boolean indexSort) {
-        mAppConfig.setIndexSort(indexSort);
-    }
-
     public TVChannelsList getChannels(boolean isFavorites, int filter) {
-        TVChannelsList channels = new TVChannelsList(mContext, mDatabase, isIndexSort());
+        TVChannelsList channels = new TVChannelsList(mContext, mDatabase);
         channels.loadFromDB(isFavorites, filter);
         return channels;
     };
@@ -60,7 +57,28 @@ public class TVProgramDataSource {
     };
 
     public boolean checkUpdateProgram(int channel) {
-        return false;
+        String index = String.valueOf(channel);
+        String now_date = "'" + getFormatDate(new Date(),"yyyy-MM-dd") + "'";
+        boolean res = true;
+        Cursor cursor = mDatabase.query(SchedulesTable.TABLE_NAME,
+                null,
+                SchedulesTable.Cols.CHANNEL + "=? and " + SchedulesTable.Cols.START + ">=?",
+                new String[]{ index,  now_date},
+                null,
+                null,
+                null);
+        try {
+           if (cursor.getCount() != 0) {
+               Log.d(TAG, "No Update Program !!! " + now_date + ":" + index);
+               res = false;
+           } else {
+               Log.d(TAG, "Update Program !!! " + now_date + ":" + index);
+           }
+        } finally {
+            cursor.close();
+        }
+
+        return res;
     }
 
 }

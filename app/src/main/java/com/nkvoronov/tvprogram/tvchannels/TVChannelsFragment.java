@@ -125,7 +125,6 @@ public class TVChannelsFragment extends Fragment{
         private TVChannel mChannel;
         private ImageView mChannelIcon;
         private TextView mChannelName;
-        private ImageView mChannelUpdate;
         private ImageView mChannelFavorites;
 
         public ChannelHolder(LayoutInflater inflater, ViewGroup parent) {
@@ -133,14 +132,6 @@ public class TVChannelsFragment extends Fragment{
             itemView.setOnClickListener(this);
             mChannelIcon = itemView.findViewById(R.id.channel_icon);
             mChannelName = itemView.findViewById(R.id.channel_name);
-            mChannelUpdate = itemView.findViewById(R.id.channel_update);
-            mChannelUpdate.setVisibility(View.GONE);
-            mChannelUpdate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //
-                }
-            });
             mChannelFavorites = itemView.findViewById(R.id.channel_favorites);
             mChannelFavorites.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -171,10 +162,10 @@ public class TVChannelsFragment extends Fragment{
         @Override
         public void onClick(View view) {
             if (mDataSource.checkUpdateProgram(mChannel.getIndex())) {
+                updateProgramForChannel();
+            } else {
                 Intent intent = TVProgramChannelActivity.newIntent(getActivity(), mChannel.getIndex());
                 startActivity(intent);
-            } else {
-                updateProgramForChannel();
             }
         }
 

@@ -11,7 +11,6 @@ public class AppConfig {
     private static final String DEF_ID = "1";
 
     private int mCoutDays;
-    private boolean mIndexSort;
     private SQLiteDatabase mDatabase;
 
     public AppConfig(SQLiteDatabase database) {
@@ -21,7 +20,6 @@ public class AppConfig {
 
     private void initConfig() {
         mCoutDays = 7;
-        mIndexSort = true;
         Log.d(TAG, "initConfig");
         ConfigCursorWrapper cursor = new ConfigCursorWrapper(mDatabase.query(
                 ConfigsTable.TABLE_NAME,
@@ -39,7 +37,6 @@ public class AppConfig {
             } else {
                 cursor.moveToFirst();
                 mCoutDays = cursor.getCountDays();
-                mIndexSort = cursor.getIndexSort();
                 Log.d(TAG, "initConfig get");
             }
         } finally {
@@ -57,15 +54,6 @@ public class AppConfig {
         updateConfig();
     }
 
-    public boolean isIndexSort() {
-        return mIndexSort;
-    }
-
-    public void setIndexSort(boolean indexSort) {
-        mIndexSort =indexSort;
-        updateConfig();
-    }
-
     private void updateConfig() {
         mDatabase.update(ConfigsTable.TABLE_NAME, getConfigValues(false), ConfigsTable.Cols.ID + " = ?", new String[]{ DEF_ID });
     }
@@ -76,7 +64,6 @@ public class AppConfig {
             values.put(ConfigsTable.Cols.ID, DEF_ID);
         }
         values.put(ConfigsTable.Cols.COUNT_DAYS, getCoutDays());
-        values.put(ConfigsTable.Cols.INDEX_SORT, isIndexSort() ? 1 : 0);
         return values;
     }
 }

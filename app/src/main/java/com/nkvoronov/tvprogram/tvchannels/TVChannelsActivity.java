@@ -124,7 +124,6 @@ public class TVChannelsActivity extends AppCompatActivity implements TVChannelsF
                 TVChannel channel = new TVChannel(Integer.parseInt(channel_index), channel_name, channel_icon);
                 channel.setLang(lang);
                 channel.setIsFavorites(false);
-                channel.setIsUpdate(false);
                 channels.add(channel);
                 channel.setParent(channels);
                 Log.d(TAG, channel.toString());
@@ -136,7 +135,6 @@ public class TVChannelsActivity extends AppCompatActivity implements TVChannelsF
                 }
                 i++;
             }
-            channels.sort(true);
             channels.postUpdateChannel();
             return null;
         }

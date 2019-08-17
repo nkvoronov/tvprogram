@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.Spinner;
 import androidx.appcompat.app.AppCompatActivity;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
@@ -16,7 +14,6 @@ import java.util.List;
 
 public class SettingsActivity extends AppCompatActivity {
     private Spinner  mSpinnerCountDays;
-    private CheckBox mIndexSort;
     private TVProgramDataSource mDataSource;
 
     public static Intent newIntent(Context context) {
@@ -68,14 +65,5 @@ public class SettingsActivity extends AppCompatActivity {
         mDataSource = TVProgramDataSource.get(this);
 
         addSpinnerCountDays();
-
-        mIndexSort = findViewById(R.id.chb_index_sort);
-        mIndexSort.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-              @Override
-              public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                  mDataSource.setIndexSort(b);
-              }
-        });
-        mIndexSort.setChecked(mDataSource.isIndexSort());
     }
 }

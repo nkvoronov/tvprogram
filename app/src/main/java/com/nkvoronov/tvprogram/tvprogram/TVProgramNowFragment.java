@@ -14,7 +14,7 @@ import com.nkvoronov.tvprogram.R;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 
 public class TVProgramNowFragment extends Fragment {
-    private static final String ARG_PAGE_NUMBER = "page_number";
+    private static final String ARG_NOW_PAGE_NUMBER = "com.nkvoronov.tvprogram.tvprogram.page_number_now";
     private Spinner mSpinnerFilter;
     private RecyclerView mProgramView;
     private TextView mEmptyTextView;
@@ -24,7 +24,7 @@ public class TVProgramNowFragment extends Fragment {
     public static TVProgramNowFragment newInstance(int index) {
         TVProgramNowFragment fragment = new TVProgramNowFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_PAGE_NUMBER, index);
+        args.putSerializable(ARG_NOW_PAGE_NUMBER, index);
         fragment.setArguments(args);
         return fragment;
     }
@@ -32,7 +32,7 @@ public class TVProgramNowFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPageIndex = (int) getArguments().getSerializable(ARG_PAGE_NUMBER);
+        mPageIndex = (int) getArguments().getSerializable(ARG_NOW_PAGE_NUMBER);
     }
 
     @Override

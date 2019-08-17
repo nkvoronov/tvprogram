@@ -12,7 +12,7 @@ import com.nkvoronov.tvprogram.R;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 
 public class TVProgramSearchFragment extends Fragment {
-    private static final String ARG_PAGE_NUMBER = "page_number";
+    private static final String ARG_SEARCH_PAGE_NUMBER = "com.nkvoronov.tvprogram.tvprogram.page_number_search";
     private RecyclerView mProgramView;
     private TextView mEmptyTextView;
     private int mPageIndex;
@@ -21,7 +21,7 @@ public class TVProgramSearchFragment extends Fragment {
     public static TVProgramSearchFragment newInstance(int index) {
         TVProgramSearchFragment fragment = new TVProgramSearchFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_PAGE_NUMBER, index);
+        args.putSerializable(ARG_SEARCH_PAGE_NUMBER, index);
         fragment.setArguments(args);
         return fragment;
     }
@@ -29,7 +29,7 @@ public class TVProgramSearchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPageIndex = (int) getArguments().getSerializable(ARG_PAGE_NUMBER);
+        mPageIndex = (int) getArguments().getSerializable(ARG_SEARCH_PAGE_NUMBER);
     }
 
     @Override
