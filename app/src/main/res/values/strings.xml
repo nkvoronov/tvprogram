@@ -14,7 +14,6 @@
     <string name="title_settings_win">Settings</string>
     <string name="empty_list">List Is Empty</string>
     <string name="lab_countday">Count day</string>
-    <string name="lab_indexsort">Sort index</string>
     <string name="set_sep_main">Main</string>
     <string name="lang_rus">Russian</string>
     <string name="lang_ukr">Ukrainian</string>
@@ -29,4 +28,8 @@
     <string name="bt_yes">Yes</string>
     <string name="bt_no">No</string>
     <string name="program_not_date">Program for %1$s not found, update ?</string>
+    <string name="program_progress_msg">Update program, please wait.</string>
+    <string name="program_progress_msg1">Receive program for \nchannel %1$s by %2$s ...</string>
+    <string name="program_progress_msg2">Save program in database</string>
+    <string name="update_channel">Update\nchannel %1$s ...</string>
 </resources>

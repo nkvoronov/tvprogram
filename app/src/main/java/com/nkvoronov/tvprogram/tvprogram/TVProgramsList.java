@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
 import com.nkvoronov.tvprogram.database.TVProgramsCursorWrapper;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -79,8 +77,35 @@ public class TVProgramsList {
         return new TVProgramsCursorWrapper(cursor);
     }
 
+    public void setProgramStop() {
+        int i = 0;
+        while (i != mData.size()) {
+            TVProgram program = mData.get(i);
+            TVProgram program_next;
+            if (i + 1 != mData.size()) {
+                program_next = mData.get(i+1);
+                if (program_next.getIndex() == program_next.getIndex()) {
+                    program.setStop(program_next.getStart());
+                }
+            }
+            i++;
+        }
+    }
+
     public void saveToDB() {
-        //
+        for (TVProgram program : mData) {
+            mDatabase.insert(SchedulesTable.TABLE_NAME, null, getContentProgramsValues(program));
+        }
+    }
+
+    private ContentValues getContentProgramsValues(TVProgram program) {
+        ContentValues values = new ContentValues();
+        values.put(SchedulesTable.Cols.CHANNEL, program.getIndex());
+        values.put(SchedulesTable.Cols.CATEGORY, program.getCategory());
+        values.put(SchedulesTable.Cols.START, program.getStart().getTime());
+        values.put(SchedulesTable.Cols.END, program.getStop().getTime());
+        values.put(SchedulesTable.Cols.TITLE, program.getTitle());
+        return values;
     }
 
     private int getCategoryID(String nameEN, String nameRU) {
@@ -131,40 +156,11 @@ public class TVProgramsList {
         return -1;
     }
 
-    public void setProgramStop() {
-        //
-    }
-
     public int clearDBSchedule() {
         return -1;
     }
 
     public TVProgram getProgrammeForUrl(String url) {
         return null;
-    }
-
-    @Override
-    public String toString() {
-        String result = "";
-        for (TVProgram program : mData) {
-            result += program.toString() + "/n";
-        }
-        return result;
-    }
-
-    public void getXML(Document document, Element element) {
-        for (TVProgram program : mData) {
-            program.getXML(document, element);
-        }
-    }
-
-    private ContentValues getContentProgramsValues(TVProgram program) {
-        ContentValues values = new ContentValues();
-        values.put(SchedulesTable.Cols.CHANNEL, program.getIndex());
-        values.put(SchedulesTable.Cols.CATEGORY, program.getCategory());
-        values.put(SchedulesTable.Cols.START, program.getStart().getTime());
-        values.put(SchedulesTable.Cols.END, program.getStop().getTime());
-        values.put(SchedulesTable.Cols.TITLE, program.getTitle());
-        return values;
     }
 }

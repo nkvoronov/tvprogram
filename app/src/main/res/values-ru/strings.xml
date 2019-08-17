@@ -15,7 +15,6 @@
     <string name="title_settings_win">Настройки</string>
     <string name="empty_list">Список пуст</string>
     <string name="lab_countday">Количество дней</string>
-    <string name="lab_indexsort">Сортировать по индексу</string>
     <string name="set_sep_main">Основное</string>
     <string name="lang_ukr">Украинский</string>
     <string name="lang_all">Все</string>
@@ -30,4 +29,8 @@
     <string name="bt_yes">Да</string>
     <string name="bt_no">Нет</string>
     <string name="program_not_date">Програма для %1$s не найдена, обновить ?</string>
+    <string name="program_progress_msg">Програма обновляются, пожалуйста, подождите.</string>
+    <string name="program_progress_msg1">Получение програмы\nдля канала %1$s за %2$s ...</string>
+    <string name="program_progress_msg2">Сохраниe програмы в базеданных</string>
+    <string name="update_channel">"Обновление\nканала %1$s ... "</string>
 </resources>

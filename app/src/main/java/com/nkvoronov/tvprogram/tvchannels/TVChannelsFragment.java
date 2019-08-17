@@ -1,6 +1,7 @@
 package com.nkvoronov.tvprogram.tvchannels;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.nkvoronov.tvprogram.R;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
+import com.nkvoronov.tvprogram.tasks.UpdateProgramsTask;
 import com.nkvoronov.tvprogram.tvprogram.TVProgramChannelActivity;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 
@@ -126,6 +128,8 @@ public class TVChannelsFragment extends Fragment{
         private ImageView mChannelIcon;
         private TextView mChannelName;
         private ImageView mChannelFavorites;
+        private ProgressDialog mProgressDialog;
+        private UpdateProgramsTask mUpdateTask;
 
         public ChannelHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_tvchannels, parent, false));
@@ -138,6 +142,38 @@ public class TVChannelsFragment extends Fragment{
                 public void onClick(View view) {
                     mChannel.changeFavorites();
                     mChangesChannels.onUpdatePages(mChannel);
+                }
+            });
+
+            mProgressDialog = new ProgressDialog(getActivity());
+            mProgressDialog.setIndeterminate(false);
+            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            mProgressDialog.setTitle(getString(R.string.prg_update_caption));
+
+            mUpdateTask = new UpdateProgramsTask(mDataSource);
+            mUpdateTask.setListeners(new UpdateProgramsTask.OnTaskListeners() {
+
+                @Override
+                public void onStart() {
+                    mProgressDialog.setMessage(getString(R.string.program_progress_msg));
+                    mProgressDialog.show();
+                }
+
+                @Override
+                public void onUpdate(String[] progress) {
+                    if (progress[0].equals("-1")) {
+                        mProgressDialog.setMessage(getActivity().getString(R.string.program_progress_msg1, mChannel.getName(), progress[1]));
+                    } else {
+                        mProgressDialog.setMessage(getActivity().getString(R.string.program_progress_msg2));
+                    }
+                    mProgressDialog.setProgress(Integer.parseInt(progress[2]));
+                }
+
+                @Override
+                public void onStop() {
+                    if (mProgressDialog.isShowing()) {
+                        mProgressDialog.dismiss();
+                    }
                 }
             });
         }
@@ -164,9 +200,13 @@ public class TVChannelsFragment extends Fragment{
             if (mDataSource.checkUpdateProgram(mChannel.getIndex())) {
                 updateProgramForChannel();
             } else {
-                Intent intent = TVProgramChannelActivity.newIntent(getActivity(), mChannel.getIndex());
-                startActivity(intent);
+                openProgramChannel();
             }
+        }
+
+        private void openProgramChannel() {
+            Intent intent = TVProgramChannelActivity.newIntent(getActivity(), mChannel.getIndex());
+            startActivity(intent);
         }
 
         public void updateProgramForChannel() {
@@ -176,7 +216,7 @@ public class TVChannelsFragment extends Fragment{
             builder.setPositiveButton(getActivity().getString(R.string.bt_yes), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Toast.makeText(getContext(), getActivity().getString(R.string.prg_update_caption), Toast.LENGTH_LONG).show();
+                    mUpdateTask.execute(mChannel.getIndex());
                 }
             });
             builder.setNegativeButton(getActivity().getString(R.string.bt_no), new DialogInterface.OnClickListener() {

@@ -64,8 +64,7 @@ public class TVChannelsActivity extends AppCompatActivity implements TVChannelsF
         mProgressDialog.setIndeterminate(false);
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         mProgressDialog.setTitle(getString(R.string.prg_update_caption));
-        mUpdateTask = new UpdateChannelsTask();
-        mUpdateTask.setDataSource(mDataSource);
+        mUpdateTask = new UpdateChannelsTask(mDataSource);
         mUpdateTask.setListeners(new UpdateChannelsTask.OnTaskListeners() {
             @Override
             public void onStart() {
@@ -74,8 +73,9 @@ public class TVChannelsActivity extends AppCompatActivity implements TVChannelsF
             }
 
             @Override
-            public void onUpdate(int progress) {
-                mProgressDialog.setProgress(progress);
+            public void onUpdate(String[] progress) {
+                mProgressDialog.setMessage(getString(R.string.update_channel, progress[0]));
+                mProgressDialog.setProgress(Integer.parseInt(progress[1]));
             }
 
             @Override

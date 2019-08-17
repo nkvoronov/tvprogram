@@ -13,15 +13,19 @@ import static com.nkvoronov.tvprogram.common.TVProgramDataSource.RUS_LANG;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.UKR_LANG;
 
-public class UpdateChannelsTask extends AsyncTask<Void,Integer,Void> {
+public class UpdateChannelsTask extends AsyncTask<Void,String,Void> {
     private static final String CHANNELS_SELECT = "option[value^=channel_]";
 
     private OnTaskListeners mListeners;
     private TVProgramDataSource mDataSource;
 
+    public UpdateChannelsTask(TVProgramDataSource dataSource) {
+        mDataSource = dataSource;
+    }
+
     public interface OnTaskListeners {
         public void onStart();
-        public void onUpdate(int progress);
+        public void onUpdate(String[] progress);
         public void onStop();
     }
 
@@ -46,6 +50,8 @@ public class UpdateChannelsTask extends AsyncTask<Void,Integer,Void> {
         String channel_icon;
         String lang = ALL_LANG;
         Boolean flag = false;
+        String[] progress;
+        int counter;
         TVChannelsList channels = mDataSource.getChannels(false, 0);
         channels.clear();
         channels.preUpdateChannel();
@@ -71,7 +77,9 @@ public class UpdateChannelsTask extends AsyncTask<Void,Integer,Void> {
             Log.d(TAG, channel.toString());
             channels.saveChannelToDB(channel);
             channel.saveIconToFile();
-            publishProgress((int) (((i+1) / (float) total) * 100));
+            counter = (int) (((i+1) / (float) total) * 100);
+            progress = new String[] {channel_name, String.valueOf(counter)};
+            publishProgress(progress);
             if(isCancelled()){
                 break;
             }
@@ -82,8 +90,8 @@ public class UpdateChannelsTask extends AsyncTask<Void,Integer,Void> {
     }
 
     @Override
-    protected void onProgressUpdate(Integer... values) {
-        mListeners.onUpdate(values[0]);
+    protected void onProgressUpdate(String... values) {
+        mListeners.onUpdate(values);
     }
 
     @Override

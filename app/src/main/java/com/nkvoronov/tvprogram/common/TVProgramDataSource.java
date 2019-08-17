@@ -16,7 +16,6 @@ public class TVProgramDataSource {
     public static final String UKR_LANG = "ukr";
     public static final String ALL_LANG = "all";
     public static final String TAG = "TVPROGRAM";
-    public static final int DEF_CORRECTION = 120;
 
     private static TVProgramDataSource sTVProgramLab;
     private Context mContext;

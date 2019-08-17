@@ -92,8 +92,8 @@ public class TVProgramChannelFragment  extends Fragment {
 
         public void bind(TVProgram program) {
             mProgram = program;
-            mStart.setText(getFormatDate(mProgram.getStart(),"yyyy-MM-dd G HH:mm"));
-            mEnd.setText(getFormatDate(mProgram.getStop(),"yyyy-MM-dd G HH:mm"));
+            mStart.setText(getFormatDate(mProgram.getStart(),"yyyy-MM-dd HH:mm"));
+            mEnd.setText(getFormatDate(mProgram.getStop(),"yyyy-MM-dd HH:mm"));
             mTitle.setText(mProgram.getTitle());
         }
 
