@@ -1,5 +1,6 @@
 package com.nkvoronov.tvprogram;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,6 +10,7 @@ import androidx.core.view.MenuCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
+import com.nkvoronov.tvprogram.tasks.UpdateProgramsTask;
 import com.nkvoronov.tvprogram.tvchannels.TVChannelsActivity;
 import com.nkvoronov.tvprogram.tvprogram.TVProgramPageAdapter;
 
@@ -16,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
     private TVProgramPageAdapter mPageAdapter;
     private ViewPager mMainViewPager;
     private TabLayout mMainTabLayout;
+    ProgressDialog mProgressDialog;
+    private UpdateProgramsTask mUpdateTask;
     private TVProgramDataSource mDataSource;
 
     @Override
@@ -48,6 +52,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onUpdate() {
+        mUpdateTask.execute(-1);
+    }
+
+    private void updateUI() {
         //
     }
 
@@ -80,5 +88,38 @@ public class MainActivity extends AppCompatActivity {
         mPageAdapter = new TVProgramPageAdapter(this, getSupportFragmentManager());
         mMainViewPager.setAdapter(mPageAdapter);
         mMainTabLayout.setupWithViewPager(mMainViewPager);
+
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setIndeterminate(false);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        mProgressDialog.setTitle(getString(R.string.prg_update_caption));
+
+        mUpdateTask = new UpdateProgramsTask(mDataSource);
+        mUpdateTask.setListeners(new UpdateProgramsTask.OnTaskListeners() {
+
+            @Override
+            public void onStart() {
+                mProgressDialog.setMessage(getString(R.string.program_progress_msg));
+                mProgressDialog.show();
+            }
+
+            @Override
+            public void onUpdate(String[] progress) {
+                if (progress[0].equals("0")) {
+                    mProgressDialog.setMessage(getString(R.string.program_progress_msg2));
+                } else {
+                    mProgressDialog.setMessage(getString(R.string.program_progress_msg1, progress[0], progress[1]));
+                }
+                mProgressDialog.setProgress(Integer.parseInt(progress[2]));
+            }
+
+            @Override
+            public void onStop() {
+                if (mProgressDialog.isShowing()) {
+                    mProgressDialog.dismiss();
+                }
+                updateUI();
+            }
+        });
     }
 }

@@ -21,6 +21,7 @@ public class TVProgramChannelActivity extends AppCompatActivity {
     private TVProgramChannelPageAdapter mPageAdapter;
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
+    private int mChannelIndex;
     TVChannel mChannel;
     private ImageView mChannelIcon;
     private TextView mChannelName;
@@ -34,12 +35,22 @@ public class TVProgramChannelActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putSerializable(EXTRA_TVCHANNEL_INDEX, mChannelIndex);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tvprogramchannel);
+        setContentView(R.layout.activity_tvprogram_channel);
         mDataSource = TVProgramDataSource.get(this);
-        int channel_index = (int) getIntent().getSerializableExtra(EXTRA_TVCHANNEL_INDEX);
-        getChannel(channel_index);
+        if (savedInstanceState != null) {
+            mChannelIndex = (int) savedInstanceState.getSerializable(EXTRA_TVCHANNEL_INDEX);
+        } else {
+            mChannelIndex = (int) getIntent().getSerializableExtra(EXTRA_TVCHANNEL_INDEX);
+        }
+        getChannel();
         mChannelIcon = findViewById(R.id.channel_icon_own);
         Glide
                 .with(this)
@@ -64,9 +75,9 @@ public class TVProgramChannelActivity extends AppCompatActivity {
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
-    private void getChannel(int index) {
+    private void getChannel() {
         TVChannelsList channelList = mDataSource.getChannels(false, 0);
-        mChannel = channelList.getForIndex(index);
+        mChannel = channelList.getForIndex(mChannelIndex);
     }
 
     private void setFavorites() {

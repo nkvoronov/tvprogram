@@ -34,6 +34,17 @@ public class TVProgramsList {
         return mData.get(position);
     }
 
+    public TVProgram getForId(int id) {
+        TVProgram program = null;
+        for (int i = 0; i < mData.size(); i++) {
+            if (mData.get(i).getId() == id) {
+                program = mData.get(i);
+                break;
+            }
+        }
+        return program;
+    }
+
     public int size() {
         return mData.size();
     }

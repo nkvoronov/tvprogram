@@ -41,7 +41,6 @@ public class TVChannelsActivity extends AppCompatActivity implements TVChannelsF
 
     private void onUpdate() {
         mUpdateTask.execute();
-        onUpdatePages(null);
     }
 
     public static Intent newIntent(Context context) {
@@ -83,6 +82,7 @@ public class TVChannelsActivity extends AppCompatActivity implements TVChannelsF
                 if (mProgressDialog.isShowing()) {
                     mProgressDialog.dismiss();
                 }
+                onUpdatePages(null);
             }
         });
     }

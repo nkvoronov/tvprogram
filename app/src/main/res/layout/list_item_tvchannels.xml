@@ -15,9 +15,9 @@
         android:layout_height="40dp"
         android:layout_gravity="center_vertical"
         android:background="@android:drawable/ic_menu_gallery"
-        android:contentDescription=""
+        android:contentDescription="@string/img_tvicon_desc"
         android:scaleType="fitXY"
-        app:srcCompat="@mipmap/ic_launcher_foreground" />
+        app:srcCompat="@drawable/rectangle_control" />
 
     <TextView
         android:id="@+id/channel_name"
@@ -26,6 +26,7 @@
         android:layout_gravity="center"
         android:layout_weight="1"
         android:padding="8dp"
+        android:text="@string/title_tvchannels_win"
         android:textSize="18sp" />
 
     <ImageView
@@ -33,6 +34,6 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_gravity="center_vertical"
-        android:contentDescription=""
+        android:contentDescription="@string/img_favorite_desc"
         app:srcCompat="@android:drawable/btn_star_big_on" />
 </LinearLayout>

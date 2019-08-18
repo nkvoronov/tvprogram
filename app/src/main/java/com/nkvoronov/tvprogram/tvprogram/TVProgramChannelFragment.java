@@ -1,17 +1,18 @@
 package com.nkvoronov.tvprogram.tvprogram;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.nkvoronov.tvprogram.R;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import static com.nkvoronov.tvprogram.common.DateUtils.*;
@@ -82,6 +83,8 @@ public class TVProgramChannelFragment  extends Fragment {
         private TextView mStart;
         private TextView mDuration;
         private TextView mTitle;
+        private ImageView mFavoriteIcon;
+        private ImageView mCategoryIcon;
 
         public ProgramChannelHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_tvprogram, parent, false));
@@ -89,18 +92,31 @@ public class TVProgramChannelFragment  extends Fragment {
             mStart = itemView.findViewById(R.id.text_start);
             mDuration = itemView.findViewById(R.id.text_duration);
             mTitle = itemView.findViewById(R.id.text_title);
+            mFavoriteIcon = itemView.findViewById(R.id.image_fav);
+            mCategoryIcon = itemView.findViewById(R.id.image_category);
+
         }
 
         public void bind(TVProgram program) {
             mProgram = program;
+            if (mProgram.isFavorites()) {
+                mFavoriteIcon.setVisibility(View.VISIBLE);
+            } else {
+                mFavoriteIcon.setVisibility(View.GONE);
+            }
+            mTitle.setText(mProgram.getTitle());
             mStart.setText(getDateFormat(mProgram.getStart(), "HH:mm"));
             mDuration.setText(getActivity().getString(R.string.dutation_txt, getDuration(mProgram.getStart(), mProgram.getStop())));
-            mTitle.setText(mProgram.getTitle());
         }
 
         @Override
         public void onClick(View view) {
-            //
+            openProgramDetail();
+        }
+
+        private void openProgramDetail() {
+            Intent intent = TVProgramDetailActivity.newIntent(getActivity(), mProgram.getId(), mProgram.getIndex());
+            startActivity(intent);
         }
     }
 

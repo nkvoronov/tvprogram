@@ -131,7 +131,7 @@ public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
                 //
             }
             TVProgram program = new TVProgram(-1, channel, startDate, endDate, etitle);
-            program.setCorrectionTime(DEF_CORRECTION);
+            program.setFavorites(false);
             getCategoryFromTitle(program);
 
             if (edesc.length() > 0 && !Objects.equals(edesc, "")) {

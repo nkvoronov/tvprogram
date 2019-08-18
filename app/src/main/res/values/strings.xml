@@ -29,8 +29,19 @@
     <string name="bt_no">No</string>
     <string name="program_not_date">Program for %1$s not found, update ?</string>
     <string name="program_progress_msg">Update program, please wait.</string>
-    <string name="program_progress_msg1">Receive program for \nchannel %1$s by %2$s ...</string>
-    <string name="program_progress_msg2">Save program in database</string>
-    <string name="update_channel">Update channel \n%1$s ...</string>
+    <string name="program_progress_msg1">Receive program for channel\n%1$s by %2$s</string>
+    <string name="program_progress_msg2">Save program in Database</string>
+    <string name="update_channel">Update channel \n%1$s</string>
     <string name="dutation_txt">Dutation %1$s</string>
+    <string name="title_tvprogram_det_win">Description</string>
+    <string name="add_to_favorites">Add To Favorites</string>
+    <string name="img_tvicon_desc">TV Icon channel</string>
+    <string name="img_favorite_desc">Favorite icon channel</string>
+    <string name="img_program_desc">Image for program</string>
+    <string name="img_program_category_desc">Category program</string>
+    <string name="img_favorite_program_desc">Favorite icon program</string>
+    <string name="lab_channel">Channel: %1$s</string>
+    <string name="lab_genre">Genre: %1$s</string>
+    <string name="lab_country">Country: %1$s</string>
+    <string name="lab_year">Year: %1$s</string>
 </resources>

@@ -1,8 +1,6 @@
 package com.nkvoronov.tvprogram.tvprogram;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import static com.nkvoronov.tvprogram.common.DateUtils.*;
 
 public class TVProgram {
     public static final String SEPARATOR_LIST = ",";
@@ -11,7 +9,6 @@ public class TVProgram {
     private int mIndex;
     private Date mStart;
     private Date mStop;
-    private String mCorrectionTime;
     private String mTitle;
     private String mDescription;
     private String mUrlFullDesc;
@@ -19,28 +16,29 @@ public class TVProgram {
     private String mGenres;
     private String mDirectors;
     private String mActors;
-    private String mDate;
+    private String mYear;
     private String mCountry;
     private String mImage;
     private String mStarRating;
+    private boolean mIsFavorites;
 
     public TVProgram(int id, int index, Date start, Date stop, String title) {
         mId = id;
         mIndex = index;
         mStart = start;
         mStop = stop;
-        mCorrectionTime = null;
         mTitle = title;
-        mDescription = null;
-        mUrlFullDesc = null;
         mCategory = 0;
         mGenres = null;
+        mCountry = null;
+        mYear = null;
+        mDescription = null;
+        mUrlFullDesc = null;
         mDirectors = null;
         mActors = null;
-        mDate = null;
-        mCountry = null;
         mImage = null;
         mStarRating = null;
+        mIsFavorites = false;
     }
 
     public int getId() {
@@ -73,10 +71,6 @@ public class TVProgram {
 
     public void setStop(Date stop) {
         mStop = stop;
-    }
-
-    public void setCorrectionTime(int correction) {
-        mCorrectionTime = intToTime(correction, "", true, false);
     }
 
     public String getTitle() {
@@ -135,12 +129,12 @@ public class TVProgram {
         mActors = actors;
     }
 
-    public String getDate() {
-        return mDate;
+    public String getYear() {
+        return mYear;
     }
 
-    public void setSDate(String sDate) {
-        mDate = sDate;
+    public void setYear(String year) {
+        mYear = year;
     }
 
     public String getCountry() {
@@ -167,12 +161,11 @@ public class TVProgram {
         mStarRating = starRating;
     }
 
-    private String getDateToFormat(Date date) {
-        SimpleDateFormat date_format = new SimpleDateFormat("yyyyMMddHHmmss");
-        String result = date_format.format(date);
-        if (mCorrectionTime != null) {
-            result = result + " " + mCorrectionTime;
-        }
-        return result;
+    public boolean isFavorites() {
+        return mIsFavorites;
+    }
+
+    public void setFavorites(boolean favorites) {
+        this.mIsFavorites = favorites;
     }
 }

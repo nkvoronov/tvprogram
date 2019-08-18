@@ -39,6 +39,7 @@ public class TVProgramsCursorWrapper extends CursorWrapper {
 
         TVProgram program = new TVProgram(id, index, startDate, endDate, title);
         program.setCategory(category);
+        program.setFavorites(false);
         return program;
     }
 }

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="4dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvprogram_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:drawablePadding="4dp"
+            android:gravity="center|start"
+            android:text="@string/title_tvprogram_det_win"
+            android:textColor="#C62828"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/tvprogram_image_category"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="@string/img_program_category_desc"
+            app:srcCompat="@drawable/rectangle" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/tvprogram_image_desc"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="8dp"
+            android:background="@android:drawable/ic_menu_gallery"
+            android:contentDescription="@string/img_program_desc"
+            app:srcCompat="@drawable/rectangle_control" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvprogram_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tvprogram_duration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#C62828" />
+
+            <TextView
+                android:id="@+id/tvprogram_channel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/lab_channel" />
+
+            <TextView
+                android:id="@+id/tvprogram_genre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="@string/lab_genre" />
+
+            <TextView
+                android:id="@+id/tvprogram_country"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="@string/lab_country" />
+
+            <TextView
+                android:id="@+id/tvprogram_year"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="@string/lab_year" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvprogram_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp" />
+
+    <Button
+        android:id="@+id/tvprogram_action"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:text="@string/add_to_favorites" />
+
+</LinearLayout>
