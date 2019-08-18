@@ -9,16 +9,12 @@ import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
 import com.nkvoronov.tvprogram.tvprogram.TVProgram;
 import com.nkvoronov.tvprogram.tvprogram.TVProgramsList;
 import org.jsoup.select.Elements;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
-import java.util.TimeZone;
-
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
-import static com.nkvoronov.tvprogram.common.DateUtils.*;
 import static com.nkvoronov.tvprogram.common.HttpContent.HOST;
 
 public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
@@ -55,10 +51,6 @@ public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
 
     public void setListeners(OnTaskListeners listeners) {
         mListeners = listeners;
-    }
-
-    public void setDataSource(TVProgramDataSource dataSource) {
-        mDataSource = dataSource;
     }
 
     public void setFullDesc(boolean fullDesc) {
@@ -99,8 +91,8 @@ public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         String otime = "00:00";
-        String vdirection = String.format(STR_SCHEDULECHANNEL, channel, dateFormat.format(date));
-        org.jsoup.nodes.Document doc = new HttpContent(HOST + vdirection).getDocument();
+        String direction = String.format(STR_SCHEDULECHANNEL, channel, dateFormat.format(date));
+        org.jsoup.nodes.Document doc = new HttpContent(HOST + direction).getDocument();
         Elements items = doc.select(STR_ELMDOCSELECT);
         for (org.jsoup.nodes.Element item : items){
             String etime = item.html().trim();
@@ -165,11 +157,13 @@ public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
             total = mChannels.size() * mDataSource.getCoutDays();
             for (TVChannel channel : mChannels.getData()) {
                 progress[0] = channel.getName();
+                mPrograms.preUpdateProgram(channel.getIndex());
                 getContentForChannel(channel.getIndex(), new Date());
             }
         } else {
             total = 1 * mDataSource.getCoutDays();
             progress[0] = "-1";
+            mPrograms.preUpdateProgram(type_channels);
             getContentForChannel(type_channels, new Date());
         }
         mPrograms.setProgramStop();

@@ -11,8 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.nkvoronov.tvprogram.R;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
-import static com.nkvoronov.tvprogram.common.DateUtils.getFormatDate;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 
 public class TVProgramChannelFragment  extends Fragment {
@@ -42,8 +43,10 @@ public class TVProgramChannelFragment  extends Fragment {
         super.onCreate(savedInstanceState);
         mPageIndex = (int) getArguments().getSerializable(ARG_TVPROGRAM_PAGE_NUMBER);
         mChannelIndex = (int) getArguments().getSerializable(ARG_TVPROGRAM_CHANNEL_INDEX);
-        long dt = (long) getArguments().getSerializable(ARG_TVPROGRAM_DATE);
-        mProgramDate = new Date(dt);
+        Calendar calendar = Calendar.getInstance();
+        long time = (long) getArguments().getSerializable(ARG_TVPROGRAM_DATE);
+        mProgramDate = new Date(time);
+        calendar.setTime(mProgramDate);
     }
 
     @Override
@@ -64,8 +67,11 @@ public class TVProgramChannelFragment  extends Fragment {
     }
 
     public void updateUI() {
-        Log.d(TAG, "UpdateUI " + mPageIndex);
-        TVProgramsList programs = mDataSource.getPrograms(0, mChannelIndex, null);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(mProgramDate);
+        Log.d(TAG, "UpdateUI - " + mPageIndex + ";" + mChannelIndex + ";" + simpleDateFormat.format(calendar.getTime()));
+        TVProgramsList programs = mDataSource.getPrograms(0, mChannelIndex, calendar.getTime());
 
         if (mAdapter == null) {
             mAdapter = new ProgramChannelAdapter(programs);
@@ -92,8 +98,12 @@ public class TVProgramChannelFragment  extends Fragment {
 
         public void bind(TVProgram program) {
             mProgram = program;
-            mStart.setText(getFormatDate(mProgram.getStart(),"yyyy-MM-dd HH:mm"));
-            mEnd.setText(getFormatDate(mProgram.getStop(),"yyyy-MM-dd HH:mm"));
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(mProgram.getStart());
+            mStart.setText(simpleDateFormat.format(calendar.getTime()));
+            calendar.setTime(mProgram.getStop());
+            mEnd.setText(simpleDateFormat.format(calendar.getTime()));
             mTitle.setText(mProgram.getTitle());
         }
 

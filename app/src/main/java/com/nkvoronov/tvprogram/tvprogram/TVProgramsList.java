@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
 import com.nkvoronov.tvprogram.database.TVProgramsCursorWrapper;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -99,13 +101,18 @@ public class TVProgramsList {
     }
 
     private ContentValues getContentProgramsValues(TVProgram program) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         ContentValues values = new ContentValues();
         values.put(SchedulesTable.Cols.CHANNEL, program.getIndex());
         values.put(SchedulesTable.Cols.CATEGORY, program.getCategory());
-        values.put(SchedulesTable.Cols.START, program.getStart().getTime());
-        values.put(SchedulesTable.Cols.END, program.getStop().getTime());
+        values.put(SchedulesTable.Cols.START, simpleDateFormat.format(program.getStart()));
+        values.put(SchedulesTable.Cols.END, simpleDateFormat.format(program.getStop()));
         values.put(SchedulesTable.Cols.TITLE, program.getTitle());
         return values;
+    }
+
+    public void preUpdateProgram(int channel) {
+        mDatabase.delete(SchedulesTable.TABLE_NAME, SchedulesTable.Cols.CHANNEL + "=?", new String[]{ String.valueOf(channel) });
     }
 
     private int getCategoryID(String nameEN, String nameRU) {

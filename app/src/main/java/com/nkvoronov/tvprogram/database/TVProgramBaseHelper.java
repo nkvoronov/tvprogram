@@ -9,8 +9,9 @@ import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsTable;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsFavoritesTable;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.SchedulesTable;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsAllTable;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
-import static com.nkvoronov.tvprogram.common.DateUtils.*;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.RUS_LANG;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.UKR_LANG;
@@ -125,11 +126,15 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
     public static String getSQLProgramsForChannelToDate(int channel, Date date) {
         String sql_filter = "";
         String sChannel = String.valueOf(channel);
-        sql_filter = "WHERE " + SchedulesTable.Cols.CHANNEL + "=" + sChannel;
+        sql_filter = "WHERE (" + SchedulesTable.Cols.CHANNEL + "=" + sChannel + ")";
         if (date != null) {
-            String sDate1 = getFormatDate(date, "yyyy-MM-dd");
-            String sDate2 = getFormatDate(addDays(date, 1), "yyyy-MM-dd");
-            sql_filter = sql_filter + " and (" + SchedulesTable.Cols.START + ">='" + sDate1 + "' and " + SchedulesTable.Cols.START + "<'" + sDate2 + "')";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            String sDate1 = "'" + simpleDateFormat.format(calendar.getTime()) + "'";
+            calendar.add(Calendar.DATE, 1);
+            String sDate2 = "'" + simpleDateFormat.format(calendar.getTime()) + "'";
+            sql_filter = sql_filter + " and ((" + SchedulesTable.Cols.START + ">=" + sDate1 + ") and (" + SchedulesTable.Cols.START + "<" + sDate2 + "))";
         }
 
         String sql =

@@ -31,5 +31,5 @@
     <string name="program_progress_msg">Update program, please wait.</string>
     <string name="program_progress_msg1">Receive program for \nchannel %1$s by %2$s ...</string>
     <string name="program_progress_msg2">Save program in database</string>
-    <string name="update_channel">Update\nchannel %1$s ...</string>
+    <string name="update_channel">Update channel \n%1$s ...</string>
 </resources>

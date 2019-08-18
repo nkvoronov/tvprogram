@@ -33,10 +33,6 @@ public class UpdateChannelsTask extends AsyncTask<Void,String,Void> {
         mListeners = listeners;
     }
 
-    public void setDataSource(TVProgramDataSource dataSource) {
-        mDataSource = dataSource;
-    }
-
     @Override
     protected void onPreExecute() {
         mListeners.onStart();
@@ -44,12 +40,7 @@ public class UpdateChannelsTask extends AsyncTask<Void,String,Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        String channel_index;
-        String channel_name;
-        String channel_link;
-        String channel_icon;
         String lang = ALL_LANG;
-        Boolean flag = false;
         String[] progress;
         int counter;
         TVChannelsList channels = mDataSource.getChannels(false, 0);
@@ -60,15 +51,15 @@ public class UpdateChannelsTask extends AsyncTask<Void,String,Void> {
         int i = 0;
         int total = elements.size();
         for (org.jsoup.nodes.Element element : elements){
-            channel_name = element.text();
+            String channel_name = element.text();
             if (channel_name.endsWith("(на укр.)")) {
                 lang = UKR_LANG;
             } else {
                 lang = RUS_LANG;
             }
-            channel_link = element.attr("value");
-            channel_index = channel_link.split("_")[1];
-            channel_icon = ICONS_PRE + channel_index + ".gif";
+            String channel_link = element.attr("value");
+            String channel_index = channel_link.split("_")[1];
+            String channel_icon = ICONS_PRE + channel_index + ".gif";
             TVChannel channel = new TVChannel(Integer.parseInt(channel_index), channel_name, channel_icon);
             channel.setLang(lang);
             channel.setIsFavorites(false);

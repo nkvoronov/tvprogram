@@ -16,7 +16,7 @@ public class TVProgram {
     private String mTitle;
     private String mDescription;
     private String mUrlFullDesc;
-    private String mCategory;
+    private int mCategory;
     private String mGenres;
     private String mDirectors;
     private String mActors;
@@ -61,7 +61,7 @@ public class TVProgram {
         mTitle = title;
         mDescription = null;
         mUrlFullDesc = null;
-        mCategory = null;
+        mCategory = 0;
         mGenres = null;
         mDirectors = null;
         mActors = null;
@@ -131,11 +131,11 @@ public class TVProgram {
         mUrlFullDesc = urlFullDesc;
     }
 
-    public String getCategory() {
+    public int getCategory() {
         return mCategory;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(int category) {
         mCategory = category;
     }
 
