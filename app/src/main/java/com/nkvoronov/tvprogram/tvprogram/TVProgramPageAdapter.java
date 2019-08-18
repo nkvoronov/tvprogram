@@ -4,10 +4,11 @@ import android.content.Context;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+
 import com.nkvoronov.tvprogram.R;
 
-public class TVProgramPageAdapter extends FragmentPagerAdapter {
+public class TVProgramPageAdapter extends FragmentStatePagerAdapter {
 
     @StringRes
     private final int[] TAB_P_TITLES = new int[]{R.string.tab_now, R.string.tab_search, R.string.tab_favorites};

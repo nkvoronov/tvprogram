@@ -1,9 +1,8 @@
 package com.nkvoronov.tvprogram.tvprogram;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import static com.nkvoronov.tvprogram.common.DateUtils.*;
 
 public class TVProgram {
     public static final String SEPARATOR_LIST = ",";
@@ -24,33 +23,6 @@ public class TVProgram {
     private String mCountry;
     private String mImage;
     private String mStarRating;
-
-    public static String addZero(int value) {
-        if (value < 10) {
-            return "0" + Integer.toString(value);
-        } else {
-            return Integer.toString(value);
-        }
-    }
-
-    public static String intToTime(int value, String sep, Boolean isZN, Boolean isSec) {
-        String zn = "";
-        int del = 60;
-        if (isSec) {
-            del = del * 60;
-        }
-        int crh = value / del;
-        int crm;
-        if (isSec) {
-            crm = (value - crh * del) / 60;
-        } else crm = value - crh * del;
-        if (isZN) {
-            if (value >= 0) {
-                zn = "+";
-            } else zn = "-";
-        }
-        return zn + addZero(crh) + sep + addZero(crm);
-    }
 
     public TVProgram(int id, int index, Date start, Date stop, String title) {
         mId = id;

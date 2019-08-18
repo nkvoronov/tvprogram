@@ -7,11 +7,10 @@ import android.util.Log;
 import com.nkvoronov.tvprogram.database.TVProgramBaseHelper;
 import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
 import com.nkvoronov.tvprogram.tvprogram.TVProgramsList;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
+import static com.nkvoronov.tvprogram.common.DateUtils.*;
+import static com.nkvoronov.tvprogram.common.StringUtils.addQuotes;
 
 public class TVProgramDataSource {
     public static final String RUS_LANG = "rus";
@@ -58,11 +57,8 @@ public class TVProgramDataSource {
     };
 
     public boolean checkUpdateProgram(int channel) {
-        String index = String.valueOf(channel);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        String now_date = "'" + simpleDateFormat.format(calendar.getTime()) + "'";
+        String index = new Integer(channel).toString();
+        String now_date = addQuotes(getDateFormat(new Date(), "yyyy-MM-dd"), "'");
         boolean res = true;
         Cursor cursor = mDatabase.query(SchedulesTable.TABLE_NAME,
                 null,

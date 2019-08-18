@@ -9,9 +9,9 @@ import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsTable;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsFavoritesTable;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.SchedulesTable;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsAllTable;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
+import static com.nkvoronov.tvprogram.common.DateUtils.*;
+import static com.nkvoronov.tvprogram.common.StringUtils.*;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.RUS_LANG;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.UKR_LANG;
@@ -85,10 +85,10 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
     public static String getSQLChannels(int filter) {
         String sql_filter = "";
         if (filter == 1) {
-            sql_filter = "WHERE ca." + ChannelsTable.Cols.LANG + "='" + RUS_LANG + "' ";
+            sql_filter = "WHERE ca." + ChannelsTable.Cols.LANG + "=" + addQuotes(RUS_LANG, "'") + " ";
         }
         if (filter == 2) {
-            sql_filter = "WHERE ca." + ChannelsTable.Cols.LANG + "='" + UKR_LANG + "' ";
+            sql_filter = "WHERE ca." + ChannelsTable.Cols.LANG + "=" + addQuotes(UKR_LANG, "'") + " ";
         }
 
         String sql =
@@ -128,12 +128,8 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
         String sChannel = String.valueOf(channel);
         sql_filter = "WHERE (" + SchedulesTable.Cols.CHANNEL + "=" + sChannel + ")";
         if (date != null) {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            String sDate1 = "'" + simpleDateFormat.format(calendar.getTime()) + "'";
-            calendar.add(Calendar.DATE, 1);
-            String sDate2 = "'" + simpleDateFormat.format(calendar.getTime()) + "'";
+            String sDate1 = addQuotes(getDateFormat(date, "yyyy-MM-dd"), "'");
+            String sDate2 = addQuotes(getDateFormat(addDays(date, 1), "yyyy-MM-dd"), "'");
             sql_filter = sql_filter + " and ((" + SchedulesTable.Cols.START + ">=" + sDate1 + ") and (" + SchedulesTable.Cols.START + "<" + sDate2 + "))";
         }
 

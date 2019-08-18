@@ -14,12 +14,12 @@ import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import static com.nkvoronov.tvprogram.common.DateUtils.*;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 
 public class TVProgramChannelFragment  extends Fragment {
     private static final String ARG_TVPROGRAM_PAGE_NUMBER = "com.nkvoronov.tvprogram.tvprogram.page_number";
     private static final String ARG_TVPROGRAM_CHANNEL_INDEX = "com.nkvoronov.tvprogram.tvprogram.channel_index";
-    private static final String ARG_TVPROGRAM_DATE = "com.nkvoronov.tvprogram.tvprogram.program_date";
     private RecyclerView mProgramView;
     private TextView mEmptyTextView;
     private ProgramChannelAdapter mAdapter;
@@ -28,12 +28,11 @@ public class TVProgramChannelFragment  extends Fragment {
     private Date mProgramDate;
     private TVProgramDataSource mDataSource;
 
-    public static TVProgramChannelFragment newInstance(int page, int channel, Date date) {
+    public static TVProgramChannelFragment newInstance(int page, int channel) {
         TVProgramChannelFragment fragment = new TVProgramChannelFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_TVPROGRAM_PAGE_NUMBER, page);
         args.putSerializable(ARG_TVPROGRAM_CHANNEL_INDEX, channel);
-        args.putSerializable(ARG_TVPROGRAM_DATE, date.getTime());
         fragment.setArguments(args);
         return fragment;
     }
@@ -44,8 +43,7 @@ public class TVProgramChannelFragment  extends Fragment {
         mPageIndex = (int) getArguments().getSerializable(ARG_TVPROGRAM_PAGE_NUMBER);
         mChannelIndex = (int) getArguments().getSerializable(ARG_TVPROGRAM_CHANNEL_INDEX);
         Calendar calendar = Calendar.getInstance();
-        long time = (long) getArguments().getSerializable(ARG_TVPROGRAM_DATE);
-        mProgramDate = new Date(time);
+        mProgramDate = addDays(new Date(),mPageIndex);
         calendar.setTime(mProgramDate);
     }
 
@@ -67,11 +65,8 @@ public class TVProgramChannelFragment  extends Fragment {
     }
 
     public void updateUI() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(mProgramDate);
-        Log.d(TAG, "UpdateUI - " + mPageIndex + ";" + mChannelIndex + ";" + simpleDateFormat.format(calendar.getTime()));
-        TVProgramsList programs = mDataSource.getPrograms(0, mChannelIndex, calendar.getTime());
+        Log.d(TAG, "UpdateUI - " + mPageIndex + ";" + mChannelIndex + ";" + getDateFormat(mProgramDate, "yyyy-MM-dd"));
+        TVProgramsList programs = mDataSource.getPrograms(0, mChannelIndex, mProgramDate);
 
         if (mAdapter == null) {
             mAdapter = new ProgramChannelAdapter(programs);
@@ -98,13 +93,8 @@ public class TVProgramChannelFragment  extends Fragment {
 
         public void bind(TVProgram program) {
             mProgram = program;
-            SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat("d MMM, HH:mm");
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(mProgram.getStart());
-            mStart.setText(simpleDateTimeFormat.format(calendar.getTime()));
-            SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm");
-            calendar.setTime(mProgram.getStop());
-            mDuration.setText(getActivity().getString(R.string.dutation_txt, simpleTimeFormat.format(calendar.getTime())));
+            mStart.setText(getDateFormat(mProgram.getStart(), "HH:mm"));
+            mDuration.setText(getActivity().getString(R.string.dutation_txt, getDuration(mProgram.getStart(), mProgram.getStop())));
             mTitle.setText(mProgram.getTitle());
         }
 

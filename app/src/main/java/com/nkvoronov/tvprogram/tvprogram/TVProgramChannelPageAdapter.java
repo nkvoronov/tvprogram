@@ -3,45 +3,42 @@ package com.nkvoronov.tvprogram.tvprogram;
 import android.content.Context;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import static com.nkvoronov.tvprogram.common.DateUtils.*;
 
-public class TVProgramChannelPageAdapter extends FragmentPagerAdapter {
+public class TVProgramChannelPageAdapter extends FragmentStatePagerAdapter {
     private final Context mContext;
+    private List<String> mListTabsName;
     private int mChannelIndex;
-    private Date mDate;
-    int mDays;
 
-    public TVProgramChannelPageAdapter(Context context, FragmentManager fm, int index, Date date, int days) {
+    public TVProgramChannelPageAdapter(Context context, FragmentManager fm, int index, Date date, int count) {
         super(fm);
         mContext = context;
         mChannelIndex = index;
-        mDate = date;
-        mDays = days;
+        mListTabsName = new ArrayList<>();
+        for (int i=0 ; i < count ; i++) {
+            String title = getDateFormat(addDays(date, i), "EEE, d MMM");
+            mListTabsName.add(title);
+        }
     }
 
     @Override
     public Fragment getItem(int position) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(mDate);
-        calendar.add(Calendar.DATE, position);
-        TVProgramChannelFragment page = TVProgramChannelFragment.newInstance(position, mChannelIndex, calendar.getTime());
+        TVProgramChannelFragment page = TVProgramChannelFragment.newInstance(position, mChannelIndex);
         return page;
     }
 
     @Override
     public int getCount() {
-        return  mDays;
+        return  mListTabsName.size();
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, d MMM");
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(mDate);
-        calendar.add(Calendar.DATE, position);
-        return simpleDateFormat.format(calendar.getTime());
+        return mListTabsName.get(position);
     }
 }
