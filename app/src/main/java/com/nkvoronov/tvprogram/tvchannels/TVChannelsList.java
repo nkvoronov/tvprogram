@@ -9,6 +9,7 @@ import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import com.nkvoronov.tvprogram.database.TVChannelsAllCursorWrapper;
 import com.nkvoronov.tvprogram.database.TVChannelsCursorWrapper;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -155,12 +156,13 @@ public class TVChannelsList {
 
     private ContentValues getContentChannelsAllValues(TVChannel channel) {
         ContentValues values = new ContentValues();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
         values.put(ChannelsTable.Cols.CHANNEL_INDEX, channel.getIndex());
         values.put(ChannelsTable.Cols.NAME, channel.getName());
         values.put(ChannelsTable.Cols.ICON, channel.getIcon());
         values.put(ChannelsTable.Cols.LANG, channel.getLang());
-        values.put(ChannelsTable.Cols.UPD_CHANNEL, date.getTime());
+        values.put(ChannelsTable.Cols.UPD_CHANNEL, simpleDateFormat.format(date));
         return values;
     }
 

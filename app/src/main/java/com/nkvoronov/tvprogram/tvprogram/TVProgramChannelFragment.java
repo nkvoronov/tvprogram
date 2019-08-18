@@ -85,25 +85,26 @@ public class TVProgramChannelFragment  extends Fragment {
     private class ProgramChannelHolder extends RecyclerView.ViewHolder implements  View.OnClickListener{
         private TVProgram mProgram;
         private TextView mStart;
-        private TextView mEnd;
+        private TextView mDuration;
         private TextView mTitle;
 
         public ProgramChannelHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_tvprogram, parent, false));
             itemView.setOnClickListener(this);
             mStart = itemView.findViewById(R.id.text_start);
-            mEnd = itemView.findViewById(R.id.text_end);
+            mDuration = itemView.findViewById(R.id.text_duration);
             mTitle = itemView.findViewById(R.id.text_title);
         }
 
         public void bind(TVProgram program) {
             mProgram = program;
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat("d MMM, HH:mm");
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(mProgram.getStart());
-            mStart.setText(simpleDateFormat.format(calendar.getTime()));
+            mStart.setText(simpleDateTimeFormat.format(calendar.getTime()));
+            SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm");
             calendar.setTime(mProgram.getStop());
-            mEnd.setText(simpleDateFormat.format(calendar.getTime()));
+            mDuration.setText(getActivity().getString(R.string.dutation_txt, simpleTimeFormat.format(calendar.getTime())));
             mTitle.setText(mProgram.getTitle());
         }
 

@@ -33,4 +33,5 @@
     <string name="program_progress_msg1">Получение програмы\nдля канала %1$s за %2$s ...</string>
     <string name="program_progress_msg2">Сохраниe програмы в базеданных</string>
     <string name="update_channel">"Обновление канала \n%1$s ... "</string>
+    <string name="dutation_txt">Продолжительность : %1$s</string>
 </resources>
