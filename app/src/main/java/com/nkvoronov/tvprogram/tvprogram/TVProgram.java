@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TVProgram {
-    public static final String SEPARATOR = ";";
     public static final String SEPARATOR_LIST = ",";
 
     private int mId;
@@ -196,11 +195,6 @@ public class TVProgram {
         mStarRating = starRating;
     }
 
-    @Override
-    public String toString() {
-        return Integer.toString(getIndex()) + SEPARATOR + getStart().toString() + SEPARATOR + getStop().toString() + SEPARATOR + getTitle() + SEPARATOR + getDescription();
-    }
-
     private String getDateToFormat(Date date) {
         SimpleDateFormat date_format = new SimpleDateFormat("yyyyMMddHHmmss");
         String result = date_format.format(date);
@@ -208,70 +202,5 @@ public class TVProgram {
             result = result + " " + mCorrectionTime;
         }
         return result;
-    }
-
-    public void getXML(Document document, Element element) {
-        Element xml_program = document.createElement("programme");
-        xml_program.setAttribute("start", getDateToFormat(getStart()));
-        xml_program.setAttribute("stop", getDateToFormat(getStop()));
-        xml_program.setAttribute("channel", Integer.toString(getIndex()));
-        Element xml_title = document.createElement("title");
-        xml_title.setAttribute("lang", "ru");
-        xml_title.appendChild(document.createTextNode(getTitle()));
-        xml_program.appendChild(xml_title);
-        if (getDescription() != null) {
-            Element xml_description = document.createElement("desc");
-            xml_description.setAttribute("lang", "ru");
-            xml_description.appendChild(document.createTextNode(getDescription()));
-            xml_program.appendChild(xml_description);
-        }
-        if (getDirectors() != null ||  getActors() != null) {
-            Element xml_credits = document.createElement("credits");
-            if (getDirectors() != null) {
-                String[] xml_str_list = getDirectors().split(SEPARATOR_LIST);
-                for (String str:xml_str_list) {
-                    Element xml_director = document.createElement("director");
-                    xml_director.appendChild(document.createTextNode(str));
-                    xml_credits.appendChild(xml_director);
-                }
-            }
-            if (getActors() != null) {
-                String[] xml_str_list = getActors().split(SEPARATOR_LIST);
-                for (String str:xml_str_list) {
-                    Element xml_actor = document.createElement("actor");
-                    xml_actor.appendChild(document.createTextNode(str));
-                    xml_credits.appendChild(xml_actor);
-                }
-            }
-            xml_program.appendChild(xml_credits);
-        }
-        if (getDate() != null) {
-            Element xml_date = document.createElement("date");
-            xml_date.appendChild(document.createTextNode(getDate()));
-            xml_program.appendChild(xml_date);
-        }
-        if (getCategory() != null) {
-            Element xml_category2 = document.createElement("category");
-            xml_category2.setAttribute("lang", "ru");
-            xml_category2.appendChild(document.createTextNode(getCategory()));
-            xml_program.appendChild(xml_category2);
-        }
-        if (getGenres() != null) {
-            String[] xml_str_list = getGenres().split(SEPARATOR_LIST);
-            for (String str:xml_str_list) {
-                Element xml_category3 = document.createElement("category");
-                xml_category3.setAttribute("lang", "ru");
-                xml_category3.appendChild(document.createTextNode(str));
-                xml_program.appendChild(xml_category3);
-            }
-        }
-        if (getStarRating() != null) {
-            Element xml_rating = document.createElement("star-rating");
-            Element xml_value = document.createElement("value");
-            xml_value.appendChild(document.createTextNode(getStarRating()));
-            xml_rating.appendChild(xml_value);
-            xml_program.appendChild(xml_rating);
-        }
-        element.appendChild(xml_program);
     }
 }

@@ -145,6 +145,7 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
                 sql_filter + " " +
                 "ORDER BY " +
                 SchedulesTable.Cols.START;
+        Log.d(TAG, sql);
         return sql;
     }
 }

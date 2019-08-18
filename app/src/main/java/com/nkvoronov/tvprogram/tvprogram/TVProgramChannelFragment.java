@@ -65,7 +65,7 @@ public class TVProgramChannelFragment  extends Fragment {
 
     public void updateUI() {
         Log.d(TAG, "UpdateUI " + mPageIndex);
-        TVProgramsList programs = mDataSource.getPrograms(0, mChannelIndex, mProgramDate);
+        TVProgramsList programs = mDataSource.getPrograms(0, mChannelIndex, null);
 
         if (mAdapter == null) {
             mAdapter = new ProgramChannelAdapter(programs);

@@ -217,6 +217,7 @@ public class TVChannelsFragment extends Fragment{
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     mUpdateTask.execute(mChannel.getIndex());
+                    openProgramChannel();
                 }
             });
             builder.setNegativeButton(getActivity().getString(R.string.bt_no), new DialogInterface.OnClickListener() {

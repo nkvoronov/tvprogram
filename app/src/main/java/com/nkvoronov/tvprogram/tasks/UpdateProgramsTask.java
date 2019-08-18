@@ -9,8 +9,14 @@ import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
 import com.nkvoronov.tvprogram.tvprogram.TVProgram;
 import com.nkvoronov.tvprogram.tvprogram.TVProgramsList;
 import org.jsoup.select.Elements;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
+import java.util.TimeZone;
+
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 import static com.nkvoronov.tvprogram.common.DateUtils.*;
 import static com.nkvoronov.tvprogram.common.HttpContent.HOST;
@@ -65,39 +71,53 @@ public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
     }
 
     public void getContentForChannel(int channel, Date date) {
-        Date lastdate = addDays(date, mDataSource.getCoutDays());
-        Log.d(TAG, "LAST " + getFormatDate(lastdate, "yyyy-MM-dd"));
-        while (date.compareTo(lastdate) != 0) {
-            progress[1] = getFormatDate(date, "yyyy-MM-dd");
-            getContentForDay(channel, date);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        Calendar calendar_last = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar_last.setTime(date);
+        calendar_last.add(Calendar.DATE, mDataSource.getCoutDays());
+        Log.d(TAG, "LAST " + dateFormat.format(calendar_last.getTime()));
+        while (!calendar.getTime().equals(calendar_last.getTime())) {
+            progress[1] = dateFormat.format(calendar.getTime());
+            getContentForDay(channel, calendar.getTime());
             counter = (int) (((index+1) / (float) total) * 100);
             progress[2] = String.valueOf(counter);
             publishProgress(progress);
             if(isCancelled()){
                 break;
             }
-            Log.d(TAG, "CDATA " + getFormatDate(date, "yyyy-MM-dd"));
-            date = addDays(date, 1);
+            Log.d(TAG, "CDATA " + dateFormat.format(calendar.getTime()));
+            calendar.add(Calendar.DATE, 1);
             index++;
         }
     }
 
     public void getContentForDay(int channel, Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
         String otime = "00:00";
-        String vdirection = String.format(STR_SCHEDULECHANNEL, channel, getFormatDate(date, "yyyy-MM-dd"));
-        Log.d(TAG, HOST + vdirection);
+        String vdirection = String.format(STR_SCHEDULECHANNEL, channel, dateFormat.format(date));
         org.jsoup.nodes.Document doc = new HttpContent(HOST + vdirection).getDocument();
         Elements items = doc.select(STR_ELMDOCSELECT);
         for (org.jsoup.nodes.Element item : items){
-            String etime = item.html();
+            String etime = item.html().trim();
             Date startDate = null;
             Date endDate = null;
             if (Integer.parseInt(etime.split(":")[0]) < Integer.parseInt(otime.split(":")[0])) {
-                addDays(date, 1);
+                calendar.add(Calendar.DATE, 1);
             }
             otime = etime;
-            startDate = getDateFromString(getFormatDate(date, "yyyy-MM-dd") + " " + etime + ":00", "yyyy-MM-dd  HH:mm:ss");
-            endDate = getDateFromString(getFormatDate(date, "yyyy-MM-dd") + " " + "23:59:59", "yyyy-MM-dd  HH:mm:ss");
+            try {
+                startDate = dateTimeFormat.parse(dateFormat.format(calendar.getTime()) + " " + etime + ":00");
+                endDate = dateTimeFormat.parse(dateFormat.format(calendar.getTime()) + " 23:59:59");
+            } catch (ParseException e) {
+                e.fillInStackTrace();
+                Log.d(TAG, e.getMessage());
+            }
+            Log.d(TAG, "times " + dateTimeFormat.format(startDate) + " / " + dateTimeFormat.format(endDate));
             String etitle = "";
             String efulldescurl = "";
             String edesc = "";
@@ -121,7 +141,6 @@ public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
             TVProgram program = new TVProgram(-1, channel, startDate, endDate, etitle);
             program.setCorrectionTime(DEF_CORRECTION);
             getCategoryFromTitle(program);
-            //Log.d(TAG, program.toString());
 
             if (edesc.length() > 0 && !Objects.equals(edesc, "")) {
                 program.setDescription(edesc);
@@ -132,7 +151,6 @@ public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
             }
             mPrograms.add(program);
         }
-
     }
 
     @Override
