@@ -1,6 +1,8 @@
 package com.nkvoronov.tvprogram.tvprogram;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -104,7 +106,20 @@ public class TVProgramChannelFragment  extends Fragment {
             } else {
                 mFavoriteIcon.setVisibility(View.GONE);
             }
+
+            Date date = new Date();
+
             mTitle.setText(mProgram.getTitle());
+            mTitle.setTypeface(null, Typeface.NORMAL);
+            mTitle.setTextColor(Color.BLACK);
+
+            if (mProgram.getStart().getTime() <= date.getTime() && mProgram.getStop().getTime() >= date.getTime()) {
+                mTitle.setTypeface(null, Typeface.BOLD);
+            } else if (mProgram.getStart().getTime() < date.getTime()) {
+                mTitle.setTextColor(Color.GRAY);
+                mTitle.setTypeface(null, Typeface.ITALIC);
+            }
+
             mStart.setText(getDateFormat(mProgram.getStart(), "HH:mm"));
             mDuration.setText(getActivity().getString(R.string.dutation_txt, getDuration(mProgram.getStart(), mProgram.getStop())));
         }
