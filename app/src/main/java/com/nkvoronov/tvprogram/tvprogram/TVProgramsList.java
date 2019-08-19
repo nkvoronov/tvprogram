@@ -64,7 +64,6 @@ public class TVProgramsList {
         switch (type) {
             case 0:
                 cursor = queryPrograms(getSQLProgramsForChannelToDate(channel, date),null);
-                Log.d(TAG, "type : " + type);
                 break;
             case 1:
                 break;
