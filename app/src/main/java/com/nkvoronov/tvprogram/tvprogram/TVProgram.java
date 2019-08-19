@@ -3,8 +3,6 @@ package com.nkvoronov.tvprogram.tvprogram;
 import java.util.Date;
 
 public class TVProgram {
-    public static final String SEPARATOR_LIST = ",";
-
     private int mId;
     private int mIndex;
     private Date mStart;
@@ -20,6 +18,7 @@ public class TVProgram {
     private String mCountry;
     private String mImage;
     private String mStarRating;
+    private int mTimeType;
     private boolean mIsFavorites;
 
     public TVProgram(int id, int index, Date start, Date stop, String title) {
@@ -39,6 +38,7 @@ public class TVProgram {
         mImage = null;
         mStarRating = null;
         mIsFavorites = false;
+        mTimeType = 2;
     }
 
     public int getId() {
@@ -167,5 +167,13 @@ public class TVProgram {
 
     public void setFavorites(boolean favorites) {
         this.mIsFavorites = favorites;
+    }
+
+    public int getTimeType() {
+        return mTimeType;
+    }
+
+    public void setTimeType(int timeType) {
+        mTimeType = timeType;
     }
 }

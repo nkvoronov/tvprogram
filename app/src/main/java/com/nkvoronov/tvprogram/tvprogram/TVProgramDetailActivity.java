@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.nkvoronov.tvprogram.R;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import com.nkvoronov.tvprogram.tvchannels.TVChannel;
-import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
 import static com.nkvoronov.tvprogram.common.DateUtils.getDateFormat;
 
 public class TVProgramDetailActivity extends AppCompatActivity {
@@ -60,8 +59,8 @@ public class TVProgramDetailActivity extends AppCompatActivity {
             mProgramId = (int) getIntent().getSerializableExtra(EXTRA_TVPROGRAM_ID);
             mChannelIndex = (int) getIntent().getSerializableExtra(EXTRA_TVCHANNEL_INDEX);
         }
-        getProgram();
-        getChannel();
+        mProgram = mDataSource.getProgram(mChannelIndex, mProgramId);
+        mChannel = mDataSource.getChannel(mChannelIndex);
         mProgramTitle = findViewById(R.id.tvprogram_title);
         mProgramCategoryIcon = findViewById(R.id.tvprogram_image_category);
         mProgramImage = findViewById(R.id.tvprogram_image_desc);
@@ -101,15 +100,5 @@ public class TVProgramDetailActivity extends AppCompatActivity {
             mProgramDescription.setVisibility(View.GONE);
         }
 
-    }
-
-    private void getProgram() {
-        TVProgramsList programs = mDataSource.getPrograms(0, mChannelIndex, null);
-        mProgram = programs.getForId(mProgramId);
-    }
-
-    private void getChannel() {
-        TVChannelsList channelList = mDataSource.getChannels(false, 0);
-        mChannel = channelList.getForIndex(mChannelIndex);
     }
 }

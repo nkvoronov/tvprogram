@@ -48,6 +48,8 @@ public class TVProgramDbSchema {
             public static final String START = "starting";
             public static final String END = "ending";
             public static final String TITLE = "title";
+            public static final String TIME_TYPE = "timetype";
+            public static final String FAVORITE = "favorite";
         }
     }
 

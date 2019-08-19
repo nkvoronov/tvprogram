@@ -1,5 +1,6 @@
 package com.nkvoronov.tvprogram.tvprogram;
 
+import java.util.Date;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -15,14 +16,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.nkvoronov.tvprogram.R;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
-import java.util.Calendar;
-import java.util.Date;
 import static com.nkvoronov.tvprogram.common.DateUtils.*;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 
 public class TVProgramChannelFragment  extends Fragment {
     private static final String ARG_TVPROGRAM_PAGE_NUMBER = "com.nkvoronov.tvprogram.tvprogram.page_number";
     private static final String ARG_TVPROGRAM_CHANNEL_INDEX = "com.nkvoronov.tvprogram.tvprogram.channel_index";
+    private static final String ARG_TVPROGRAM_DATE = "com.nkvoronov.tvprogram.tvprogram.date";
     private RecyclerView mProgramView;
     private TextView mEmptyTextView;
     private ProgramChannelAdapter mAdapter;
@@ -31,11 +31,12 @@ public class TVProgramChannelFragment  extends Fragment {
     private Date mProgramDate;
     private TVProgramDataSource mDataSource;
 
-    public static TVProgramChannelFragment newInstance(int page, int channel) {
+    public static TVProgramChannelFragment newInstance(int page, int channel, Date date) {
         TVProgramChannelFragment fragment = new TVProgramChannelFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_TVPROGRAM_PAGE_NUMBER, page);
         args.putSerializable(ARG_TVPROGRAM_CHANNEL_INDEX, channel);
+        args.putSerializable(ARG_TVPROGRAM_DATE, date);
         fragment.setArguments(args);
         return fragment;
     }
@@ -45,9 +46,7 @@ public class TVProgramChannelFragment  extends Fragment {
         super.onCreate(savedInstanceState);
         mPageIndex = (int) getArguments().getSerializable(ARG_TVPROGRAM_PAGE_NUMBER);
         mChannelIndex = (int) getArguments().getSerializable(ARG_TVPROGRAM_CHANNEL_INDEX);
-        Calendar calendar = Calendar.getInstance();
-        mProgramDate = addDays(new Date(),mPageIndex);
-        calendar.setTime(mProgramDate);
+        mProgramDate = (Date) getArguments().getSerializable(ARG_TVPROGRAM_DATE);
     }
 
     @Override
@@ -107,15 +106,14 @@ public class TVProgramChannelFragment  extends Fragment {
                 mFavoriteIcon.setVisibility(View.GONE);
             }
 
-            Date date = new Date();
-
             mTitle.setText(mProgram.getTitle());
             mTitle.setTypeface(null, Typeface.NORMAL);
             mTitle.setTextColor(Color.BLACK);
 
-            if (mProgram.getStart().getTime() <= date.getTime() && mProgram.getStop().getTime() >= date.getTime()) {
+            if (mProgram.getTimeType() == 1) {
+                mTitle.setText(mProgram.getTitle());
                 mTitle.setTypeface(null, Typeface.BOLD);
-            } else if (mProgram.getStart().getTime() < date.getTime()) {
+            } else if (mProgram.getTimeType() == 0) {
                 mTitle.setTextColor(Color.GRAY);
                 mTitle.setTypeface(null, Typeface.ITALIC);
             }

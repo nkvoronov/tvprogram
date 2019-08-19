@@ -140,7 +140,8 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
                 SchedulesTable.Cols.CATEGORY + ", " +
                 SchedulesTable.Cols.START + ", " +
                 SchedulesTable.Cols.END + ", " +
-                SchedulesTable.Cols.TITLE + " " +
+                SchedulesTable.Cols.TITLE + ", " +
+                "CASE WHEN (" + SchedulesTable.Cols.START + "<=datetime('now','localtime')) and (" + SchedulesTable.Cols.END + ">=datetime('now','localtime')) THEN 1 WHEN " + SchedulesTable.Cols.START + "<=datetime('now','localtime') THEN 0 else 2 END AS " + SchedulesTable.Cols.TIME_TYPE + " " +
                 "FROM " +
                 SchedulesTable.TABLE_NAME + " " +
                 sql_filter + " " +

@@ -13,7 +13,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.nkvoronov.tvprogram.R;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import com.nkvoronov.tvprogram.tvchannels.TVChannel;
-import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
 import java.util.Date;
 
 public class TVProgramChannelActivity extends AppCompatActivity {
@@ -50,7 +49,7 @@ public class TVProgramChannelActivity extends AppCompatActivity {
         } else {
             mChannelIndex = (int) getIntent().getSerializableExtra(EXTRA_TVCHANNEL_INDEX);
         }
-        getChannel();
+        mChannel = mDataSource.getChannel(mChannelIndex);
         mChannelIcon = findViewById(R.id.channel_icon_own);
         Glide
                 .with(this)
@@ -70,14 +69,22 @@ public class TVProgramChannelActivity extends AppCompatActivity {
         });
         mTabLayout = findViewById(R.id.tvprogramchannels_tabs);
         mViewPager = findViewById(R.id.tvprogramchannels_pager);
-        mPageAdapter = new TVProgramChannelPageAdapter(this, getSupportFragmentManager(), mChannel.getIndex(), new Date(), mDataSource.getCoutDays());
+
+        long[] info = mDataSource.getProgramInfo(mChannelIndex);
+        Date beginDate = new Date(info[0]);
+        int days = (int)info[1];
+        int current = (int)info[2];
+
+        mPageAdapter = new TVProgramChannelPageAdapter(this, getSupportFragmentManager(), mChannelIndex, beginDate, days);
         mViewPager.setAdapter(mPageAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
-    }
 
-    private void getChannel() {
-        TVChannelsList channelList = mDataSource.getChannels(false, 0);
-        mChannel = channelList.getForIndex(mChannelIndex);
+        for (int i = 0; i < mPageAdapter.getCount(); i++) {
+            if (i == current) {
+                mViewPager.setCurrentItem(i);
+                break;
+            }
+        }
     }
 
     private void setFavorites() {

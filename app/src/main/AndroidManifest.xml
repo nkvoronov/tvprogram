@@ -30,8 +30,7 @@
         </activity>
         <activity
             android:name=".tvprogram.TVProgramDetailActivity"
-            android:label="@string/title_tvprogram_det_win"
-            android:parentActivityName=".tvprogram.TVProgramChannelActivity">
+            android:label="@string/title_tvprogram_det_win">
         </activity>
         <activity
             android:name=".SettingsActivity"

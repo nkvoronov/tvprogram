@@ -1,14 +1,13 @@
 package com.nkvoronov.tvprogram.database;
 
-import android.database.Cursor;
-import android.database.CursorWrapper;
+import java.util.Date;
 import android.util.Log;
-import com.nkvoronov.tvprogram.tvprogram.TVProgram;
-import com.nkvoronov.tvprogram.database.TVProgramDbSchema.SchedulesTable;
+import android.database.Cursor;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-
+import android.database.CursorWrapper;
+import com.nkvoronov.tvprogram.tvprogram.TVProgram;
+import com.nkvoronov.tvprogram.database.TVProgramDbSchema.SchedulesTable;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 
 public class TVProgramsCursorWrapper extends CursorWrapper {
@@ -24,6 +23,7 @@ public class TVProgramsCursorWrapper extends CursorWrapper {
         String start = getString(getColumnIndex(SchedulesTable.Cols.START));
         String stop = getString(getColumnIndex(SchedulesTable.Cols.END));
         String title = getString(getColumnIndex(SchedulesTable.Cols.TITLE));
+        int timeType = getInt(getColumnIndex(SchedulesTable.Cols.TIME_TYPE));
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date startDate = null;
@@ -39,6 +39,7 @@ public class TVProgramsCursorWrapper extends CursorWrapper {
 
         TVProgram program = new TVProgram(id, index, startDate, endDate, title);
         program.setCategory(category);
+        program.setTimeType(timeType);
         program.setFavorites(false);
         return program;
     }
