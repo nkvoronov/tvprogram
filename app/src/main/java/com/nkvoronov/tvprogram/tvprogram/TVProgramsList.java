@@ -1,29 +1,25 @@
 package com.nkvoronov.tvprogram.tvprogram;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
-import com.nkvoronov.tvprogram.database.TVProgramsCursorWrapper;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import android.util.Log;
+import java.util.ArrayList;
+import android.database.Cursor;
+import java.text.SimpleDateFormat;
+import android.content.ContentValues;
+import com.nkvoronov.tvprogram.common.TVProgramDataSource;
+import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
+import com.nkvoronov.tvprogram.database.TVProgramsCursorWrapper;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 import static com.nkvoronov.tvprogram.database.TVProgramBaseHelper.getSQLProgramsForChannelToDate;
 
 public class TVProgramsList {
     private List<TVProgram> mData;
-    private SQLiteDatabase mDatabase;
-    private Context mContext;
+    private TVProgramDataSource mDataSource;
 
-    public TVProgramsList(Context context, SQLiteDatabase database) {
+    public TVProgramsList(TVProgramDataSource dataSource) {
         mData = new ArrayList<>();
-        mContext = context;
-        mDatabase = database;
+        mDataSource = dataSource;
     }
 
     public List<TVProgram> getData() {
@@ -31,14 +27,14 @@ public class TVProgramsList {
     }
 
     public TVProgram get(int position) {
-        return mData.get(position);
+        return getData().get(position);
     }
 
     public TVProgram getForId(int id) {
         TVProgram program = null;
-        for (int i = 0; i < mData.size(); i++) {
-            if (mData.get(i).getId() == id) {
-                program = mData.get(i);
+        for (int i = 0; i < size(); i++) {
+            if (get(i).getId() == id) {
+                program = get(i);
                 break;
             }
         }
@@ -46,20 +42,21 @@ public class TVProgramsList {
     }
 
     public int size() {
-        return mData.size();
+        return getData().size();
     }
 
     public void clear() {
-        mData.clear();
+        getData().clear();
     }
 
-    public void add(TVProgram channel) {
-        mData.add(channel);
+    public void add(TVProgram program) {
+        program.setDataSource(mDataSource);
+        getData().add(program);
     }
 
     public void loadFromDB(int type, int channel, Date date) {
         TVProgramsCursorWrapper cursor = null;
-        mData.clear();
+        clear();
 
         switch (type) {
             case 0:
@@ -76,7 +73,7 @@ public class TVProgramsList {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 TVProgram program = cursor.getProgram();
-                mData.add(program);
+                add(program);
                 cursor.moveToNext();
             }
         } finally {
@@ -85,17 +82,17 @@ public class TVProgramsList {
     }
 
     private TVProgramsCursorWrapper queryPrograms(String sql, String[] selectionArgs) {
-        Cursor cursor = mDatabase.rawQuery(sql, selectionArgs);
+        Cursor cursor = mDataSource.getDatabase().rawQuery(sql, selectionArgs);
         return new TVProgramsCursorWrapper(cursor);
     }
 
     public void setProgramStop() {
         int i = 0;
-        while (i != mData.size()) {
-            TVProgram program = mData.get(i);
+        while (i != size()) {
+            TVProgram program = get(i);
             TVProgram program_next;
-            if (i + 1 != mData.size()) {
-                program_next = mData.get(i+1);
+            if (i + 1 != size()) {
+                program_next = get(i+1);
                 if (program_next.getIndex() == program_next.getIndex()) {
                     program.setStop(program_next.getStart());
                 }
@@ -105,8 +102,8 @@ public class TVProgramsList {
     }
 
     public void saveToDB() {
-        for (TVProgram program : mData) {
-            mDatabase.insert(SchedulesTable.TABLE_NAME, null, getContentProgramsValues(program));
+        for (TVProgram program : getData()) {
+            mDataSource.getDatabase().insert(SchedulesTable.TABLE_NAME, null, getContentProgramsValues(program));
         }
     }
 
@@ -122,7 +119,7 @@ public class TVProgramsList {
     }
 
     public void preUpdateProgram(int channel) {
-        mDatabase.delete(SchedulesTable.TABLE_NAME, SchedulesTable.Cols.CHANNEL + "=?", new String[]{ String.valueOf(channel) });
+        mDataSource.getDatabase().delete(SchedulesTable.TABLE_NAME, SchedulesTable.Cols.CHANNEL + "=?", new String[]{ String.valueOf(channel) });
     }
 
     private int getCategoryID(String nameEN, String nameRU) {

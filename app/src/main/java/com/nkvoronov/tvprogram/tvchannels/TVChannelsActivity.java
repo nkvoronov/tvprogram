@@ -1,26 +1,26 @@
 package com.nkvoronov.tvprogram.tvchannels;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
+import android.content.Context;
+import com.nkvoronov.tvprogram.R;
+import android.app.ProgressDialog;
 import androidx.core.view.MenuCompat;
 import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.tabs.TabLayout;
-import com.nkvoronov.tvprogram.R;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import com.nkvoronov.tvprogram.tasks.UpdateChannelsTask;
 
 public class TVChannelsActivity extends AppCompatActivity implements TVChannelsFragment.ChangesChannels {
-    private TVChannelsPageAdapter mPageAdapter;
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
     ProgressDialog mProgressDialog;
     private TVProgramDataSource mDataSource;
     private UpdateChannelsTask mUpdateTask;
+    private TVChannelsPageAdapter mPageAdapter;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

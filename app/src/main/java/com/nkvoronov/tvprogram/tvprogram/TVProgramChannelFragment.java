@@ -1,34 +1,35 @@
 package com.nkvoronov.tvprogram.tvprogram;
 
 import java.util.Date;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.content.Intent;
+import android.graphics.Color;
 import android.widget.TextView;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.widget.ImageView;
 import com.nkvoronov.tvprogram.R;
-import com.nkvoronov.tvprogram.common.TVProgramDataSource;
+import android.graphics.Typeface;
+import android.view.LayoutInflater;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import static com.nkvoronov.tvprogram.common.DateUtils.*;
+import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 
 public class TVProgramChannelFragment  extends Fragment {
+    private static final String ARG_TVPROGRAM_DATE = "com.nkvoronov.tvprogram.tvprogram.date";
     private static final String ARG_TVPROGRAM_PAGE_NUMBER = "com.nkvoronov.tvprogram.tvprogram.page_number";
     private static final String ARG_TVPROGRAM_CHANNEL_INDEX = "com.nkvoronov.tvprogram.tvprogram.channel_index";
-    private static final String ARG_TVPROGRAM_DATE = "com.nkvoronov.tvprogram.tvprogram.date";
-    private RecyclerView mProgramView;
-    private TextView mEmptyTextView;
-    private ProgramChannelAdapter mAdapter;
+
     private int mPageIndex;
     private int mChannelIndex;
     private Date mProgramDate;
+    private TextView mEmptyTextView;
+    private RecyclerView mProgramView;
+    private ProgramChannelAdapter mAdapter;
     private TVProgramDataSource mDataSource;
 
     public static TVProgramChannelFragment newInstance(int page, int channel, Date date) {
@@ -80,10 +81,10 @@ public class TVProgramChannelFragment  extends Fragment {
     }
 
     private class ProgramChannelHolder extends RecyclerView.ViewHolder implements  View.OnClickListener{
-        private TVProgram mProgram;
         private TextView mStart;
-        private TextView mDuration;
         private TextView mTitle;
+        private TVProgram mProgram;
+        private TextView mDuration;
         private ImageView mFavoriteIcon;
         private ImageView mCategoryIcon;
 

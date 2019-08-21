@@ -1,23 +1,24 @@
 package com.nkvoronov.tvprogram.tvchannels;
 
-import android.util.Log;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.net.URL;
+import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import static com.nkvoronov.tvprogram.common.TVProgramDataSource.ALL_LANG;
+import java.io.DataInputStream;
+import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
+import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
+import static com.nkvoronov.tvprogram.common.TVProgramDataSource.ALL_LANG;
 
 public class TVChannel {
     private int mIndex;
     private String mName;
     private String mIcon;
-    private boolean mIsFavorites;
     private String mLang;
-    private TVChannelsList mParent;
+    private boolean mIsFavorites;
+    private TVProgramDataSource mDataSource;
 
     public TVChannel(int index, String name, String icon) {
         mIndex = index;
@@ -25,7 +26,7 @@ public class TVChannel {
         mIcon = icon;
         mIsFavorites = false;
         mLang = ALL_LANG;
-        mParent = null;
+        mDataSource = null;
     }
 
     public int getIndex() {
@@ -64,8 +65,12 @@ public class TVChannel {
         return  mIsFavorites;
     }
 
+    public void setDataSource(TVProgramDataSource dataSource) {
+        mDataSource = dataSource;
+    }
+
     public File getIconFile() {
-        File filesDir = mParent.getContext().getFilesDir();
+        File filesDir = mDataSource.getContext().getFilesDir();
         return new File(filesDir, "IMG_" + Integer.toString(getIndex()) + ".gif");
     }
 
@@ -96,11 +101,7 @@ public class TVChannel {
     }
 
     public void changeFavorites() {
-        mParent.channelChangeFavorites(this);
+        mDataSource.channelChangeFavorites(this);
         mIsFavorites = !mIsFavorites;
-    }
-
-    public void setParent(TVChannelsList parent) {
-        mParent = parent;
     }
 }

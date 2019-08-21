@@ -1,19 +1,20 @@
 package com.nkvoronov.tvprogram.common;
 
-import android.util.Log;
 import java.util.Date;
+import android.util.Log;
 import android.content.Context;
 import android.database.Cursor;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
-import com.nkvoronov.tvprogram.database.TVProgramBaseHelper;
-import com.nkvoronov.tvprogram.tvchannels.TVChannel;
-import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
 import com.nkvoronov.tvprogram.tvprogram.TVProgram;
+import com.nkvoronov.tvprogram.tvchannels.TVChannel;
 import com.nkvoronov.tvprogram.tvprogram.TVProgramsList;
-import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
+import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
 import static com.nkvoronov.tvprogram.common.DateUtils.*;
+import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
+import com.nkvoronov.tvprogram.database.TVProgramBaseHelper;
 import static com.nkvoronov.tvprogram.common.StringUtils.addQuotes;
 
 public class TVProgramDataSource {
@@ -21,10 +22,11 @@ public class TVProgramDataSource {
     public static final String UKR_LANG = "ukr";
     public static final String ALL_LANG = "all";
     public static final String TAG = "TVPROGRAM";
-    private static TVProgramDataSource sTVProgramLab;
+
     private Context mContext;
-    private SQLiteDatabase mDatabase;
     private AppConfig mAppConfig;
+    private SQLiteDatabase mDatabase;
+    private static TVProgramDataSource sTVProgramLab;
 
     public TVProgramDataSource(Context context) {
         mContext = context.getApplicationContext();
@@ -47,8 +49,30 @@ public class TVProgramDataSource {
         mAppConfig.setCoutDays(coutDays);
     }
 
+    public Context getContext() {
+        return mContext;
+    }
+
+    public SQLiteDatabase getDatabase() {
+        return mDatabase;
+    }
+
+    public void channelChangeFavorites(TVChannel channel) {
+        if (channel.isFavorites()) {
+            mDatabase.delete(ChannelsFavoritesTable.TABLE_NAME, ChannelsFavoritesTable.Cols.CHANNEL_INDEX + " = ?", new String[]{String.valueOf(channel.getIndex())});
+        } else {
+            mDatabase.insert(ChannelsFavoritesTable.TABLE_NAME, null, getContentChannelsFavValues(channel));
+        }
+    }
+
+    private ContentValues getContentChannelsFavValues(TVChannel channel) {
+        ContentValues values = new ContentValues();
+        values.put(ChannelsFavoritesTable.Cols.CHANNEL_INDEX, channel.getIndex());
+        return values;
+    }
+
     public TVChannelsList getChannels(boolean isFavorites, int filter) {
-        TVChannelsList channels = new TVChannelsList(mContext, mDatabase);
+        TVChannelsList channels = new TVChannelsList(this);
         channels.loadFromDB(isFavorites, filter);
         return channels;
     };
@@ -59,7 +83,7 @@ public class TVProgramDataSource {
     }
 
     public TVProgramsList getPrograms(int type, int channel, Date date) {
-        TVProgramsList programs = new TVProgramsList(mContext, mDatabase);
+        TVProgramsList programs = new TVProgramsList(this);
         programs.loadFromDB(type, channel, date);
         return programs;
     };

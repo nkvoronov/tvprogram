@@ -1,40 +1,38 @@
 package com.nkvoronov.tvprogram.tasks;
 
-import android.os.AsyncTask;
-import android.util.Log;
-import com.nkvoronov.tvprogram.common.HttpContent;
-import com.nkvoronov.tvprogram.common.TVProgramDataSource;
-import com.nkvoronov.tvprogram.tvchannels.TVChannel;
-import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
-import com.nkvoronov.tvprogram.tvprogram.TVProgram;
-import com.nkvoronov.tvprogram.tvprogram.TVProgramsList;
-import org.jsoup.select.Elements;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
+import android.util.Log;
 import java.util.Objects;
-import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
+import java.util.Calendar;
+import android.os.AsyncTask;
+import java.text.ParseException;
+import org.jsoup.select.Elements;
+import java.text.SimpleDateFormat;
+import com.nkvoronov.tvprogram.common.HttpContent;
+import com.nkvoronov.tvprogram.tvprogram.TVProgram;
+import com.nkvoronov.tvprogram.tvchannels.TVChannel;
+import com.nkvoronov.tvprogram.tvprogram.TVProgramsList;
+import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
+import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import static com.nkvoronov.tvprogram.common.HttpContent.HOST;
+import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 
 public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
+    public static final int DEF_CORRECTION = 120;
     public static final String STR_SCHEDULECHANNEL = "schedule_channel_%d_day_%s.html";
     public static final String STR_ELMDOCSELECT = "div[class~=(?:pasttime|onair|time)]";
     public static final String STR_ELMDOCTITLE = "div[class~=(?:pastprname2|prname2)]";
     public static final String STR_ELMDOCDESC = "div[class~=(?:pastdesc|prdesc)]";
-    public static final int DEF_CORRECTION = 120;
 
-    private OnTaskListeners mListeners;
-    private TVProgramDataSource mDataSource;
+    private int index;
+    private int total;
+    private int counter;
+    private boolean mFullDesc;
+    private String[] progress;
     private TVChannelsList mChannels;
     private TVProgramsList mPrograms;
-
-    private String[] progress;
-    private int index;
-    private int counter;
-    private int total;
-
-    private boolean mFullDesc;
+    private OnTaskListeners mListeners;
+    private TVProgramDataSource mDataSource;
 
     public UpdateProgramsTask(TVProgramDataSource dataSource) {
         mDataSource = dataSource;

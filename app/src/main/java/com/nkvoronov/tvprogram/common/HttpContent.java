@@ -1,11 +1,11 @@
 package com.nkvoronov.tvprogram.common;
 
-import android.os.StrictMode;
-import android.util.Log;
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+import android.util.Log;
 import java.io.IOException;
+import org.jsoup.Connection;
+import android.os.StrictMode;
+import org.jsoup.nodes.Document;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 
 public class HttpContent {

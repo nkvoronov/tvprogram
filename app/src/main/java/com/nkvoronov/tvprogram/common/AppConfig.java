@@ -1,15 +1,14 @@
 package com.nkvoronov.tvprogram.common;
 
+import android.util.Log;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-import com.nkvoronov.tvprogram.database.ConfigCursorWrapper;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
+import com.nkvoronov.tvprogram.database.ConfigCursorWrapper;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class AppConfig {
     private static final String DEF_ID = "1";
-
     private int mCoutDays;
     private SQLiteDatabase mDatabase;
 

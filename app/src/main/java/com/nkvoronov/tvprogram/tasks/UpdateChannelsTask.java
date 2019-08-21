@@ -1,7 +1,7 @@
 package com.nkvoronov.tvprogram.tasks;
 
-import android.os.AsyncTask;
 import android.util.Log;
+import android.os.AsyncTask;
 import com.nkvoronov.tvprogram.common.HttpContent;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import com.nkvoronov.tvprogram.tvchannels.TVChannel;
@@ -64,7 +64,6 @@ public class UpdateChannelsTask extends AsyncTask<Void,String,Void> {
             channel.setLang(lang);
             channel.setIsFavorites(false);
             channels.add(channel);
-            channel.setParent(channels);
             Log.d(TAG, channel.toString());
             channels.saveChannelToDB(channel);
             channel.saveIconToFile();

@@ -1,16 +1,16 @@
 package com.nkvoronov.tvprogram.tvprogram;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.content.Intent;
+import android.content.Context;
 import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
+import android.widget.ImageView;
 import com.nkvoronov.tvprogram.R;
-import com.nkvoronov.tvprogram.common.TVProgramDataSource;
+import androidx.appcompat.app.AppCompatActivity;
 import com.nkvoronov.tvprogram.tvchannels.TVChannel;
+import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import static com.nkvoronov.tvprogram.common.DateUtils.getDateFormat;
 
 public class TVProgramDetailActivity extends AppCompatActivity {

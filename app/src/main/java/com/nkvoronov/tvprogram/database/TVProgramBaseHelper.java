@@ -1,20 +1,20 @@
 package com.nkvoronov.tvprogram.database;
 
+import java.util.Date;
+import android.util.Log;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ConfigsTable;
-import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsTable;
-import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsFavoritesTable;
-import com.nkvoronov.tvprogram.database.TVProgramDbSchema.SchedulesTable;
-import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsAllTable;
-import java.util.Date;
 import static com.nkvoronov.tvprogram.common.DateUtils.*;
 import static com.nkvoronov.tvprogram.common.StringUtils.*;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
+import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ConfigsTable;
+import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsTable;
+import com.nkvoronov.tvprogram.database.TVProgramDbSchema.SchedulesTable;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.RUS_LANG;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.UKR_LANG;
+import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsAllTable;
+import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsFavoritesTable;
 
 public class TVProgramBaseHelper extends SQLiteOpenHelper {
     private static final int VERSION = 1;

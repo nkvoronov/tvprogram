@@ -1,31 +1,32 @@
 package com.nkvoronov.tvprogram.tvprogram;
 
-import android.content.Context;
-import android.content.Intent;
+import java.util.Date;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
+import android.content.Intent;
+import android.content.Context;
 import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
+import android.widget.ImageView;
 import com.bumptech.glide.Glide;
-import com.google.android.material.tabs.TabLayout;
 import com.nkvoronov.tvprogram.R;
-import com.nkvoronov.tvprogram.common.TVProgramDataSource;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.tabs.TabLayout;
 import com.nkvoronov.tvprogram.tvchannels.TVChannel;
-import java.util.Date;
+import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 
 public class TVProgramChannelActivity extends AppCompatActivity {
     private static final String EXTRA_TVCHANNEL_INDEX = "com.nkvoronov.tvprogram.tvprogram.tvchannel_index";
-    private TVProgramChannelPageAdapter mPageAdapter;
+
+    TVChannel mChannel;
+    private int mChannelIndex;
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
-    private int mChannelIndex;
-    TVChannel mChannel;
-    private ImageView mChannelIcon;
     private TextView mChannelName;
+    private ImageView mChannelIcon;
     private ImageView mChannelFavorites;
     private TVProgramDataSource mDataSource;
+    private TVProgramChannelPageAdapter mPageAdapter;
 
     public static Intent newIntent(Context context, int channel_index) {
         Intent intent = new Intent(context, TVProgramChannelActivity.class);

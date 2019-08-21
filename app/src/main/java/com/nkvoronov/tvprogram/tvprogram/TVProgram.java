@@ -1,29 +1,34 @@
 package com.nkvoronov.tvprogram.tvprogram;
 
+import com.nkvoronov.tvprogram.common.TVProgramDataSource;
+
 import java.util.Date;
 
 public class TVProgram {
     private int mId;
     private int mIndex;
-    private Date mStart;
     private Date mStop;
+    private Date mStart;
+    private String mYear;
+    private int mCategory;
     private String mTitle;
+    private String mImage;
+    private int mTimeType;
+    private String mActors;
+    private String mGenres;
+    private String mCountry;
+    private String mDirectors;
+    private String mStarRating;
+    private String mNameChannel;
     private String mDescription;
     private String mUrlFullDesc;
-    private int mCategory;
-    private String mGenres;
-    private String mDirectors;
-    private String mActors;
-    private String mYear;
-    private String mCountry;
-    private String mImage;
-    private String mStarRating;
-    private int mTimeType;
     private boolean mIsFavorites;
+    private TVProgramDataSource mDataSource;
 
     public TVProgram(int id, int index, Date start, Date stop, String title) {
         mId = id;
         mIndex = index;
+        mNameChannel = null;
         mStart = start;
         mStop = stop;
         mTitle = title;
@@ -39,6 +44,7 @@ public class TVProgram {
         mStarRating = null;
         mIsFavorites = false;
         mTimeType = 2;
+        mDataSource = null;
     }
 
     public int getId() {
@@ -55,6 +61,14 @@ public class TVProgram {
 
     public void setIndex(int index) {
         mIndex = index;
+    }
+
+    public String getNameChannel() {
+        return mNameChannel;
+    }
+
+    public void setNameChannel(String nameChannel) {
+        mNameChannel = nameChannel;
     }
 
     public Date getStart() {
@@ -175,5 +189,9 @@ public class TVProgram {
 
     public void setTimeType(int timeType) {
         mTimeType = timeType;
+    }
+
+    public void setDataSource(TVProgramDataSource dataSource) {
+        mDataSource = dataSource;
     }
 }

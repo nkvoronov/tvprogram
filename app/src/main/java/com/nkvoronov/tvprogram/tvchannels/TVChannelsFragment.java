@@ -1,40 +1,41 @@
 package com.nkvoronov.tvprogram.tvchannels;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.view.ViewGroup;
+import android.content.Intent;
+import android.widget.Spinner;
+import android.content.Context;
+import android.app.AlertDialog;
+import android.widget.TextView;
+import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.nkvoronov.tvprogram.R;
-import com.nkvoronov.tvprogram.common.TVProgramDataSource;
+import android.app.ProgressDialog;
+import android.widget.AdapterView;
+import android.view.LayoutInflater;
+import androidx.fragment.app.Fragment;
+import android.content.DialogInterface;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import com.nkvoronov.tvprogram.tasks.UpdateProgramsTask;
+import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import com.nkvoronov.tvprogram.tvprogram.TVProgramChannelActivity;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 
 public class TVChannelsFragment extends Fragment{
     private static final String ARG_TVCHANNELS_PAGE_NUMBER = "com.nkvoronov.tvprogram.tvchannels.page_number";
+
+    private int mPageIndex;
+    private int mFilterIndex;
     private Spinner mSpinnerFilter;
-    private RecyclerView mChannelsView;
     private TextView mEmptyTextView;
     private ChannelAdapter mAdapter;
-    private int mPageIndex;
+    private RecyclerView mChannelsView;
     private ChangesChannels mChangesChannels;
     private TVProgramDataSource mDataSource;
-    private int mFilterIndex;
 
     public interface ChangesChannels {
         void onUpdatePages(TVChannel channel);

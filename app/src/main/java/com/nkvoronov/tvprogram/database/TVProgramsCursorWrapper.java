@@ -7,8 +7,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import android.database.CursorWrapper;
 import com.nkvoronov.tvprogram.tvprogram.TVProgram;
-import com.nkvoronov.tvprogram.database.TVProgramDbSchema.SchedulesTable;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
+import com.nkvoronov.tvprogram.database.TVProgramDbSchema.SchedulesTable;
 
 public class TVProgramsCursorWrapper extends CursorWrapper {
 
