@@ -24,7 +24,7 @@
             android:layout_margin="4dp"
             android:contentDescription="@string/img_favorite_program_desc"
             android:scaleType="fitXY"
-            app:srcCompat="@drawable/rectangle" />
+            app:srcCompat="@drawable/favorites_on" />
 
         <TextView
             android:id="@+id/text_title"

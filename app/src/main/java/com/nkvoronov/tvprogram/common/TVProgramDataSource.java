@@ -7,13 +7,12 @@ import android.util.Log;
 import java.util.ArrayList;
 import android.content.Context;
 import android.database.Cursor;
+import android.widget.ImageView;
 import java.text.ParseException;
 import com.nkvoronov.tvprogram.R;
 import java.text.SimpleDateFormat;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
-import android.widget.ImageView;
-
 import com.nkvoronov.tvprogram.tvprogram.TVProgram;
 import com.nkvoronov.tvprogram.tvchannels.TVChannel;
 import com.nkvoronov.tvprogram.tvprogram.TVProgramsList;
@@ -75,6 +74,20 @@ public class TVProgramDataSource {
     private ContentValues getContentChannelsFavValues(TVChannel channel) {
         ContentValues values = new ContentValues();
         values.put(ChannelsFavoritesTable.Cols.CHANNEL, channel.getIndex());
+        return values;
+    }
+
+    public void programChangeFavorites(TVProgram program) {
+        if (program.isFavorites()) {
+            mDatabase.delete(SchedulesFavoritesTable.TABLE_NAME, SchedulesFavoritesTable.Cols.SCHEDULE + " = ?", new String[]{String.valueOf(program.getId())});
+        } else {
+            mDatabase.insert(SchedulesFavoritesTable.TABLE_NAME, null, getContentSchedulesFavValues(program));
+        }
+    }
+
+    private ContentValues getContentSchedulesFavValues(TVProgram program) {
+        ContentValues values = new ContentValues();
+        values.put(SchedulesFavoritesTable.Cols.SCHEDULE, program.getId());
         return values;
     }
 

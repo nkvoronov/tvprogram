@@ -70,6 +70,7 @@ public class TVProgramDetailActivity extends AppCompatActivity {
         }
 
         mProgramImage = findViewById(R.id.tvprogram_image_desc);
+        mProgramImage.setImageResource(R.drawable.rectangle_control);
         mProgramDate = findViewById(R.id.tvprogram_date);
         mProgramDuration = findViewById(R.id.tvprogram_duration);
         mProgramChannel = findViewById(R.id.tvprogram_channel);
@@ -77,7 +78,16 @@ public class TVProgramDetailActivity extends AppCompatActivity {
         mProgramCountry = findViewById(R.id.tvprogram_country);
         mProgramYear = findViewById(R.id.tvprogram_year);
         mProgramDescription = findViewById(R.id.tvprogram_description);
+
         mButtonExecute = findViewById(R.id.tvprogram_action);
+        mButtonExecute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mProgram.changeFavorites();
+                updateUI();
+            }
+        });
+        updateUI();
 
         mProgramTitle.setText(mProgram.getTitle());
         mProgramDate.setText(getDateFormat(mProgram.getStart(), "EEE, d MMM"));
@@ -106,5 +116,13 @@ public class TVProgramDetailActivity extends AppCompatActivity {
             mProgramDescription.setVisibility(View.GONE);
         }
 
+    }
+
+    public void updateUI() {
+        if (mProgram.isFavorites()) {
+            mButtonExecute.setText(R.string.del_from_favorites);
+        } else {
+            mButtonExecute.setText(R.string.add_to_favorites);
+        }
     }
 }

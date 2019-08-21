@@ -193,4 +193,9 @@ public class TVProgram {
     public void setDataSource(TVProgramDataSource dataSource) {
         mDataSource = dataSource;
     }
+
+    public void changeFavorites() {
+        mDataSource.programChangeFavorites(this);
+        mIsFavorites = !mIsFavorites;
+    }
 }

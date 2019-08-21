@@ -171,7 +171,7 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
                 "sch." + SchedulesTable.Cols.END + " AS " + SchedulesTable.Cols.END + ", " +
                 "sch." + SchedulesTable.Cols.TITLE + " AS " + SchedulesTable.Cols.TITLE + ", " +
                 "CASE WHEN (sch." + SchedulesTable.Cols.START + "<=datetime('now','localtime')) AND (sch." + SchedulesTable.Cols.END + ">=datetime('now','localtime')) THEN 1 WHEN sch." + SchedulesTable.Cols.START + "<=datetime('now','localtime') THEN 0 else 2 END AS " + SchedulesTable.Cols.TIME_TYPE + ", " +
-                "0 AS " + SchedulesTable.Cols.FAVORITE + " " +
+                "CASE WHEN (SELECT sf." + SchedulesFavoritesTable.Cols.ID + " FROM " + SchedulesFavoritesTable.TABLE_NAME + " sf WHERE sf." + SchedulesFavoritesTable.Cols.ID + "=sch." + SchedulesTable.Cols.ID + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.FAVORITE + " " +
                 "FROM " +
                 SchedulesTable.TABLE_NAME + " sch " +
                 "JOIN " + ChannelsTable.TABLE_NAME + " ca ON (sch." + SchedulesTable.Cols.CHANNEL + "=ca." + ChannelsTable.Cols.CHANNEL + ") " +
@@ -198,10 +198,11 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
                         "sch." + SchedulesTable.Cols.END + " AS " + SchedulesTable.Cols.END + ", " +
                         "sch." + SchedulesTable.Cols.TITLE + " AS " + SchedulesTable.Cols.TITLE + ", " +
                         "1 AS " + SchedulesTable.Cols.TIME_TYPE + ", " +
-                        "0 AS " + SchedulesTable.Cols.FAVORITE + " " +
+                        "CASE WHEN (SELECT sf." + SchedulesFavoritesTable.Cols.ID + " FROM " + SchedulesFavoritesTable.TABLE_NAME + " sf WHERE sf." + SchedulesFavoritesTable.Cols.ID + "=sch." + SchedulesTable.Cols.ID + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.FAVORITE + " " +
                         "FROM " +
                         SchedulesTable.TABLE_NAME + " sch " +
-                        "JOIN " + ChannelsTable.TABLE_NAME + " ca ON (sch." + SchedulesTable.Cols.CHANNEL + "=ca." + ChannelsTable.Cols.CHANNEL + ") " +
+                        "JOIN " + ChannelsFavoritesTable.TABLE_NAME + " cf ON (sch." + SchedulesTable.Cols.CHANNEL + "=cf." + ChannelsFavoritesTable.Cols.CHANNEL + ") " +
+                        "JOIN " + ChannelsTable.TABLE_NAME + " ca ON (cf." + ChannelsFavoritesTable.Cols.CHANNEL + "=ca." + ChannelsTable.Cols.CHANNEL + ") " +
                         "WHERE (sch." + SchedulesTable.Cols.START + "<=datetime('now','localtime')) AND (sch." + SchedulesTable.Cols.END + ">datetime('now','localtime')) " +
                         sql_filter + " " +
                         "ORDER BY " +

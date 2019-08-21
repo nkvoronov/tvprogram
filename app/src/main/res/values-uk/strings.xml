@@ -45,4 +45,5 @@
     <string name="lab_genre">Жанр: %1$s</string>
     <string name="lab_country">Страна: %1$s</string>
     <string name="lab_year">Год: %1$s</string>
+    <string name="del_from_favorites">Удалить из Избранного</string>
 </resources>
