@@ -1,8 +1,7 @@
 package com.nkvoronov.tvprogram.tvprogram;
 
-import com.nkvoronov.tvprogram.common.TVProgramDataSource;
-
 import java.util.Date;
+import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 
 public class TVProgram {
     private int mId;

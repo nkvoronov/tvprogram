@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.nkvoronov.tvprogram.tasks.UpdateProgramsTask;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import com.nkvoronov.tvprogram.tvprogram.TVProgramChannelActivity;
-import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 
 public class TVChannelsFragment extends Fragment{
     private static final String ARG_TVCHANNELS_PAGE_NUMBER = "com.nkvoronov.tvprogram.tvchannels.page_number";
@@ -56,8 +55,6 @@ public class TVChannelsFragment extends Fragment{
     public static TVChannelsFragment newInstance(int index) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_TVCHANNELS_PAGE_NUMBER, index);
-        Log.d(TAG, "PageIndex : " + index);
-
         TVChannelsFragment fragment = new TVChannelsFragment();
         fragment.setArguments(args);
         return fragment;
@@ -68,7 +65,6 @@ public class TVChannelsFragment extends Fragment{
         super.onCreate(savedInstanceState);
         mPageIndex = (int) getArguments().getSerializable(ARG_TVCHANNELS_PAGE_NUMBER);
         mFilterIndex = 0;
-        Log.d(TAG, "PageIndex : " + mPageIndex);
     }
 
     @Override
@@ -112,9 +108,7 @@ public class TVChannelsFragment extends Fragment{
     }
 
     public void updateUI() {
-        Log.d(TAG, "UpdateUI " + mPageIndex);
         TVChannelsList channels = mDataSource.getChannels(isFavorites(), mFilterIndex);
-
         if (mAdapter == null) {
             mAdapter = new ChannelAdapter(channels);
             mChannelsView.setAdapter(mAdapter);
@@ -185,7 +179,7 @@ public class TVChannelsFragment extends Fragment{
             mChannelName.setText(mChannel.getName());
             Glide
                     .with(getContext())
-                    .load(mChannel.getIconFile())
+                    .load(mDataSource.getChannelIconFile(mChannel.getIndex()))
                     .fitCenter()
                     .into(mChannelIcon);
 

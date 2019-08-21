@@ -1,26 +1,29 @@
 package com.nkvoronov.tvprogram;
 
-import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import com.google.android.material.tabs.TabLayout;
+import android.content.Intent;
+import android.app.ProgressDialog;
 import androidx.core.view.MenuCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.tabs.TabLayout;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import com.nkvoronov.tvprogram.tasks.UpdateProgramsTask;
 import com.nkvoronov.tvprogram.tvchannels.TVChannelsActivity;
+import com.nkvoronov.tvprogram.tvprogram.TVProgramFavoritesFragment;
+import com.nkvoronov.tvprogram.tvprogram.TVProgramNowFragment;
 import com.nkvoronov.tvprogram.tvprogram.TVProgramPageAdapter;
+import com.nkvoronov.tvprogram.tvprogram.TVProgramSearchFragment;
 
 public class MainActivity extends AppCompatActivity {
-    private TVProgramPageAdapter mPageAdapter;
     private ViewPager mMainViewPager;
     private TabLayout mMainTabLayout;
-    ProgressDialog mProgressDialog;
+    private ProgressDialog mProgressDialog;
     private UpdateProgramsTask mUpdateTask;
     private TVProgramDataSource mDataSource;
+    private TVProgramPageAdapter mPageAdapter;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -52,11 +55,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onUpdate() {
+        //Check favorites channels !!!
         mUpdateTask.execute(-1);
     }
 
     private void updateUI() {
-        //
+        updatePages();
+    }
+
+    public void updatePages() {
+        ((TVProgramNowFragment) mPageAdapter.instantiateItem(mMainViewPager, 0)).updateUI();
+        ((TVProgramSearchFragment) mPageAdapter.instantiateItem(mMainViewPager, 1)).updateUI();
+        ((TVProgramFavoritesFragment) mPageAdapter.instantiateItem(mMainViewPager, 2)).updateUI();
     }
 
     private void onChannels() {

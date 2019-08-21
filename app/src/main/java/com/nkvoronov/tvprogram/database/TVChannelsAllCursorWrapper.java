@@ -3,7 +3,7 @@ package com.nkvoronov.tvprogram.database;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import com.nkvoronov.tvprogram.tvchannels.TVChannel;
-import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsAllTable;
+import com.nkvoronov.tvprogram.database.TVProgramDbSchema.ChannelsTable;
 
 public class TVChannelsAllCursorWrapper extends CursorWrapper {
 
@@ -12,11 +12,11 @@ public class TVChannelsAllCursorWrapper extends CursorWrapper {
     }
 
     public TVChannel getChannel() {
-        int index = getInt(getColumnIndex(ChannelsAllTable.Cols.CHANNEL_INDEX));
-        String name = getString(getColumnIndex(ChannelsAllTable.Cols.CHANNEL_NAME));
-        String icon = getString(getColumnIndex(ChannelsAllTable.Cols.CHANNEL_ICON));
-        String lang = getString(getColumnIndex(ChannelsAllTable.Cols.LANG));
-        int favorite = getInt(getColumnIndex(ChannelsAllTable.Cols.FAVORITE));
+        int index = getInt(getColumnIndex(ChannelsTable.Cols.CHANNEL));
+        String name = getString(getColumnIndex(ChannelsTable.Cols.NAME));
+        String icon = getString(getColumnIndex(ChannelsTable.Cols.ICON));
+        String lang = getString(getColumnIndex(ChannelsTable.Cols.LANG));
+        int favorite = getInt(getColumnIndex(ChannelsTable.Cols.FAVORITE));
 
         TVChannel channel = new TVChannel(index, name, icon);
         channel.setLang(lang);

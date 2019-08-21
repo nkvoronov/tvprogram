@@ -69,18 +69,14 @@ public class TVChannel {
         mDataSource = dataSource;
     }
 
-    public File getIconFile() {
-        File filesDir = mDataSource.getContext().getFilesDir();
-        return new File(filesDir, "IMG_" + Integer.toString(getIndex()) + ".gif");
-    }
-
     public void saveIconToFile() {
         try {
-            if (!getIconFile().exists()) {
+            File iconFile = mDataSource.getChannelIconFile(getIndex());
+            if (!iconFile.exists()) {
                 URL url = new URL(getIcon());
                 InputStream inputStream = url.openStream();
                 DataInputStream dataInputStream = new DataInputStream(inputStream);
-                FileOutputStream fileOutputStream = new FileOutputStream(getIconFile());
+                FileOutputStream fileOutputStream = new FileOutputStream(iconFile);
                 byte[] buffer = new byte[1024];
                 int length;
                 while ((length = dataInputStream.read(buffer)) > 0) {

@@ -1,8 +1,8 @@
 package com.nkvoronov.tvprogram;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
+import android.content.Intent;
+import android.content.Context;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class AboutActivity extends AppCompatActivity {

@@ -25,7 +25,6 @@ public class HttpContent {
         connection.userAgent(USER_AGENT);
         try {
             mDocument = connection.get();
-            Log.d(TAG, "HttpContent " + url);
         } catch (IOException e) {
             Log.d(TAG, e.getMessage());
             e.fillInStackTrace();

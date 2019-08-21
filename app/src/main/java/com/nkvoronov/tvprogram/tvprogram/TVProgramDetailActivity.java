@@ -9,29 +9,28 @@ import android.widget.TextView;
 import android.widget.ImageView;
 import com.nkvoronov.tvprogram.R;
 import androidx.appcompat.app.AppCompatActivity;
-import com.nkvoronov.tvprogram.tvchannels.TVChannel;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import static com.nkvoronov.tvprogram.common.DateUtils.getDateFormat;
 
 public class TVProgramDetailActivity extends AppCompatActivity {
     private static final String EXTRA_TVPROGRAM_ID = "com.nkvoronov.tvprogram.tvprogram.tvprogram_id";
     private static final String EXTRA_TVCHANNEL_INDEX = "com.nkvoronov.tvprogram.tvprogram.tvchannel_index_det";
-    private TVProgramDataSource mDataSource;
+
     private int mProgramId;
     private int mChannelIndex;
     private TVProgram mProgram;
-    private TVChannel mChannel;
-    private TextView mProgramTitle;
-    private ImageView mProgramCategoryIcon;
-    private ImageView mProgramImage;
     private TextView mProgramDate;
-    private TextView mProgramDuration;
-    private TextView mProgramChannel;
-    private TextView mProgramGenre;
-    private TextView mProgramCountry;
-    private TextView mProgramYear;
-    private TextView mProgramDescription;
     private Button mButtonExecute;
+    private TextView mProgramYear;
+    private TextView mProgramTitle;
+    private TextView mProgramGenre;
+    private ImageView mProgramImage;
+    private TextView mProgramCountry;
+    private TextView mProgramChannel;
+    private TextView mProgramDuration;
+    private TextView mProgramDescription;
+    private ImageView mProgramCategoryIcon;
+    private TVProgramDataSource mDataSource;
 
     public static Intent newIntent(Context context, int program_id, int channel_index) {
         Intent intent = new Intent(context, TVProgramDetailActivity.class);
@@ -60,7 +59,6 @@ public class TVProgramDetailActivity extends AppCompatActivity {
             mChannelIndex = (int) getIntent().getSerializableExtra(EXTRA_TVCHANNEL_INDEX);
         }
         mProgram = mDataSource.getProgram(mChannelIndex, mProgramId);
-        mChannel = mDataSource.getChannel(mChannelIndex);
         mProgramTitle = findViewById(R.id.tvprogram_title);
         mProgramCategoryIcon = findViewById(R.id.tvprogram_image_category);
         mProgramImage = findViewById(R.id.tvprogram_image_desc);
@@ -77,7 +75,7 @@ public class TVProgramDetailActivity extends AppCompatActivity {
         mProgramDate.setText(getDateFormat(mProgram.getStart(), "EEE, d MMM"));
         String duration = getDateFormat(mProgram.getStart(), "HH:mm") + " - " + getDateFormat(mProgram.getStop(), "HH:mm");
         mProgramDuration.setText(duration);
-        mProgramChannel.setText(getString(R.string.lab_channel, mChannel.getName()));
+        mProgramChannel.setText(getString(R.string.lab_channel, mProgram.getNameChannel()));
 
         if (mProgram.getGenres() != null) {
             mProgramGenre.setText(getString(R.string.lab_genre, mProgram.getGenres()));

@@ -1,26 +1,23 @@
 package com.nkvoronov.tvprogram.common;
 
-import android.util.Log;
 import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
 import com.nkvoronov.tvprogram.database.ConfigCursorWrapper;
-import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class AppConfig {
     private static final String DEF_ID = "1";
-    private int mCoutDays;
-    private SQLiteDatabase mDatabase;
 
-    public AppConfig(SQLiteDatabase database) {
-        mDatabase = database;
+    private int mCoutDays;
+    TVProgramDataSource mDataSource;
+
+    public AppConfig(TVProgramDataSource dataSource) {
+        mDataSource = dataSource;
         initConfig();
     }
 
     private void initConfig() {
         mCoutDays = 7;
-        Log.d(TAG, "initConfig");
-        ConfigCursorWrapper cursor = new ConfigCursorWrapper(mDatabase.query(
+        ConfigCursorWrapper cursor = new ConfigCursorWrapper(mDataSource.getDatabase().query(
                 ConfigsTable.TABLE_NAME,
                 null,
                 ConfigsTable.Cols.ID + " = ?",
@@ -31,12 +28,10 @@ public class AppConfig {
         ));
         try {
             if (cursor.getCount() == 0) {
-                mDatabase.insert(ConfigsTable.TABLE_NAME, null, getConfigValues(true));
-                Log.d(TAG, "initConfig insert");
+                mDataSource.getDatabase().insert(ConfigsTable.TABLE_NAME, null, getConfigValues(true));
             } else {
                 cursor.moveToFirst();
                 mCoutDays = cursor.getCountDays();
-                Log.d(TAG, "initConfig get");
             }
         } finally {
             cursor.close();
@@ -54,7 +49,7 @@ public class AppConfig {
     }
 
     private void updateConfig() {
-        mDatabase.update(ConfigsTable.TABLE_NAME, getConfigValues(false), ConfigsTable.Cols.ID + " = ?", new String[]{ DEF_ID });
+        mDataSource.getDatabase().update(ConfigsTable.TABLE_NAME, getConfigValues(false), ConfigsTable.Cols.ID + " = ?", new String[]{ DEF_ID });
     }
 
     private ContentValues getConfigValues(boolean withID) {

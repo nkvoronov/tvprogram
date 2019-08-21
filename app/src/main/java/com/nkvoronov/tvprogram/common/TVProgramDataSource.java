@@ -1,10 +1,14 @@
 package com.nkvoronov.tvprogram.common;
 
+import java.io.File;
 import java.util.Date;
+import java.util.List;
 import android.util.Log;
+import java.util.ArrayList;
 import android.content.Context;
 import android.database.Cursor;
 import java.text.ParseException;
+import com.nkvoronov.tvprogram.R;
 import java.text.SimpleDateFormat;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,6 +19,7 @@ import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
 import static com.nkvoronov.tvprogram.common.DateUtils.*;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
 import com.nkvoronov.tvprogram.database.TVProgramBaseHelper;
+import com.nkvoronov.tvprogram.tvprogram.TVProgramCategoriesList;
 import static com.nkvoronov.tvprogram.common.StringUtils.addQuotes;
 
 public class TVProgramDataSource {
@@ -31,7 +36,7 @@ public class TVProgramDataSource {
     public TVProgramDataSource(Context context) {
         mContext = context.getApplicationContext();
         mDatabase = new TVProgramBaseHelper(mContext).getWritableDatabase();
-        mAppConfig = new AppConfig(mDatabase);
+        mAppConfig = new AppConfig(this);
     }
 
     public static TVProgramDataSource get(Context context) {
@@ -59,7 +64,7 @@ public class TVProgramDataSource {
 
     public void channelChangeFavorites(TVChannel channel) {
         if (channel.isFavorites()) {
-            mDatabase.delete(ChannelsFavoritesTable.TABLE_NAME, ChannelsFavoritesTable.Cols.CHANNEL_INDEX + " = ?", new String[]{String.valueOf(channel.getIndex())});
+            mDatabase.delete(ChannelsFavoritesTable.TABLE_NAME, ChannelsFavoritesTable.Cols.CHANNEL + " = ?", new String[]{String.valueOf(channel.getIndex())});
         } else {
             mDatabase.insert(ChannelsFavoritesTable.TABLE_NAME, null, getContentChannelsFavValues(channel));
         }
@@ -67,7 +72,7 @@ public class TVProgramDataSource {
 
     private ContentValues getContentChannelsFavValues(TVChannel channel) {
         ContentValues values = new ContentValues();
-        values.put(ChannelsFavoritesTable.Cols.CHANNEL_INDEX, channel.getIndex());
+        values.put(ChannelsFavoritesTable.Cols.CHANNEL, channel.getIndex());
         return values;
     }
 
@@ -82,15 +87,36 @@ public class TVProgramDataSource {
         return channelList.getForIndex(index);
     }
 
-    public TVProgramsList getPrograms(int type, int channel, Date date) {
+    public TVProgramsList getPrograms(int type, int filter, Date date) {
         TVProgramsList programs = new TVProgramsList(this);
-        programs.loadFromDB(type, channel, date);
+        programs.loadFromDB(type, filter, date);
         return programs;
     };
 
     public TVProgram getProgram(int index, int programID) {
         TVProgramsList programs = getPrograms(0, index, null);
         return programs.getForId(programID);
+    }
+
+    public TVProgramCategoriesList getCategories() {
+        TVProgramCategoriesList categories = new TVProgramCategoriesList(this);
+        categories.loadFromDB();
+        return categories;
+    }
+
+    public List<String> getCategoriesList() {
+        List<String> list = new ArrayList<>();
+        list.add(mContext.getString(R.string.category_all));
+        TVProgramCategoriesList categories = getCategories();
+        for (int i = 0; i<categories.size(); i++) {
+            list.add(categories.get(i).getName());
+        }
+        return list;
+    }
+
+    public File getChannelIconFile(int index) {
+        File filesDir = mContext.getFilesDir();
+        return new File(filesDir, "IMG_" + Integer.toString(index) + ".gif");
     }
 
     public boolean checkUpdateProgram(int channel) {
@@ -106,10 +132,7 @@ public class TVProgramDataSource {
                 null);
         try {
            if (cursor.getCount() != 0) {
-               Log.d(TAG, "No Update Program !!! " + now_date + ":" + index);
                res = false;
-           } else {
-               Log.d(TAG, "Update Program !!! " + now_date + ":" + index);
            }
         } finally {
             cursor.close();

@@ -1,16 +1,14 @@
 package com.nkvoronov.tvprogram.tasks;
 
-import android.util.Log;
 import android.os.AsyncTask;
 import com.nkvoronov.tvprogram.common.HttpContent;
-import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import com.nkvoronov.tvprogram.tvchannels.TVChannel;
 import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
-import static com.nkvoronov.tvprogram.common.HttpContent.CHANNELS_PRE;
+import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import static com.nkvoronov.tvprogram.common.HttpContent.ICONS_PRE;
+import static com.nkvoronov.tvprogram.common.HttpContent.CHANNELS_PRE;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.ALL_LANG;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.RUS_LANG;
-import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.UKR_LANG;
 
 public class UpdateChannelsTask extends AsyncTask<Void,String,Void> {
@@ -64,7 +62,6 @@ public class UpdateChannelsTask extends AsyncTask<Void,String,Void> {
             channel.setLang(lang);
             channel.setIsFavorites(false);
             channels.add(channel);
-            Log.d(TAG, channel.toString());
             channels.saveChannelToDB(channel);
             channel.saveIconToFile();
             counter = (int) (((i+1) / (float) total) * 100);

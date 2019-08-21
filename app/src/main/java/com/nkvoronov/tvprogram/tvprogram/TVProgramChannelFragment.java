@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import static com.nkvoronov.tvprogram.common.DateUtils.*;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
-import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 
 public class TVProgramChannelFragment  extends Fragment {
     private static final String ARG_TVPROGRAM_DATE = "com.nkvoronov.tvprogram.tvprogram.date";
@@ -52,7 +51,7 @@ public class TVProgramChannelFragment  extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.page_tvprogram_channel, container, false);
+        View root = inflater.inflate(R.layout.page_tvprograms_channel, container, false);
         mDataSource = TVProgramDataSource.get(getContext());
         mProgramView = root.findViewById(R.id.tvprogramchannel_view);
         mEmptyTextView = root.findViewById(R.id.tvprogramchannel_empty);
@@ -68,7 +67,6 @@ public class TVProgramChannelFragment  extends Fragment {
     }
 
     public void updateUI() {
-        Log.d(TAG, "UpdateUI - " + mPageIndex + ";" + mChannelIndex + ";" + getDateFormat(mProgramDate, "yyyy-MM-dd"));
         TVProgramsList programs = mDataSource.getPrograms(0, mChannelIndex, mProgramDate);
 
         if (mAdapter == null) {
@@ -89,7 +87,7 @@ public class TVProgramChannelFragment  extends Fragment {
         private ImageView mCategoryIcon;
 
         public ProgramChannelHolder(LayoutInflater inflater, ViewGroup parent) {
-            super(inflater.inflate(R.layout.list_item_tvprogram, parent, false));
+            super(inflater.inflate(R.layout.list_item_tvprograms_channel, parent, false));
             itemView.setOnClickListener(this);
             mStart = itemView.findViewById(R.id.text_start);
             mDuration = itemView.findViewById(R.id.text_duration);
@@ -112,7 +110,6 @@ public class TVProgramChannelFragment  extends Fragment {
             mTitle.setTextColor(Color.BLACK);
 
             if (mProgram.getTimeType() == 1) {
-                mTitle.setText(mProgram.getTitle());
                 mTitle.setTypeface(null, Typeface.BOLD);
             } else if (mProgram.getTimeType() == 0) {
                 mTitle.setTextColor(Color.GRAY);

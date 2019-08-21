@@ -14,7 +14,9 @@ import com.nkvoronov.tvprogram.tvchannels.TVChannel;
 import com.nkvoronov.tvprogram.tvprogram.TVProgramsList;
 import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
+import com.nkvoronov.tvprogram.tvprogram.TVProgramCategory;
 import static com.nkvoronov.tvprogram.common.HttpContent.HOST;
+import com.nkvoronov.tvprogram.tvprogram.TVProgramCategoriesList;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 
 public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
@@ -107,7 +109,6 @@ public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
                 e.fillInStackTrace();
                 Log.d(TAG, e.getMessage());
             }
-            Log.d(TAG, "times " + dateTimeFormat.format(startDate) + " / " + dateTimeFormat.format(endDate));
             String etitle = "";
             String efulldescurl = "";
             String edesc = "";
@@ -118,7 +119,8 @@ public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
                     etitle = titleItem.text();
                 }
             } catch (Exception e) {
-                //
+                e.fillInStackTrace();
+                Log.d(TAG, e.getMessage());
             }
             try {
                 Elements descItem = item.nextElementSibling().nextElementSibling().select(STR_ELMDOCDESC);
@@ -126,7 +128,8 @@ public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
                     edesc = descItem.text();
                 }
             } catch (Exception e) {
-                //
+                e.fillInStackTrace();
+                Log.d(TAG, e.getMessage());
             }
             TVProgram program = new TVProgram(-1, channel, startDate, endDate, etitle);
             program.setFavorites(false);
@@ -183,8 +186,23 @@ public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
         mListeners.onStop();
     }
 
+    private Boolean titleContainsDictWorlds(String title, String dictionary) {
+        Boolean res = false;
+        String[] list = dictionary.split(",");
+        for (String str:list) {
+            res = res || title.contains(str);
+        }
+        return res;
+    }
+
     private void getCategoryFromTitle(TVProgram program) {
-        //
+        TVProgramCategoriesList categories = mDataSource.getCategories();
+        for (TVProgramCategory programCategory : categories.getData()) {
+            if (titleContainsDictWorlds(program.getTitle().toLowerCase(), programCategory.getDictionary())) {
+                program.setCategory(programCategory.getId());
+                break;
+            }
+        }
     }
 
     private void getFullDesc(TVProgram program) {

@@ -11,7 +11,7 @@ import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
 import com.nkvoronov.tvprogram.database.TVProgramsCursorWrapper;
 import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
-import static com.nkvoronov.tvprogram.database.TVProgramBaseHelper.getSQLProgramsForChannelToDate;
+import static com.nkvoronov.tvprogram.database.TVProgramBaseHelper.*;
 
 public class TVProgramsList {
     private List<TVProgram> mData;
@@ -54,15 +54,16 @@ public class TVProgramsList {
         getData().add(program);
     }
 
-    public void loadFromDB(int type, int channel, Date date) {
+    public void loadFromDB(int type, int filter, Date date) {
         TVProgramsCursorWrapper cursor = null;
         clear();
 
         switch (type) {
             case 0:
-                cursor = queryPrograms(getSQLProgramsForChannelToDate(channel, date),null);
+                cursor = queryPrograms(getSQLProgramsForChannelToDay(filter, date),null);
                 break;
             case 1:
+                cursor = queryPrograms(getSQLNowPrograms(filter),null);
                 break;
             default:
                 break;

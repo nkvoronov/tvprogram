@@ -19,11 +19,13 @@ public class TVProgramsCursorWrapper extends CursorWrapper {
     public TVProgram getProgram() {
         int id = getInt(getColumnIndex(SchedulesTable.Cols.ID));
         int index = getInt(getColumnIndex(SchedulesTable.Cols.CHANNEL));
+        String name = getString(getColumnIndex(SchedulesTable.Cols.NAME));
         int category = getInt(getColumnIndex(SchedulesTable.Cols.CATEGORY));
         String start = getString(getColumnIndex(SchedulesTable.Cols.START));
         String stop = getString(getColumnIndex(SchedulesTable.Cols.END));
         String title = getString(getColumnIndex(SchedulesTable.Cols.TITLE));
         int timeType = getInt(getColumnIndex(SchedulesTable.Cols.TIME_TYPE));
+        int favorite = getInt(getColumnIndex(SchedulesTable.Cols.FAVORITE));
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date startDate = null;
@@ -38,9 +40,10 @@ public class TVProgramsCursorWrapper extends CursorWrapper {
         }
 
         TVProgram program = new TVProgram(id, index, startDate, endDate, title);
+        program.setNameChannel(name);
         program.setCategory(category);
         program.setTimeType(timeType);
-        program.setFavorites(false);
+        program.setFavorites(favorite == 1);
         return program;
     }
 }

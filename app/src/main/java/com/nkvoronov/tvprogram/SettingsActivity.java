@@ -1,16 +1,16 @@
 package com.nkvoronov.tvprogram;
 
-import android.content.Context;
-import android.content.Intent;
+import java.util.List;
 import android.os.Bundle;
 import android.view.View;
+import java.util.ArrayList;
+import android.widget.Spinner;
+import android.content.Intent;
+import android.content.Context;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import androidx.appcompat.app.AppCompatActivity;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SettingsActivity extends AppCompatActivity {
     private Spinner  mSpinnerCountDays;
@@ -21,7 +21,7 @@ public class SettingsActivity extends AppCompatActivity {
         return intent;
     }
 
-    private void setItemCountDays() {
+    private void setDefCountDays() {
         mSpinnerCountDays.setSelection(mDataSource.getCoutDays() - 1);
     }
 
@@ -54,16 +54,14 @@ public class SettingsActivity extends AppCompatActivity {
                 //
             }
         });
-        setItemCountDays();
+        setDefCountDays();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-
         mDataSource = TVProgramDataSource.get(this);
-
         addSpinnerCountDays();
     }
 }

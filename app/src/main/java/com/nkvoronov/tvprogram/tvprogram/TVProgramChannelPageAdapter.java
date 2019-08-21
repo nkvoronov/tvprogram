@@ -1,20 +1,19 @@
 package com.nkvoronov.tvprogram.tvprogram;
 
+import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 import android.content.Context;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import static com.nkvoronov.tvprogram.common.DateUtils.*;
 
 public class TVProgramChannelPageAdapter extends FragmentStatePagerAdapter {
+    private Date mMinDate;
+    private int mChannelIndex;
     private final Context mContext;
     private List<String> mListTabsName;
-    private int mChannelIndex;
-    private Date mMinDate;
 
     public TVProgramChannelPageAdapter(Context context, FragmentManager fm, int index, Date date, int count) {
         super(fm);

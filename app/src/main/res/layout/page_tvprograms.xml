@@ -14,7 +14,6 @@
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="2dp"
         android:background="@drawable/rectangle_control"
-        android:entries="@array/categorys"
         android:fadingEdge="horizontal|vertical"
         android:fadingEdgeLength="1dp"
         android:isScrollContainer="true"
@@ -29,6 +28,7 @@
             android:id="@+id/tvprogram_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/colorItemBackground"
             android:scrollbars="vertical"
             tools:layout_editor_absoluteY="690dp">
 

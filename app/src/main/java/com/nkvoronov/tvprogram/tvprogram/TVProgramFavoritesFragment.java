@@ -1,24 +1,25 @@
 package com.nkvoronov.tvprogram.tvprogram;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import com.nkvoronov.tvprogram.R;
+import android.widget.AdapterView;
+import android.view.LayoutInflater;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 
 public class TVProgramFavoritesFragment extends Fragment {
     private static final String ARG_FAVORITES_PAGE_NUMBER = "com.nkvoronov.tvprogram.tvprogram.page_number_favorites";
-    private Spinner mSpinnerFilter;
-    private RecyclerView mProgramView;
-    private TextView mEmptyTextView;
+
     private int mPageIndex;
+    private Spinner mSpinnerFilter;
+    private TextView mEmptyTextView;
+    private RecyclerView mProgramView;
     private TVProgramDataSource mDataSource;
 
     public static TVProgramFavoritesFragment newInstance(int index) {
@@ -37,7 +38,7 @@ public class TVProgramFavoritesFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.page_tvprogram, container, false);
+        View root = inflater.inflate(R.layout.page_tvprograms, container, false);
         mDataSource = TVProgramDataSource.get(getContext());
         mSpinnerFilter = root.findViewById(R.id.tvprogram_filter);
         mSpinnerFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){

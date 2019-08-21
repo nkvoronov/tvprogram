@@ -43,7 +43,7 @@ public class TVProgramChannelActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tvprogram_channel);
+        setContentView(R.layout.activity_tvprograms_channel);
         mDataSource = TVProgramDataSource.get(this);
         if (savedInstanceState != null) {
             mChannelIndex = (int) savedInstanceState.getSerializable(EXTRA_TVCHANNEL_INDEX);
@@ -54,7 +54,7 @@ public class TVProgramChannelActivity extends AppCompatActivity {
         mChannelIcon = findViewById(R.id.channel_icon_own);
         Glide
                 .with(this)
-                .load(mChannel.getIconFile())
+                .load(mDataSource.getChannelIconFile(mChannel.getIndex()))
                 .fitCenter()
                 .into(mChannelIcon);
         mChannelName = findViewById(R.id.channel_name_own);
