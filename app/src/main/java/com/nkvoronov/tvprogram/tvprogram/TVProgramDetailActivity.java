@@ -60,7 +60,15 @@ public class TVProgramDetailActivity extends AppCompatActivity {
         }
         mProgram = mDataSource.getProgram(mChannelIndex, mProgramId);
         mProgramTitle = findViewById(R.id.tvprogram_title);
+
         mProgramCategoryIcon = findViewById(R.id.tvprogram_image_category);
+        if (mProgram.getCategory() != 0) {
+            mProgramCategoryIcon.setVisibility(View.VISIBLE);
+            mDataSource.setCategoryDrawable(mProgramCategoryIcon, mProgram.getCategory());
+        } else {
+            mProgramCategoryIcon.setVisibility(View.GONE);
+        }
+
         mProgramImage = findViewById(R.id.tvprogram_image_desc);
         mProgramDate = findViewById(R.id.tvprogram_date);
         mProgramDuration = findViewById(R.id.tvprogram_duration);

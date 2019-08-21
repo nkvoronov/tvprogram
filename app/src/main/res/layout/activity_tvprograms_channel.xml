@@ -23,9 +23,8 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center_vertical"
-            android:background="@android:drawable/ic_menu_gallery"
             android:contentDescription="@string/img_tvicon_desc"
-            android:scaleType="fitXY"
+            android:scaleType="fitCenter"
             app:srcCompat="@drawable/rectangle_control" />
 
         <TextView

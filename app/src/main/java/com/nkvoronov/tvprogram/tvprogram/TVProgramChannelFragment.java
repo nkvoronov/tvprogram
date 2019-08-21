@@ -118,6 +118,13 @@ public class TVProgramChannelFragment  extends Fragment {
 
             mStart.setText(getDateFormat(mProgram.getStart(), "HH:mm"));
             mDuration.setText(getActivity().getString(R.string.dutation_txt, getDuration(mProgram.getStart(), mProgram.getStop())));
+
+            if (mProgram.getCategory() != 0) {
+                mCategoryIcon.setVisibility(View.VISIBLE);
+                mDataSource.setCategoryDrawable(mCategoryIcon, mProgram.getCategory());
+            } else {
+                mCategoryIcon.setVisibility(View.GONE);
+            }
         }
 
         @Override

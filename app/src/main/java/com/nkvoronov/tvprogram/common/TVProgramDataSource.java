@@ -12,6 +12,8 @@ import com.nkvoronov.tvprogram.R;
 import java.text.SimpleDateFormat;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.widget.ImageView;
+
 import com.nkvoronov.tvprogram.tvprogram.TVProgram;
 import com.nkvoronov.tvprogram.tvchannels.TVChannel;
 import com.nkvoronov.tvprogram.tvprogram.TVProgramsList;
@@ -182,5 +184,32 @@ public class TVProgramDataSource {
             cursor.close();
         }
         return info;
+    }
+
+    public void setCategoryDrawable(ImageView image, int category) {
+        int id_res = 0;
+        switch (category) {
+            case 1:
+                id_res = R.drawable.category_movie;
+                break;
+            case 2:
+                id_res = R.drawable.category_tvshow;
+                break;
+            case 3:
+                id_res = R.drawable.category_cartoons;
+                break;
+            case 4:
+                id_res = R.drawable.category_sports;
+                break;
+            case 5:
+                id_res = R.drawable.category_news;
+                break;
+            case 6:
+                id_res = R.drawable.category_hobbies;
+                break;
+            default:
+                break;
+        }
+        image.setImageResource(id_res);
     }
 }

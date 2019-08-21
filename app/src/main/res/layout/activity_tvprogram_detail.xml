@@ -19,8 +19,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:drawablePadding="4dp"
             android:gravity="center|start"
+            android:paddingRight="8dp"
             android:text="@string/title_tvprogram_det_win"
             android:textColor="#C62828"
             android:textSize="18sp"
@@ -28,10 +28,10 @@
 
         <ImageView
             android:id="@+id/tvprogram_image_category"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:contentDescription="@string/img_program_category_desc"
-            app:srcCompat="@drawable/rectangle" />
+            app:srcCompat="@drawable/category_sports" />
 
     </LinearLayout>
 
@@ -46,7 +46,6 @@
             android:layout_height="100dp"
             android:layout_gravity="center_vertical"
             android:layout_margin="8dp"
-            android:background="@android:drawable/ic_menu_gallery"
             android:contentDescription="@string/img_program_desc"
             app:srcCompat="@drawable/rectangle_control" />
 
