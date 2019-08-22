@@ -95,25 +95,37 @@ public class TVProgramDetailActivity extends AppCompatActivity {
         mProgramDuration.setText(duration);
         mProgramChannel.setText(getString(R.string.lab_channel, mProgram.getNameChannel()));
 
-        if (mProgram.getGenres() != null) {
-            mProgramGenre.setText(getString(R.string.lab_genre, mProgram.getGenres()));
-        } else {
-            mProgramGenre.setVisibility(View.GONE);
-        }
-        if (mProgram.getCountry() != null) {
-            mProgramCountry.setText(getString(R.string.lab_country, mProgram.getCountry()));
-        } else {
-            mProgramCountry.setVisibility(View.GONE);
-        }
-        if (mProgram.getYear() != null) {
-            mProgramYear.setText(getString(R.string.lab_year, mProgram.getYear()));
-        } else {
-            mProgramYear.setVisibility(View.GONE);
-        }
+        mProgramGenre.setVisibility(View.GONE);
+        mProgramCountry.setVisibility(View.GONE);
+        mProgramYear.setVisibility(View.GONE);
+        mProgramDescription.setVisibility(View.GONE);
+
         if (mProgram.getDescription() != null) {
-            mProgramDescription.setText(mProgram.getDescription());
-        } else {
-            mProgramDescription.setVisibility(View.GONE);
+
+            if (mProgram.getDescription().getGenres() != null) {
+                mProgramGenre.setVisibility(View.VISIBLE);
+                mProgramGenre.setText(getString(R.string.lab_genre, mProgram.getDescription().getGenres()));
+            }
+
+            if (mProgram.getDescription().getCountry() != null) {
+                mProgramCountry.setVisibility(View.VISIBLE);
+                mProgramCountry.setText(getString(R.string.lab_country, mProgram.getDescription().getCountry()));
+            }
+
+            if (mProgram.getDescription().getYear() != null) {
+                mProgramYear.setVisibility(View.VISIBLE);
+                mProgramYear.setText(getString(R.string.lab_year, mProgram.getDescription().getYear()));
+            }
+
+            if (mProgram.getDescription().getShortDescription() != null) {
+                mProgramDescription.setVisibility(View.VISIBLE);
+                mProgramDescription.setText(mProgram.getDescription().getShortDescription());
+            }
+
+            if (mProgram.getDescription().getDescription() != null) {
+                mProgramDescription.setVisibility(View.VISIBLE);
+                mProgramDescription.setText(mProgram.getDescription().getDescription());
+            }
         }
 
     }

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import android.content.ContentValues;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
-import com.nkvoronov.tvprogram.database.TVCategoryCursorWrapper;
+import com.nkvoronov.tvprogram.database.TVProgramCategoryCursorWrapper;
 
 public class TVProgramCategoriesList {
     private List<TVProgramCategory> mData;
@@ -50,7 +50,7 @@ public class TVProgramCategoriesList {
     public void loadFromDB() {
         clear();
 
-        TVCategoryCursorWrapper cursor = new TVCategoryCursorWrapper(mDataSource.getDatabase().query(CategoryTable.TABLE_NAME,
+        TVProgramCategoryCursorWrapper cursor = new TVProgramCategoryCursorWrapper(mDataSource.getDatabase().query(CategoryTable.TABLE_NAME,
                 null,
                 CategoryTable.Cols.ID + ">0",
                 null,

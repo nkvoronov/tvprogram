@@ -11,14 +11,16 @@
             android:enabled="true"
             android:icon="@android:drawable/ic_popup_sync"
             android:title="@string/title_update_program"
-            app:showAsAction="always" />
+            app:showAsAction="ifRoom" />
     </group>
     <group
         android:id="@+id/gm_main">
         <item
             android:id="@+id/mi_channels"
             android:enabled="true"
-            android:title="@string/title_tvchannels" />
+            android:icon="@android:drawable/btn_star"
+            android:title="@string/title_tvchannels"
+            app:showAsAction="ifRoom" />
         <item
             android:id="@+id/mi_settings"
             android:enabled="true"

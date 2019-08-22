@@ -10,8 +10,8 @@ import android.content.ContentValues;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
 import com.nkvoronov.tvprogram.database.TVProgramsCursorWrapper;
-import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 import static com.nkvoronov.tvprogram.database.TVProgramBaseHelper.*;
+import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
 
 public class TVProgramsList {
     private List<TVProgram> mData;
@@ -111,6 +111,9 @@ public class TVProgramsList {
     public void saveToDB() {
         for (TVProgram program : getData()) {
             mDataSource.getDatabase().insert(SchedulesTable.TABLE_NAME, null, getContentProgramsValues(program));
+            if (program.getDescription() != null) {
+                //
+            }
         }
     }
 

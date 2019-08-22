@@ -68,6 +68,23 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
 
         insertDataCategories(sqLiteDatabase);
 
+        sqLiteDatabase.execSQL("CREATE TABLE " + DescriptionTable.TABLE_NAME + "(" +
+                DescriptionTable.Cols.ID + " INTEGER CONSTRAINT PK_DESCRIPTION PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                DescriptionTable.Cols.SHORT + " VARCHAR, " +
+                DescriptionTable.Cols.DESCRIPTION + " VARCHAR, " +
+                DescriptionTable.Cols.IMAGE + " VARCHAR , " +
+                DescriptionTable.Cols.GENRES + " VARCHAR, " +
+                DescriptionTable.Cols.DIRECTORS + " VARCHAR, " +
+                DescriptionTable.Cols.ACTORS + " VARCHAR, " +
+                DescriptionTable.Cols.COUNTRY + " VARCHAR, " +
+                DescriptionTable.Cols.YEAR + " VARCHAR, " +
+                DescriptionTable.Cols.RATING + " VARCHAR " +
+                ")"
+        );
+
+        sqLiteDatabase.execSQL("CREATE UNIQUE INDEX IDX_DESC_ID ON " + DescriptionTable.TABLE_NAME + " (" + DescriptionTable.Cols.ID + " ASC)");
+        sqLiteDatabase.execSQL("CREATE INDEX IDX_DESC_DESC ON " + DescriptionTable.TABLE_NAME + " (" + DescriptionTable.Cols.DESCRIPTION + " ASC)");
+
         sqLiteDatabase.execSQL("CREATE TABLE " + SchedulesTable.TABLE_NAME + "(" +
                 SchedulesTable.Cols.ID + " INTEGER CONSTRAINT PK_SCH PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                 SchedulesTable.Cols.CHANNEL + " INTEGER CONSTRAINT FK_CHN_SCH REFERENCES " + ChannelsTable.TABLE_NAME + " (" + ChannelsTable.Cols.CHANNEL + ") ON DELETE CASCADE NOT NULL, " +
@@ -93,6 +110,17 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL("CREATE UNIQUE INDEX IDX_SCH_FAV_ID ON " + SchedulesFavoritesTable.TABLE_NAME + " (" + SchedulesFavoritesTable.Cols.ID + " ASC)");
         sqLiteDatabase.execSQL("CREATE INDEX IDX_SCH_FAV_SCH ON " + SchedulesFavoritesTable.TABLE_NAME + " (" + SchedulesFavoritesTable.Cols.SCHEDULE + " ASC)");
+
+        sqLiteDatabase.execSQL("CREATE TABLE " + ScheduleDescriptionTable.TABLE_NAME + "(" +
+                ScheduleDescriptionTable.Cols.ID + " INTEGER CONSTRAINT PK_SCH_DESC PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                ScheduleDescriptionTable.Cols.SCHEDULE + " INTEGER CONSTRAINT FK_SCH_DESC_SCH REFERENCES " + SchedulesTable.TABLE_NAME + " (" + SchedulesTable.Cols.ID + ") ON DELETE CASCADE NOT NULL, " +
+                ScheduleDescriptionTable.Cols.DESCRIPTION + " INTEGER CONSTRAINT FK_SCH_DESC_DESC REFERENCES " + DescriptionTable.TABLE_NAME + " (" + DescriptionTable.Cols.ID + ") ON DELETE CASCADE NOT NULL " +
+                ")"
+        );
+
+        sqLiteDatabase.execSQL("CREATE UNIQUE INDEX IDX_SCH_DESC_ID ON " + ScheduleDescriptionTable.TABLE_NAME + " (" + ScheduleDescriptionTable.Cols.ID + " ASC)");
+        sqLiteDatabase.execSQL("CREATE INDEX IDX_SCH_DESC_SCH ON " + ScheduleDescriptionTable.TABLE_NAME + " (" + ScheduleDescriptionTable.Cols.SCHEDULE + " ASC)");
+        sqLiteDatabase.execSQL("CREATE INDEX IDX_SCH_DESC_DESC ON " + ScheduleDescriptionTable.TABLE_NAME + " (" + ScheduleDescriptionTable.Cols.DESCRIPTION + " ASC)");
     }
 
     @Override

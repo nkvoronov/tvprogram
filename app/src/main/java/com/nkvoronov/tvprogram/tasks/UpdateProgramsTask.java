@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import com.nkvoronov.tvprogram.common.HttpContent;
 import com.nkvoronov.tvprogram.tvprogram.TVProgram;
 import com.nkvoronov.tvprogram.tvchannels.TVChannel;
+import com.nkvoronov.tvprogram.tvprogram.TVProgramDescription;
 import com.nkvoronov.tvprogram.tvprogram.TVProgramsList;
 import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
@@ -29,7 +30,6 @@ public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
     private int index;
     private int total;
     private int counter;
-    private boolean mFullDesc;
     private String[] progress;
     private TVChannelsList mChannels;
     private TVProgramsList mPrograms;
@@ -40,7 +40,6 @@ public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
         mDataSource = dataSource;
         mChannels = null;
         index = 0;
-        mFullDesc = false;
     }
 
     public interface OnTaskListeners {
@@ -51,10 +50,6 @@ public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
 
     public void setListeners(OnTaskListeners listeners) {
         mListeners = listeners;
-    }
-
-    public void setFullDesc(boolean fullDesc) {
-        mFullDesc = fullDesc;
     }
 
     @Override
@@ -135,11 +130,20 @@ public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
             program.setFavorites(false);
             getCategoryFromTitle(program);
 
-            if (edesc.length() > 0 && !Objects.equals(edesc, "")) {
-                program.setDescription(edesc);
+            if (edesc.length() > 0 && !edesc.equals("")) {
+                if (program.getDescription() == null) {
+                    program.setDescription(new TVProgramDescription(edesc));
+                } else {
+                    program.getDescription().setShortDescription(edesc);
+                }
             }
-            if (efulldescurl.length() > 0 && !Objects.equals(efulldescurl, "") && mFullDesc) {
-                program.setUrlFullDesc(efulldescurl);
+
+            if (efulldescurl.length() > 0 && !efulldescurl.equals("")) {
+                if (program.getDescription() == null) {
+                    program.setDescription(new TVProgramDescription(""));
+                } else {
+                    program.getDescription().setUrlFullDesc(efulldescurl);
+                }
                 getFullDesc(program);
             }
             mPrograms.add(program);
@@ -206,6 +210,8 @@ public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
     }
 
     private void getFullDesc(TVProgram program) {
-        //
+        if (program.getDescription() != null) {
+            //
+        }
     }
 }

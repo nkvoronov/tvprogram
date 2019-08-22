@@ -29,7 +29,7 @@ public class TVProgramSearchFragment extends Fragment {
     private EditText mSearchEditText;
     private RecyclerView mProgramView;
     private TVProgramDataSource mDataSource;
-    private String searchString;
+    private String mSearchString = "";
 
     public static TVProgramSearchFragment newInstance(int index) {
         TVProgramSearchFragment fragment = new TVProgramSearchFragment();
@@ -43,7 +43,6 @@ public class TVProgramSearchFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPageIndex = (int) getArguments().getSerializable(ARG_SEARCH_PAGE_NUMBER);
-        searchString = "";
     }
 
     @Override
@@ -59,7 +58,7 @@ public class TVProgramSearchFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                searchString = charSequence.toString();
+                mSearchString = charSequence.toString();
                 updateUI();
             }
 
@@ -81,7 +80,10 @@ public class TVProgramSearchFragment extends Fragment {
     }
 
     public void updateUI() {
-        TVProgramsList programs = mDataSource.getPrograms(3, searchString, null);
+        if (mSearchString == null) {
+            mSearchString = "";
+        }
+        TVProgramsList programs = mDataSource.getPrograms(3, mSearchString, null);
         if (mAdapter == null) {
             mAdapter = new TVProgramSearchFragment.ProgramAdapter(programs);
             mProgramView.setAdapter(mAdapter);

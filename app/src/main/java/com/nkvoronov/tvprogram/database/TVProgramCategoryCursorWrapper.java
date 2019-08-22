@@ -5,9 +5,9 @@ import android.database.CursorWrapper;
 import com.nkvoronov.tvprogram.tvprogram.TVProgramCategory;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.CategoryTable;
 
-public class TVCategoryCursorWrapper extends CursorWrapper {
+public class TVProgramCategoryCursorWrapper extends CursorWrapper {
 
-    public TVCategoryCursorWrapper(Cursor cursor) {
+    public TVProgramCategoryCursorWrapper(Cursor cursor) {
         super(cursor);
     }
 

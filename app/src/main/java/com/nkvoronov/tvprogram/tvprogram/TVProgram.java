@@ -8,22 +8,14 @@ public class TVProgram {
     private int mIndex;
     private Date mStop;
     private Date mStart;
-    private String mYear;
     private int mCategory;
     private String mTitle;
-    private String mImage;
     private int mTimeType;
-    private String mActors;
-    private String mGenres;
-    private String mCountry;
-    private String mDirectors;
-    private String mStarRating;
     private String mNameChannel;
-    private String mDescription;
-    private String mUrlFullDesc;
     private boolean mIsFavorites;
     private boolean mIsFavoritChannel;
     private TVProgramDataSource mDataSource;
+    private TVProgramDescription mDescription;
 
     public TVProgram(int id, int index, Date start, Date stop, String title) {
         mId = id;
@@ -34,15 +26,7 @@ public class TVProgram {
         mStop = stop;
         mTitle = title;
         mCategory = 0;
-        mGenres = null;
-        mCountry = null;
-        mYear = null;
         mDescription = null;
-        mUrlFullDesc = null;
-        mDirectors = null;
-        mActors = null;
-        mImage = null;
-        mStarRating = null;
         mIsFavorites = false;
         mTimeType = 2;
         mDataSource = null;
@@ -96,84 +80,12 @@ public class TVProgram {
         mTitle = title;
     }
 
-    public String getDescription() {
-        return mDescription;
-    }
-
-    public void setDescription(String description) {
-        mDescription = description;
-    }
-
-    public String getUrlFullDesc() {
-        return mUrlFullDesc;
-    }
-
-    public void setUrlFullDesc(String urlFullDesc) {
-        mUrlFullDesc = urlFullDesc;
-    }
-
     public int getCategory() {
         return mCategory;
     }
 
     public void setCategory(int category) {
         mCategory = category;
-    }
-
-    public String getGenres() {
-        return mGenres;
-    }
-
-    public void setGenres(String genres) {
-        mGenres = genres;
-    }
-
-    public String getDirectors() {
-        return mDirectors;
-    }
-
-    public void setDirectors(String directors) {
-        mDirectors = directors;
-    }
-
-    public String getActors() {
-        return mActors;
-    }
-
-    public void setActors(String actors) {
-        mActors = actors;
-    }
-
-    public String getYear() {
-        return mYear;
-    }
-
-    public void setYear(String year) {
-        mYear = year;
-    }
-
-    public String getCountry() {
-        return mCountry;
-    }
-
-    public void setCountry(String country) {
-        mCountry = country;
-    }
-
-    public String getImage() {
-        return mImage;
-    }
-
-    public void setImage(String image) {
-        mImage = image;
-    }
-
-    public String getStarRating() {
-        return mStarRating;
-    }
-
-    public void setStarRating(String starRating) {
-        mStarRating = starRating;
     }
 
     public boolean isFavorites() {
@@ -202,6 +114,14 @@ public class TVProgram {
 
     public void setDataSource(TVProgramDataSource dataSource) {
         mDataSource = dataSource;
+    }
+
+    public TVProgramDescription getDescription() {
+        return mDescription;
+    }
+
+    public void setDescription(TVProgramDescription fullDescription) {
+        mDescription = fullDescription;
     }
 
     public void setOtherData() {

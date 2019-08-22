@@ -65,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void updatePages() {
         ((TVProgramNowFragment) mPageAdapter.instantiateItem(mMainViewPager, 0)).updateUI();
-        ((TVProgramSearchFragment) mPageAdapter.instantiateItem(mMainViewPager, 1)).updateUI();
-        ((TVProgramFavoritesFragment) mPageAdapter.instantiateItem(mMainViewPager, 2)).updateUI();
+        ((TVProgramFavoritesFragment) mPageAdapter.instantiateItem(mMainViewPager, 1)).updateUI();
+        //((TVProgramSearchFragment) mPageAdapter.instantiateItem(mMainViewPager, 2)).updateUI();
     }
 
     private void onChannels() {
