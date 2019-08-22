@@ -45,4 +45,6 @@
     <string name="lab_country">Country: %1$s</string>
     <string name="lab_year">Year: %1$s</string>
     <string name="del_from_favorites">Del From Favorites</string>
+    <string name="text_author">Voronov Nikolay</string>
+    <string name="text_author_email">nkvoronov@gmail.com</string>
 </resources>

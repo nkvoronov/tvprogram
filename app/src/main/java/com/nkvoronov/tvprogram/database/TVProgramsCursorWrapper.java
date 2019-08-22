@@ -20,6 +20,7 @@ public class TVProgramsCursorWrapper extends CursorWrapper {
         int id = getInt(getColumnIndex(SchedulesTable.Cols.ID));
         int index = getInt(getColumnIndex(SchedulesTable.Cols.CHANNEL));
         String name = getString(getColumnIndex(SchedulesTable.Cols.NAME));
+        int favorite_channel = getInt(getColumnIndex(SchedulesTable.Cols.FAVORITE_CHANNEL));
         int category = getInt(getColumnIndex(SchedulesTable.Cols.CATEGORY));
         String start = getString(getColumnIndex(SchedulesTable.Cols.START));
         String stop = getString(getColumnIndex(SchedulesTable.Cols.END));
@@ -43,7 +44,9 @@ public class TVProgramsCursorWrapper extends CursorWrapper {
         program.setNameChannel(name);
         program.setCategory(category);
         program.setTimeType(timeType);
+        program.setFavoritChannel(favorite_channel == 1);
         program.setFavorites(favorite == 1);
+        program.setOtherData();
         return program;
     }
 }

@@ -22,12 +22,14 @@ public class TVProgram {
     private String mDescription;
     private String mUrlFullDesc;
     private boolean mIsFavorites;
+    private boolean mIsFavoritChannel;
     private TVProgramDataSource mDataSource;
 
     public TVProgram(int id, int index, Date start, Date stop, String title) {
         mId = id;
         mIndex = index;
         mNameChannel = null;
+        mIsFavoritChannel = false;
         mStart = start;
         mStop = stop;
         mTitle = title;
@@ -179,7 +181,15 @@ public class TVProgram {
     }
 
     public void setFavorites(boolean favorites) {
-        this.mIsFavorites = favorites;
+        mIsFavorites = favorites;
+    }
+
+    public boolean isFavoritChannel() {
+        return mIsFavoritChannel;
+    }
+
+    public void setFavoritChannel(boolean favoritChannel) {
+        mIsFavoritChannel = favoritChannel;
     }
 
     public int getTimeType() {
@@ -192,6 +202,10 @@ public class TVProgram {
 
     public void setDataSource(TVProgramDataSource dataSource) {
         mDataSource = dataSource;
+    }
+
+    public void setOtherData() {
+        //
     }
 
     public void changeFavorites() {

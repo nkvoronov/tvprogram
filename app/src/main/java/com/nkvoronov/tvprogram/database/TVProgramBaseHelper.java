@@ -151,10 +151,9 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
         return sql;
     }
 
-    public static String getSQLProgramsForChannelToDay(int filter, Date date) {
+    public static String getSQLProgramsForChannelToDay(String filter, Date date) {
         String sql_filter = "";
-        String channel = String.valueOf(filter);
-        sql_filter = "WHERE (sch." + SchedulesTable.Cols.CHANNEL + "=" + channel + ")";
+        sql_filter = "WHERE (sch." + SchedulesTable.Cols.CHANNEL + "=" + filter + ")";
         if (date != null) {
             String sDate1 = addQuotes(getDateFormat(date, "yyyy-MM-dd"), "'");
             String sDate2 = addQuotes(getDateFormat(addDays(date, 1), "yyyy-MM-dd"), "'");
@@ -166,12 +165,13 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
                 "sch." + SchedulesTable.Cols.ID + " AS " + SchedulesTable.Cols.ID + ", " +
                 "sch." + SchedulesTable.Cols.CHANNEL + " AS " + SchedulesTable.Cols.CHANNEL + ", " +
                 "ca." + ChannelsTable.Cols.NAME + " AS " + SchedulesTable.Cols.NAME + ", " +
+                "CASE WHEN (SELECT cf." + ChannelsFavoritesTable.Cols.ID + " FROM " + ChannelsFavoritesTable.TABLE_NAME + " cf WHERE ca." + ChannelsTable.Cols.CHANNEL + "=cf." + ChannelsFavoritesTable.Cols.CHANNEL + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.FAVORITE_CHANNEL + ", " +
                 "sch." + SchedulesTable.Cols.CATEGORY + " AS " + SchedulesTable.Cols.CATEGORY + ", " +
                 "sch." + SchedulesTable.Cols.START + " AS " + SchedulesTable.Cols.START + ", " +
                 "sch." + SchedulesTable.Cols.END + " AS " + SchedulesTable.Cols.END + ", " +
                 "sch." + SchedulesTable.Cols.TITLE + " AS " + SchedulesTable.Cols.TITLE + ", " +
                 "CASE WHEN (sch." + SchedulesTable.Cols.START + "<=datetime('now','localtime')) AND (sch." + SchedulesTable.Cols.END + ">=datetime('now','localtime')) THEN 1 WHEN sch." + SchedulesTable.Cols.START + "<=datetime('now','localtime') THEN 0 else 2 END AS " + SchedulesTable.Cols.TIME_TYPE + ", " +
-                "CASE WHEN (SELECT sf." + SchedulesFavoritesTable.Cols.ID + " FROM " + SchedulesFavoritesTable.TABLE_NAME + " sf WHERE sf." + SchedulesFavoritesTable.Cols.ID + "=sch." + SchedulesTable.Cols.ID + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.FAVORITE + " " +
+                "CASE WHEN (SELECT sf." + SchedulesFavoritesTable.Cols.ID + " FROM " + SchedulesFavoritesTable.TABLE_NAME + " sf WHERE sch." + SchedulesTable.Cols.ID + "=sf." + SchedulesFavoritesTable.Cols.SCHEDULE + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.FAVORITE + " " +
                 "FROM " +
                 SchedulesTable.TABLE_NAME + " sch " +
                 "JOIN " + ChannelsTable.TABLE_NAME + " ca ON (sch." + SchedulesTable.Cols.CHANNEL + "=ca." + ChannelsTable.Cols.CHANNEL + ") " +
@@ -182,23 +182,24 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
         return sql;
     }
 
-    public static String getSQLNowPrograms(int filter) {
+    public static String getSQLNowPrograms(String filter) {
         String sql_filter = "";
-        String category = String.valueOf(filter);
-        if (filter > 0) {
-            sql_filter = "AND (sch." + SchedulesTable.Cols.CATEGORY + "=" + category + ")";
+        int category = Integer.parseInt(filter);
+        if (category > 0) {
+            sql_filter = "AND (sch." + SchedulesTable.Cols.CATEGORY + "=" + filter + ")";
         }
         String sql =
                 "SELECT " +
                         "sch." + SchedulesTable.Cols.ID + " AS " + SchedulesTable.Cols.ID + ", " +
                         "sch." + SchedulesTable.Cols.CHANNEL + " AS " + SchedulesTable.Cols.CHANNEL + ", " +
                         "ca." + ChannelsTable.Cols.NAME + " AS " + SchedulesTable.Cols.NAME + ", " +
+                        "1 AS " + SchedulesTable.Cols.FAVORITE_CHANNEL + ", " +
                         "sch." + SchedulesTable.Cols.CATEGORY + " AS " + SchedulesTable.Cols.CATEGORY + ", " +
                         "sch." + SchedulesTable.Cols.START + " AS " + SchedulesTable.Cols.START + ", " +
                         "sch." + SchedulesTable.Cols.END + " AS " + SchedulesTable.Cols.END + ", " +
                         "sch." + SchedulesTable.Cols.TITLE + " AS " + SchedulesTable.Cols.TITLE + ", " +
                         "1 AS " + SchedulesTable.Cols.TIME_TYPE + ", " +
-                        "CASE WHEN (SELECT sf." + SchedulesFavoritesTable.Cols.ID + " FROM " + SchedulesFavoritesTable.TABLE_NAME + " sf WHERE sf." + SchedulesFavoritesTable.Cols.ID + "=sch." + SchedulesTable.Cols.ID + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.FAVORITE + " " +
+                        "CASE WHEN (SELECT sf." + SchedulesFavoritesTable.Cols.ID + " FROM " + SchedulesFavoritesTable.TABLE_NAME + " sf WHERE sch." + SchedulesTable.Cols.ID + "=sf." + SchedulesFavoritesTable.Cols.SCHEDULE + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.FAVORITE + " " +
                         "FROM " +
                         SchedulesTable.TABLE_NAME + " sch " +
                         "JOIN " + ChannelsFavoritesTable.TABLE_NAME + " cf ON (sch." + SchedulesTable.Cols.CHANNEL + "=cf." + ChannelsFavoritesTable.Cols.CHANNEL + ") " +
@@ -207,6 +208,58 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
                         sql_filter + " " +
                         "ORDER BY " +
                         "ca." + ChannelsTable.Cols.NAME;
+        Log.d(TAG, sql);
+        return sql;
+    }
+
+    public static String getSQLFavoritesPrograms(String filter) {
+        String sql =
+                "SELECT " +
+                        "sch." + SchedulesTable.Cols.ID + " AS " + SchedulesTable.Cols.ID + ", " +
+                        "sch." + SchedulesTable.Cols.CHANNEL + " AS " + SchedulesTable.Cols.CHANNEL + ", " +
+                        "ca." + ChannelsTable.Cols.NAME + " AS " + SchedulesTable.Cols.NAME + ", " +
+                        "CASE WHEN (SELECT cf." + ChannelsFavoritesTable.Cols.ID + " FROM " + ChannelsFavoritesTable.TABLE_NAME + " cf WHERE ca." + ChannelsTable.Cols.CHANNEL + "=cf." + ChannelsFavoritesTable.Cols.CHANNEL + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.FAVORITE_CHANNEL + ", " +
+                        "sch." + SchedulesTable.Cols.CATEGORY + " AS " + SchedulesTable.Cols.CATEGORY + ", " +
+                        "sch." + SchedulesTable.Cols.START + " AS " + SchedulesTable.Cols.START + ", " +
+                        "sch." + SchedulesTable.Cols.END + " AS " + SchedulesTable.Cols.END + ", " +
+                        "sch." + SchedulesTable.Cols.TITLE + " AS " + SchedulesTable.Cols.TITLE + ", " +
+                        "CASE WHEN (sch." + SchedulesTable.Cols.START + "<=datetime('now','localtime')) AND (sch." + SchedulesTable.Cols.END + ">=datetime('now','localtime')) THEN 1 WHEN sch." + SchedulesTable.Cols.START + "<=datetime('now','localtime') THEN 0 else 2 END AS " + SchedulesTable.Cols.TIME_TYPE + ", " +
+                        " 1 AS " + SchedulesTable.Cols.FAVORITE + " " +
+                        "FROM " +
+                        SchedulesTable.TABLE_NAME + " sch " +
+                        "JOIN " + SchedulesFavoritesTable.TABLE_NAME + " sf ON (sch." + SchedulesTable.Cols.ID + "=sf." + SchedulesFavoritesTable.Cols.SCHEDULE + ") " +
+                        "JOIN " + ChannelsTable.TABLE_NAME + " ca ON (sch." + SchedulesTable.Cols.CHANNEL + "=ca." + ChannelsTable.Cols.CHANNEL + ") " +
+                        "ORDER BY " +
+                        "ca." + ChannelsTable.Cols.NAME + ", sch." + SchedulesTable.Cols.START;
+        Log.d(TAG, sql);
+        return sql;
+    }
+
+    public static String getSQLSearchPrograms(String filter) {
+        String sql_filter = "";
+        if (!filter.equals("")) {
+            sql_filter = "WHERE sch." + SchedulesTable.Cols.TITLE + " LIKE  '%" + filter + "%' ";
+        } else {
+            sql_filter = "WHERE sch." + SchedulesTable.Cols.ID + "=-1 ";
+        }
+        String sql =
+                "SELECT " +
+                        "sch." + SchedulesTable.Cols.ID + " AS " + SchedulesTable.Cols.ID + ", " +
+                        "sch." + SchedulesTable.Cols.CHANNEL + " AS " + SchedulesTable.Cols.CHANNEL + ", " +
+                        "ca." + ChannelsTable.Cols.NAME + " AS " + SchedulesTable.Cols.NAME + ", " +
+                        "CASE WHEN (SELECT cf." + ChannelsFavoritesTable.Cols.ID + " FROM " + ChannelsFavoritesTable.TABLE_NAME + " cf WHERE ca." + ChannelsTable.Cols.CHANNEL + "=cf." + ChannelsFavoritesTable.Cols.CHANNEL + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.FAVORITE_CHANNEL + ", " +
+                        "sch." + SchedulesTable.Cols.CATEGORY + " AS " + SchedulesTable.Cols.CATEGORY + ", " +
+                        "sch." + SchedulesTable.Cols.START + " AS " + SchedulesTable.Cols.START + ", " +
+                        "sch." + SchedulesTable.Cols.END + " AS " + SchedulesTable.Cols.END + ", " +
+                        "sch." + SchedulesTable.Cols.TITLE + " AS " + SchedulesTable.Cols.TITLE + ", " +
+                        "CASE WHEN (sch." + SchedulesTable.Cols.START + "<=datetime('now','localtime')) AND (sch." + SchedulesTable.Cols.END + ">=datetime('now','localtime')) THEN 1 WHEN sch." + SchedulesTable.Cols.START + "<=datetime('now','localtime') THEN 0 else 2 END AS " + SchedulesTable.Cols.TIME_TYPE + ", " +
+                        "CASE WHEN (SELECT sf." + SchedulesFavoritesTable.Cols.ID + " FROM " + SchedulesFavoritesTable.TABLE_NAME + " sf WHERE sch." + SchedulesTable.Cols.ID + "=sf." + SchedulesFavoritesTable.Cols.SCHEDULE + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.FAVORITE + " " +
+                        "FROM " +
+                        SchedulesTable.TABLE_NAME + " sch " +
+                        "JOIN " + ChannelsTable.TABLE_NAME + " ca ON (sch." + SchedulesTable.Cols.CHANNEL + "=ca." + ChannelsTable.Cols.CHANNEL + ") " +
+                        sql_filter + " " +
+                        "ORDER BY " +
+                        "ca." + ChannelsTable.Cols.NAME + ", sch." + SchedulesTable.Cols.START;
         Log.d(TAG, sql);
         return sql;
     }

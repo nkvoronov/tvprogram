@@ -54,7 +54,7 @@ public class TVProgramsList {
         getData().add(program);
     }
 
-    public void loadFromDB(int type, int filter, Date date) {
+    public void loadFromDB(int type, String filter, Date date) {
         TVProgramsCursorWrapper cursor = null;
         clear();
 
@@ -64,6 +64,12 @@ public class TVProgramsList {
                 break;
             case 1:
                 cursor = queryPrograms(getSQLNowPrograms(filter),null);
+                break;
+            case 2:
+                cursor = queryPrograms(getSQLFavoritesPrograms(filter),null);
+                break;
+            case 3:
+                cursor = queryPrograms(getSQLSearchPrograms(filter),null);
                 break;
             default:
                 break;
@@ -121,61 +127,5 @@ public class TVProgramsList {
 
     public void preUpdateProgram(int channel) {
         mDataSource.getDatabase().delete(SchedulesTable.TABLE_NAME, SchedulesTable.Cols.CHANNEL + "=?", new String[]{ String.valueOf(channel) });
-    }
-
-    private int getCategoryID(String nameEN, String nameRU) {
-        return -1;
-    }
-
-    private int saveToDBCategory(TVProgram program) {
-        return -1;
-    }
-
-    private int getDescriptionID(String description) {
-        return -1;
-    }
-
-    private void saveToDBDescription(int scheduleID, TVProgram program) {
-        //
-    }
-
-    private int getGenreID(String name) {
-        return -1;
-    }
-
-    private void saveToDBCategoryList(String[] list, int descriptionID) {
-
-    }
-
-    private void saveToDBGenre(int descriptionID, TVProgram program) {
-        //
-    }
-
-    private int getCreditID(String name, int type) {
-        return -1;
-    }
-
-    private void saveToDBCreditList(String[] list, int type, int descriptionID) {
-        //
-    }
-
-    private void saveToDBCredits(int descriptionID, TVProgram program) {
-        //
-    }
-
-    private int getInsertScheduleID(TVProgram program) {
-        return -1;
-    }
-
-    private int getUserChannelID(int index) {
-        return -1;
-    }
-
-    public int clearDBSchedule() {
-        return -1;
-    }
-
-    public TVProgram getProgrammeForUrl(String url) {
-        return null;
     }
 }

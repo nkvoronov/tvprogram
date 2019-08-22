@@ -39,6 +39,7 @@
             android:id="@+id/tvchannel_empty"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/colorItemBackground"
             android:gravity="center"
             android:text="@string/empty_list"
             tools:layout_editor_absoluteY="688dp" />

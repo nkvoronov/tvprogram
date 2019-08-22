@@ -151,7 +151,7 @@ public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
         int type_channels = values[0];
         index = 0;
         progress = new String[] {"", "", ""};
-        mPrograms = mDataSource.getPrograms(0, type_channels, new Date());
+        mPrograms = mDataSource.getPrograms(0, String.valueOf(type_channels), new Date());
         mPrograms.clear();
         if (type_channels == -1) {
             mChannels = mDataSource.getChannels(true, 0);

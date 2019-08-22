@@ -11,7 +11,7 @@ import com.nkvoronov.tvprogram.R;
 public class TVProgramPageAdapter extends FragmentStatePagerAdapter {
 
     @StringRes
-    private final int[] TAB_P_TITLES = new int[]{R.string.tab_now, R.string.tab_search, R.string.tab_favorites};
+    private final int[] TAB_P_TITLES = new int[]{R.string.tab_now, R.string.tab_favorites, R.string.tab_search};
     private final Context mContext;
 
     public TVProgramPageAdapter(Context context, FragmentManager fm) {
@@ -26,11 +26,11 @@ public class TVProgramPageAdapter extends FragmentStatePagerAdapter {
                 TVProgramNowFragment page_now = TVProgramNowFragment.newInstance(0);
                 return page_now;
             case 1:
+                TVProgramFavoritesFragment page_favorites = TVProgramFavoritesFragment.newInstance(1);
+                return page_favorites;
+            case 2:
                 TVProgramSearchFragment page_search = TVProgramSearchFragment.newInstance(2);
                 return page_search;
-            case 2:
-                TVProgramFavoritesFragment page_favorites = TVProgramFavoritesFragment.newInstance(3);
-                return page_favorites;
             default:
                 return null;
         }

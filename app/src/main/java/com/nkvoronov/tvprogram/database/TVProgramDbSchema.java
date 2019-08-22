@@ -58,6 +58,7 @@ public class TVProgramDbSchema {
             public static final String ID = "id";
             public static final String CHANNEL = "channel";
             public static final String NAME = "name";
+            public static final String FAVORITE_CHANNEL = "favorite_channel";
             public static final String CATEGORY = "category";
             public static final String START = "starting";
             public static final String END = "ending";

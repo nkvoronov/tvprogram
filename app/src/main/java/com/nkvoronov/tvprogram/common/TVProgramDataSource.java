@@ -102,14 +102,14 @@ public class TVProgramDataSource {
         return channelList.getForIndex(index);
     }
 
-    public TVProgramsList getPrograms(int type, int filter, Date date) {
+    public TVProgramsList getPrograms(int type, String filter, Date date) {
         TVProgramsList programs = new TVProgramsList(this);
         programs.loadFromDB(type, filter, date);
         return programs;
     };
 
     public TVProgram getProgram(int index, int programID) {
-        TVProgramsList programs = getPrograms(0, index, null);
+        TVProgramsList programs = getPrograms(0, String.valueOf(index), null);
         return programs.getForId(programID);
     }
 
