@@ -133,17 +133,15 @@ public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
             if (edesc.length() > 0 && !edesc.equals("")) {
                 if (program.getDescription() == null) {
                     program.setDescription(new TVProgramDescription(edesc));
-                } else {
-                    program.getDescription().setShortDescription(edesc);
                 }
+                program.getDescription().setShortDescription(edesc);
             }
 
             if (efulldescurl.length() > 0 && !efulldescurl.equals("")) {
                 if (program.getDescription() == null) {
                     program.setDescription(new TVProgramDescription(""));
-                } else {
-                    program.getDescription().setUrlFullDesc(efulldescurl);
                 }
+                program.getDescription().setUrlFullDesc(efulldescurl);
                 getFullDesc(program);
             }
             mPrograms.add(program);
@@ -171,7 +169,7 @@ public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
             mPrograms.preUpdateProgram(type_channels);
             getContentForChannel(type_channels, new Date());
         }
-        mPrograms.setProgramStop();
+        mPrograms.setProgramEnding();
         progress[0] = "0";
         progress[1] = "";
         progress[2] = String.valueOf(counter);

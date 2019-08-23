@@ -134,13 +134,17 @@ public class TVProgramDataSource {
         return new File(filesDir, "IMG_" + Integer.toString(index) + ".gif");
     }
 
+    public boolean checkFavoritesChannel() {
+        return true;
+    }
+
     public boolean checkUpdateProgram(int channel) {
         String index = new Integer(channel).toString();
         String now_date = addQuotes(getDateFormat(new Date(), "yyyy-MM-dd"), "'");
         boolean res = true;
         Cursor cursor = mDatabase.query(SchedulesTable.TABLE_NAME,
                 null,
-                "(" + SchedulesTable.Cols.CHANNEL + "=" + index + ") and (" + SchedulesTable.Cols.START + ">=" + now_date + ")",
+                "(" + SchedulesTable.Cols.CHANNEL + "=" + index + ") AND (" + SchedulesTable.Cols.STARTING + ">=" + now_date + ")",
                 null,
                 null,
                 null,
@@ -161,8 +165,8 @@ public class TVProgramDataSource {
         String sChannel = String.valueOf(channel);
         String sql =
                 "SELECT " +
-                "min(" + SchedulesTable.Cols.START + ") as min, " +
-                "max(" + SchedulesTable.Cols.START + ") as max " +
+                "min(" + SchedulesTable.Cols.STARTING + ") as min, " +
+                "max(" + SchedulesTable.Cols.STARTING + ") as max " +
                 "FROM " +
                 SchedulesTable.TABLE_NAME + " " +
                 "WHERE " + SchedulesTable.Cols.CHANNEL + "=" + sChannel;

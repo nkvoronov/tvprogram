@@ -6,6 +6,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import static com.nkvoronov.tvprogram.common.DateUtils.*;
+
+import com.nkvoronov.tvprogram.tvprogram.TVProgram;
 import com.nkvoronov.tvprogram.tvprogram.TVProgramCategory;
 import static com.nkvoronov.tvprogram.common.StringUtils.*;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
@@ -70,7 +72,7 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL("CREATE TABLE " + DescriptionTable.TABLE_NAME + "(" +
                 DescriptionTable.Cols.ID + " INTEGER CONSTRAINT PK_DESCRIPTION PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                DescriptionTable.Cols.SHORT + " VARCHAR, " +
+                DescriptionTable.Cols.SHORT_DESC + " VARCHAR, " +
                 DescriptionTable.Cols.DESCRIPTION + " VARCHAR, " +
                 DescriptionTable.Cols.IMAGE + " VARCHAR , " +
                 DescriptionTable.Cols.GENRES + " VARCHAR, " +
@@ -83,14 +85,15 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
         );
 
         sqLiteDatabase.execSQL("CREATE UNIQUE INDEX IDX_DESC_ID ON " + DescriptionTable.TABLE_NAME + " (" + DescriptionTable.Cols.ID + " ASC)");
+        sqLiteDatabase.execSQL("CREATE INDEX IDX_DESC_SHORT_DESC ON " + DescriptionTable.TABLE_NAME + " (" + DescriptionTable.Cols.SHORT_DESC + " ASC)");
         sqLiteDatabase.execSQL("CREATE INDEX IDX_DESC_DESC ON " + DescriptionTable.TABLE_NAME + " (" + DescriptionTable.Cols.DESCRIPTION + " ASC)");
 
         sqLiteDatabase.execSQL("CREATE TABLE " + SchedulesTable.TABLE_NAME + "(" +
                 SchedulesTable.Cols.ID + " INTEGER CONSTRAINT PK_SCH PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                 SchedulesTable.Cols.CHANNEL + " INTEGER CONSTRAINT FK_CHN_SCH REFERENCES " + ChannelsTable.TABLE_NAME + " (" + ChannelsTable.Cols.CHANNEL + ") ON DELETE CASCADE NOT NULL, " +
                 SchedulesTable.Cols.CATEGORY + " INTEGER DEFAULT (0) CONSTRAINT FK_CAT_SCH REFERENCES " + CategoryTable.TABLE_NAME + " (" + CategoryTable.Cols.ID + ") ON DELETE CASCADE NOT NULL , " +
-                SchedulesTable.Cols.START + " DATETIME, " +
-                SchedulesTable.Cols.END + " DATETIME, " +
+                SchedulesTable.Cols.STARTING + " DATETIME, " +
+                SchedulesTable.Cols.ENDING + " DATETIME, " +
                 SchedulesTable.Cols.TITLE + " VARCHAR " +
                 ")"
         );
@@ -98,8 +101,8 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("CREATE UNIQUE INDEX IDX_SCH_ID ON " + SchedulesTable.TABLE_NAME + " (" + SchedulesTable.Cols.ID + " ASC)");
         sqLiteDatabase.execSQL("CREATE INDEX IDX_SCH_CHANNEL ON " + SchedulesTable.TABLE_NAME + " (" + SchedulesTable.Cols.CHANNEL + " ASC)");
         sqLiteDatabase.execSQL("CREATE INDEX IDX_SCH_CATEGORY ON " + SchedulesTable.TABLE_NAME + " (" + SchedulesTable.Cols.CATEGORY + " ASC)");
-        sqLiteDatabase.execSQL("CREATE INDEX IDX_SCH_START ON " + SchedulesTable.TABLE_NAME + " (" + SchedulesTable.Cols.START + " ASC)");
-        sqLiteDatabase.execSQL("CREATE INDEX IDX_SCH_END ON " + SchedulesTable.TABLE_NAME + " (" + SchedulesTable.Cols.END + " ASC)");
+        sqLiteDatabase.execSQL("CREATE INDEX IDX_SCH_START ON " + SchedulesTable.TABLE_NAME + " (" + SchedulesTable.Cols.STARTING + " ASC)");
+        sqLiteDatabase.execSQL("CREATE INDEX IDX_SCH_END ON " + SchedulesTable.TABLE_NAME + " (" + SchedulesTable.Cols.ENDING + " ASC)");
         sqLiteDatabase.execSQL("CREATE INDEX IDX_SCH_TITLE ON " + SchedulesTable.TABLE_NAME + " (" + SchedulesTable.Cols.TITLE + " ASC)");
 
         sqLiteDatabase.execSQL("CREATE TABLE " + SchedulesFavoritesTable.TABLE_NAME + "(" +
@@ -185,7 +188,7 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
         if (date != null) {
             String sDate1 = addQuotes(getDateFormat(date, "yyyy-MM-dd"), "'");
             String sDate2 = addQuotes(getDateFormat(addDays(date, 1), "yyyy-MM-dd"), "'");
-            sql_filter = sql_filter + " and ((sch." + SchedulesTable.Cols.START + ">=" + sDate1 + ") AND (sch." + SchedulesTable.Cols.START + "<" + sDate2 + "))";
+            sql_filter = sql_filter + " and ((sch." + SchedulesTable.Cols.STARTING + ">=" + sDate1 + ") AND (sch." + SchedulesTable.Cols.STARTING + "<" + sDate2 + "))";
         }
 
         String sql =
@@ -195,17 +198,17 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
                 "ca." + ChannelsTable.Cols.NAME + " AS " + SchedulesTable.Cols.NAME + ", " +
                 "CASE WHEN (SELECT cf." + ChannelsFavoritesTable.Cols.ID + " FROM " + ChannelsFavoritesTable.TABLE_NAME + " cf WHERE ca." + ChannelsTable.Cols.CHANNEL + "=cf." + ChannelsFavoritesTable.Cols.CHANNEL + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.FAVORITE_CHANNEL + ", " +
                 "sch." + SchedulesTable.Cols.CATEGORY + " AS " + SchedulesTable.Cols.CATEGORY + ", " +
-                "sch." + SchedulesTable.Cols.START + " AS " + SchedulesTable.Cols.START + ", " +
-                "sch." + SchedulesTable.Cols.END + " AS " + SchedulesTable.Cols.END + ", " +
+                "sch." + SchedulesTable.Cols.STARTING + " AS " + SchedulesTable.Cols.STARTING + ", " +
+                "sch." + SchedulesTable.Cols.ENDING + " AS " + SchedulesTable.Cols.ENDING + ", " +
                 "sch." + SchedulesTable.Cols.TITLE + " AS " + SchedulesTable.Cols.TITLE + ", " +
-                "CASE WHEN (sch." + SchedulesTable.Cols.START + "<=datetime('now','localtime')) AND (sch." + SchedulesTable.Cols.END + ">=datetime('now','localtime')) THEN 1 WHEN sch." + SchedulesTable.Cols.START + "<=datetime('now','localtime') THEN 0 else 2 END AS " + SchedulesTable.Cols.TIME_TYPE + ", " +
+                "CASE WHEN (sch." + SchedulesTable.Cols.STARTING + "<=datetime('now','localtime')) AND (sch." + SchedulesTable.Cols.ENDING + ">=datetime('now','localtime')) THEN 1 WHEN sch." + SchedulesTable.Cols.STARTING + "<=datetime('now','localtime') THEN 0 else 2 END AS " + SchedulesTable.Cols.TIME_TYPE + ", " +
                 "CASE WHEN (SELECT sf." + SchedulesFavoritesTable.Cols.ID + " FROM " + SchedulesFavoritesTable.TABLE_NAME + " sf WHERE sch." + SchedulesTable.Cols.ID + "=sf." + SchedulesFavoritesTable.Cols.SCHEDULE + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.FAVORITE + " " +
                 "FROM " +
                 SchedulesTable.TABLE_NAME + " sch " +
                 "JOIN " + ChannelsTable.TABLE_NAME + " ca ON (sch." + SchedulesTable.Cols.CHANNEL + "=ca." + ChannelsTable.Cols.CHANNEL + ") " +
                 sql_filter + " " +
                 "ORDER BY " +
-                "sch." + SchedulesTable.Cols.START;
+                "sch." + SchedulesTable.Cols.STARTING;
         Log.d(TAG, sql);
         return sql;
     }
@@ -223,8 +226,8 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
                         "ca." + ChannelsTable.Cols.NAME + " AS " + SchedulesTable.Cols.NAME + ", " +
                         "1 AS " + SchedulesTable.Cols.FAVORITE_CHANNEL + ", " +
                         "sch." + SchedulesTable.Cols.CATEGORY + " AS " + SchedulesTable.Cols.CATEGORY + ", " +
-                        "sch." + SchedulesTable.Cols.START + " AS " + SchedulesTable.Cols.START + ", " +
-                        "sch." + SchedulesTable.Cols.END + " AS " + SchedulesTable.Cols.END + ", " +
+                        "sch." + SchedulesTable.Cols.STARTING + " AS " + SchedulesTable.Cols.STARTING + ", " +
+                        "sch." + SchedulesTable.Cols.ENDING + " AS " + SchedulesTable.Cols.ENDING + ", " +
                         "sch." + SchedulesTable.Cols.TITLE + " AS " + SchedulesTable.Cols.TITLE + ", " +
                         "1 AS " + SchedulesTable.Cols.TIME_TYPE + ", " +
                         "CASE WHEN (SELECT sf." + SchedulesFavoritesTable.Cols.ID + " FROM " + SchedulesFavoritesTable.TABLE_NAME + " sf WHERE sch." + SchedulesTable.Cols.ID + "=sf." + SchedulesFavoritesTable.Cols.SCHEDULE + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.FAVORITE + " " +
@@ -232,7 +235,7 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
                         SchedulesTable.TABLE_NAME + " sch " +
                         "JOIN " + ChannelsFavoritesTable.TABLE_NAME + " cf ON (sch." + SchedulesTable.Cols.CHANNEL + "=cf." + ChannelsFavoritesTable.Cols.CHANNEL + ") " +
                         "JOIN " + ChannelsTable.TABLE_NAME + " ca ON (cf." + ChannelsFavoritesTable.Cols.CHANNEL + "=ca." + ChannelsTable.Cols.CHANNEL + ") " +
-                        "WHERE (sch." + SchedulesTable.Cols.START + "<=datetime('now','localtime')) AND (sch." + SchedulesTable.Cols.END + ">datetime('now','localtime')) " +
+                        "WHERE (sch." + SchedulesTable.Cols.STARTING + "<=datetime('now','localtime')) AND (sch." + SchedulesTable.Cols.ENDING + ">datetime('now','localtime')) " +
                         sql_filter + " " +
                         "ORDER BY " +
                         "ca." + ChannelsTable.Cols.NAME;
@@ -248,17 +251,17 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
                         "ca." + ChannelsTable.Cols.NAME + " AS " + SchedulesTable.Cols.NAME + ", " +
                         "CASE WHEN (SELECT cf." + ChannelsFavoritesTable.Cols.ID + " FROM " + ChannelsFavoritesTable.TABLE_NAME + " cf WHERE ca." + ChannelsTable.Cols.CHANNEL + "=cf." + ChannelsFavoritesTable.Cols.CHANNEL + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.FAVORITE_CHANNEL + ", " +
                         "sch." + SchedulesTable.Cols.CATEGORY + " AS " + SchedulesTable.Cols.CATEGORY + ", " +
-                        "sch." + SchedulesTable.Cols.START + " AS " + SchedulesTable.Cols.START + ", " +
-                        "sch." + SchedulesTable.Cols.END + " AS " + SchedulesTable.Cols.END + ", " +
+                        "sch." + SchedulesTable.Cols.STARTING + " AS " + SchedulesTable.Cols.STARTING + ", " +
+                        "sch." + SchedulesTable.Cols.ENDING + " AS " + SchedulesTable.Cols.ENDING + ", " +
                         "sch." + SchedulesTable.Cols.TITLE + " AS " + SchedulesTable.Cols.TITLE + ", " +
-                        "CASE WHEN (sch." + SchedulesTable.Cols.START + "<=datetime('now','localtime')) AND (sch." + SchedulesTable.Cols.END + ">=datetime('now','localtime')) THEN 1 WHEN sch." + SchedulesTable.Cols.START + "<=datetime('now','localtime') THEN 0 else 2 END AS " + SchedulesTable.Cols.TIME_TYPE + ", " +
+                        "CASE WHEN (sch." + SchedulesTable.Cols.STARTING + "<=datetime('now','localtime')) AND (sch." + SchedulesTable.Cols.ENDING + ">=datetime('now','localtime')) THEN 1 WHEN sch." + SchedulesTable.Cols.STARTING + "<=datetime('now','localtime') THEN 0 else 2 END AS " + SchedulesTable.Cols.TIME_TYPE + ", " +
                         " 1 AS " + SchedulesTable.Cols.FAVORITE + " " +
                         "FROM " +
                         SchedulesTable.TABLE_NAME + " sch " +
                         "JOIN " + SchedulesFavoritesTable.TABLE_NAME + " sf ON (sch." + SchedulesTable.Cols.ID + "=sf." + SchedulesFavoritesTable.Cols.SCHEDULE + ") " +
                         "JOIN " + ChannelsTable.TABLE_NAME + " ca ON (sch." + SchedulesTable.Cols.CHANNEL + "=ca." + ChannelsTable.Cols.CHANNEL + ") " +
                         "ORDER BY " +
-                        "ca." + ChannelsTable.Cols.NAME + ", sch." + SchedulesTable.Cols.START;
+                        "ca." + ChannelsTable.Cols.NAME + ", sch." + SchedulesTable.Cols.STARTING;
         Log.d(TAG, sql);
         return sql;
     }
@@ -277,17 +280,24 @@ public class TVProgramBaseHelper extends SQLiteOpenHelper {
                         "ca." + ChannelsTable.Cols.NAME + " AS " + SchedulesTable.Cols.NAME + ", " +
                         "CASE WHEN (SELECT cf." + ChannelsFavoritesTable.Cols.ID + " FROM " + ChannelsFavoritesTable.TABLE_NAME + " cf WHERE ca." + ChannelsTable.Cols.CHANNEL + "=cf." + ChannelsFavoritesTable.Cols.CHANNEL + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.FAVORITE_CHANNEL + ", " +
                         "sch." + SchedulesTable.Cols.CATEGORY + " AS " + SchedulesTable.Cols.CATEGORY + ", " +
-                        "sch." + SchedulesTable.Cols.START + " AS " + SchedulesTable.Cols.START + ", " +
-                        "sch." + SchedulesTable.Cols.END + " AS " + SchedulesTable.Cols.END + ", " +
+                        "sch." + SchedulesTable.Cols.STARTING + " AS " + SchedulesTable.Cols.STARTING + ", " +
+                        "sch." + SchedulesTable.Cols.ENDING + " AS " + SchedulesTable.Cols.ENDING + ", " +
                         "sch." + SchedulesTable.Cols.TITLE + " AS " + SchedulesTable.Cols.TITLE + ", " +
-                        "CASE WHEN (sch." + SchedulesTable.Cols.START + "<=datetime('now','localtime')) AND (sch." + SchedulesTable.Cols.END + ">=datetime('now','localtime')) THEN 1 WHEN sch." + SchedulesTable.Cols.START + "<=datetime('now','localtime') THEN 0 else 2 END AS " + SchedulesTable.Cols.TIME_TYPE + ", " +
+                        "CASE WHEN (sch." + SchedulesTable.Cols.STARTING + "<=datetime('now','localtime')) AND (sch." + SchedulesTable.Cols.ENDING + ">=datetime('now','localtime')) THEN 1 WHEN sch." + SchedulesTable.Cols.STARTING + "<=datetime('now','localtime') THEN 0 else 2 END AS " + SchedulesTable.Cols.TIME_TYPE + ", " +
                         "CASE WHEN (SELECT sf." + SchedulesFavoritesTable.Cols.ID + " FROM " + SchedulesFavoritesTable.TABLE_NAME + " sf WHERE sch." + SchedulesTable.Cols.ID + "=sf." + SchedulesFavoritesTable.Cols.SCHEDULE + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.FAVORITE + " " +
                         "FROM " +
                         SchedulesTable.TABLE_NAME + " sch " +
                         "JOIN " + ChannelsTable.TABLE_NAME + " ca ON (sch." + SchedulesTable.Cols.CHANNEL + "=ca." + ChannelsTable.Cols.CHANNEL + ") " +
                         sql_filter + " " +
                         "ORDER BY " +
-                        "ca." + ChannelsTable.Cols.NAME + ", sch." + SchedulesTable.Cols.START;
+                        "ca." + ChannelsTable.Cols.NAME + ", sch." + SchedulesTable.Cols.STARTING;
+        Log.d(TAG, sql);
+        return sql;
+    }
+
+    public static String getSQLDescription(int id) {
+        String sql_filter = "";
+        String sql = "";
         Log.d(TAG, sql);
         return sql;
     }

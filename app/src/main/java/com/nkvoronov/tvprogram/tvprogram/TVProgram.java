@@ -1,13 +1,17 @@
 package com.nkvoronov.tvprogram.tvprogram;
 
 import java.util.Date;
+import android.database.Cursor;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
+import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
+import static com.nkvoronov.tvprogram.common.StringUtils.addQuotes;
+import static com.nkvoronov.tvprogram.common.DateUtils.getDateFormat;
 
 public class TVProgram {
     private int mId;
     private int mIndex;
-    private Date mStop;
-    private Date mStart;
+    private Date mEnding;
+    private Date mStarting;
     private int mCategory;
     private String mTitle;
     private int mTimeType;
@@ -17,13 +21,13 @@ public class TVProgram {
     private TVProgramDataSource mDataSource;
     private TVProgramDescription mDescription;
 
-    public TVProgram(int id, int index, Date start, Date stop, String title) {
+    public TVProgram(int id, int index, Date starting, Date ending, String title) {
         mId = id;
         mIndex = index;
         mNameChannel = null;
         mIsFavoritChannel = false;
-        mStart = start;
-        mStop = stop;
+        mStarting = starting;
+        mEnding = ending;
         mTitle = title;
         mCategory = 0;
         mDescription = null;
@@ -56,20 +60,20 @@ public class TVProgram {
         mNameChannel = nameChannel;
     }
 
-    public Date getStart() {
-        return mStart;
+    public Date getStarting() {
+        return mStarting;
     }
 
-    public void setStart(Date start) {
-        mStart = start;
+    public void setStarting(Date starting) {
+        mStarting = starting;
     }
 
-    public Date getStop() {
-        return mStop;
+    public Date getEnding() {
+        return mEnding;
     }
 
-    public void setStop(Date stop) {
-        mStop = stop;
+    public void setEnding(Date ending) {
+        mEnding = ending;
     }
 
     public String getTitle() {
@@ -124,8 +128,33 @@ public class TVProgram {
         mDescription = fullDescription;
     }
 
-    public void setOtherData() {
-        //
+    public void setIdFromDB() {
+        mId = -1;
+        String title = addQuotes(getTitle(), "'");
+        String starting = addQuotes(getDateFormat(getStarting(), "yyyy-MM-dd HH:mm:ss"), "'");
+        String ending = addQuotes(getDateFormat(getEnding(), "yyyy-MM-dd HH:mm:ss"), "'");
+
+        Cursor cursor = mDataSource.getDatabase().query(SchedulesTable.TABLE_NAME,
+                null,
+                "(" + SchedulesTable.Cols.TITLE + "=" + title + ") and (" + SchedulesTable.Cols.STARTING + "=" + starting + ") and (" + SchedulesTable.Cols.ENDING + "=" + ending + ")",
+                null,
+                null,
+                null,
+                null);
+
+        try {
+
+            if (cursor.getCount() == 1) {
+                cursor.moveToFirst();
+                mId = cursor.getInt(cursor.getColumnIndex(SchedulesTable.Cols.ID));
+            }
+        } finally {
+            cursor.close();
+        }
+    }
+
+    public void setDescriptionFromDB() {
+        //mDescription = new TVProgramDescription("");
     }
 
     public void changeFavorites() {

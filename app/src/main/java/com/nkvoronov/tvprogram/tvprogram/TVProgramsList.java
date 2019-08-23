@@ -2,16 +2,14 @@ package com.nkvoronov.tvprogram.tvprogram;
 
 import java.util.Date;
 import java.util.List;
-import android.util.Log;
 import java.util.ArrayList;
 import android.database.Cursor;
-import java.text.SimpleDateFormat;
 import android.content.ContentValues;
 import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
 import com.nkvoronov.tvprogram.database.TVProgramsCursorWrapper;
 import static com.nkvoronov.tvprogram.database.TVProgramBaseHelper.*;
-import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
+import static com.nkvoronov.tvprogram.common.DateUtils.getDateFormat;
 
 public class TVProgramsList {
     private List<TVProgram> mData;
@@ -76,7 +74,6 @@ public class TVProgramsList {
         }
 
         try {
-            Log.d(TAG, Integer.toString(cursor.getCount()));
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 TVProgram program = cursor.getProgram();
@@ -93,7 +90,7 @@ public class TVProgramsList {
         return new TVProgramsCursorWrapper(cursor);
     }
 
-    public void setProgramStop() {
+    public void setProgramEnding() {
         int i = 0;
         while (i != size()) {
             TVProgram program = get(i);
@@ -101,7 +98,7 @@ public class TVProgramsList {
             if (i + 1 != size()) {
                 program_next = get(i+1);
                 if (program_next.getIndex() == program_next.getIndex()) {
-                    program.setStop(program_next.getStart());
+                    program.setEnding(program_next.getStarting());
                 }
             }
             i++;
@@ -112,18 +109,23 @@ public class TVProgramsList {
         for (TVProgram program : getData()) {
             mDataSource.getDatabase().insert(SchedulesTable.TABLE_NAME, null, getContentProgramsValues(program));
             if (program.getDescription() != null) {
-                //
+                program.setIdFromDB();
+                program.getDescription().setIdProgram(program.getId());
+                program.getDescription().setIdFromDB();
+                if (program.getDescription().getId() == -1) {
+                    program.getDescription().saveToDB();
+                    program.getDescription().setIdFromDB();
+                }
             }
         }
     }
 
     private ContentValues getContentProgramsValues(TVProgram program) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         ContentValues values = new ContentValues();
         values.put(SchedulesTable.Cols.CHANNEL, program.getIndex());
         values.put(SchedulesTable.Cols.CATEGORY, program.getCategory());
-        values.put(SchedulesTable.Cols.START, simpleDateFormat.format(program.getStart()));
-        values.put(SchedulesTable.Cols.END, simpleDateFormat.format(program.getStop()));
+        values.put(SchedulesTable.Cols.STARTING, getDateFormat(program.getStarting(), "yyyy-MM-dd HH:mm:ss"));
+        values.put(SchedulesTable.Cols.ENDING, getDateFormat(program.getEnding(), "yyyy-MM-dd HH:mm:ss"));
         values.put(SchedulesTable.Cols.TITLE, program.getTitle());
         return values;
     }

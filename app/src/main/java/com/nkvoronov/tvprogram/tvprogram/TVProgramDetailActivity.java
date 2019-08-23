@@ -90,8 +90,8 @@ public class TVProgramDetailActivity extends AppCompatActivity {
         updateUI();
 
         mProgramTitle.setText(mProgram.getTitle());
-        mProgramDate.setText(getDateFormat(mProgram.getStart(), "EEE, d MMM"));
-        String duration = getDateFormat(mProgram.getStart(), "HH:mm") + " - " + getDateFormat(mProgram.getStop(), "HH:mm");
+        mProgramDate.setText(getDateFormat(mProgram.getStarting(), "EEE, d MMM"));
+        String duration = getDateFormat(mProgram.getStarting(), "HH:mm") + " - " + getDateFormat(mProgram.getEnding(), "HH:mm");
         mProgramDuration.setText(duration);
         mProgramChannel.setText(getString(R.string.lab_channel, mProgram.getNameChannel()));
 

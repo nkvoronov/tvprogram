@@ -167,8 +167,8 @@ public class TVProgramSearchFragment extends Fragment {
                 mTitle.setTypeface(null, Typeface.ITALIC);
             }
 
-            mStart.setText(getDateFormat(mProgram.getStart(), "EEE, d MMM HH:mm"));
-            mDuration.setText(getActivity().getString(R.string.dutation_txt, getDuration(mProgram.getStart(), mProgram.getStop())));
+            mStart.setText(getDateFormat(mProgram.getStarting(), "EEE, d MMM HH:mm"));
+            mDuration.setText(getActivity().getString(R.string.dutation_txt, getDuration(mProgram.getStarting(), mProgram.getEnding())));
 
             if (mProgram.getCategory() != 0) {
                 mCategoryIcon.setVisibility(View.VISIBLE);

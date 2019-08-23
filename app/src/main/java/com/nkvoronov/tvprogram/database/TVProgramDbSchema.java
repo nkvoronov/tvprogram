@@ -58,7 +58,7 @@ public class TVProgramDbSchema {
 
         public static final class Cols {
             public static final String ID = "id";
-            public static final String SHORT = "short";
+            public static final String SHORT_DESC = "short_desc";
             public static final String DESCRIPTION = "description";
             public static final String IMAGE = "image";
             public static final String GENRES = "genres";
@@ -89,8 +89,8 @@ public class TVProgramDbSchema {
             public static final String NAME = "name";
             public static final String FAVORITE_CHANNEL = "favorite_channel";
             public static final String CATEGORY = "category";
-            public static final String START = "starting";
-            public static final String END = "ending";
+            public static final String STARTING = "starting";
+            public static final String ENDING = "ending";
             public static final String TITLE = "title";
             public static final String TIME_TYPE = "time_type";
             public static final String FAVORITE = "favorite";
