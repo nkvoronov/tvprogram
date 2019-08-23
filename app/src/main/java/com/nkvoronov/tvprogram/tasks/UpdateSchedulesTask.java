@@ -8,16 +8,16 @@ import java.text.ParseException;
 import org.jsoup.select.Elements;
 import java.text.SimpleDateFormat;
 import com.nkvoronov.tvprogram.common.HttpContent;
-import com.nkvoronov.tvprogram.tvschedule.TVSchedule;
 import com.nkvoronov.tvprogram.tvchannels.TVChannel;
-import com.nkvoronov.tvprogram.tvschedule.TVScheduleDescription;
-import com.nkvoronov.tvprogram.tvschedule.TVSchedulesList;
-import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
+import com.nkvoronov.tvprogram.tvschedule.TVSchedule;
 import com.nkvoronov.tvprogram.common.MainDataSource;
+import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
+import com.nkvoronov.tvprogram.tvschedule.TVSchedulesList;
 import com.nkvoronov.tvprogram.tvschedule.TVScheduleCategory;
 import static com.nkvoronov.tvprogram.common.HttpContent.HOST;
-import com.nkvoronov.tvprogram.tvschedule.TVScheduleCategoriesList;
+import com.nkvoronov.tvprogram.tvschedule.TVScheduleDescription;
 import static com.nkvoronov.tvprogram.common.MainDataSource.TAG;
+import com.nkvoronov.tvprogram.tvschedule.TVScheduleCategoriesList;
 
 public class UpdateSchedulesTask extends AsyncTask<Integer,String,Void> {
     public static final int DEF_CORRECTION = 120;
@@ -63,7 +63,6 @@ public class UpdateSchedulesTask extends AsyncTask<Integer,String,Void> {
         calendar.setTime(date);
         calendar_last.setTime(date);
         calendar_last.add(Calendar.DATE, mDataSource.getCoutDays());
-        Log.d(TAG, "LAST " + dateFormat.format(calendar_last.getTime()));
         while (!calendar.getTime().equals(calendar_last.getTime())) {
             progress[1] = dateFormat.format(calendar.getTime());
             getContentForDay(channel, calendar.getTime());
@@ -73,7 +72,6 @@ public class UpdateSchedulesTask extends AsyncTask<Integer,String,Void> {
             if(isCancelled()){
                 break;
             }
-            Log.d(TAG, "CDATA " + dateFormat.format(calendar.getTime()));
             calendar.add(Calendar.DATE, 1);
             index++;
         }
@@ -133,6 +131,7 @@ public class UpdateSchedulesTask extends AsyncTask<Integer,String,Void> {
                 if (schedule.getDescription() == null) {
                     schedule.setDescription(new TVScheduleDescription(""));
                 }
+                Log.d(TAG, "DESC - " + edesc);
                 schedule.getDescription().setDescription(edesc);
             }
 
@@ -140,6 +139,7 @@ public class UpdateSchedulesTask extends AsyncTask<Integer,String,Void> {
                 if (schedule.getDescription() == null) {
                     schedule.setDescription(new TVScheduleDescription(""));
                 }
+                Log.d(TAG, "URL_DESC - " + efulldescurl);
                 schedule.getDescription().setUrlFullDesc(efulldescurl);
                 getFullDesc(schedule);
             }

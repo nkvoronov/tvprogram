@@ -135,7 +135,7 @@ public class TVScheduleDescription {
 
     public void setIdFromDB() {
         mIdDescription = -1;
-        String desc = addQuotes(getDescription(), "'");
+        String desc = addQuotes(getDescription().replaceAll("'","''"), "'");
         Cursor cursor = mDataSource.getDatabase().query(DescriptionTable.TABLE_NAME,
                 null,
                 "(" + DescriptionTable.Cols.DESCRIPTION + "=" + desc + ")",
@@ -193,7 +193,7 @@ public class TVScheduleDescription {
 
     private ContentValues getContentProgramDescription() {
         ContentValues values = new ContentValues();
-        values.put(DescriptionTable.Cols.DESCRIPTION, getDescription());
+        values.put(DescriptionTable.Cols.DESCRIPTION, getDescription().replaceAll("'","''"));
         values.put(DescriptionTable.Cols.IMAGE, getImage());
         values.put(DescriptionTable.Cols.GENRES, getGenres());
         values.put(DescriptionTable.Cols.ACTORS, getActors());

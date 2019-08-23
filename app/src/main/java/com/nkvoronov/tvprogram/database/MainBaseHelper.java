@@ -1,15 +1,13 @@
 package com.nkvoronov.tvprogram.database;
 
 import java.util.Date;
-import android.util.Log;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import static com.nkvoronov.tvprogram.common.DateUtils.*;
-import com.nkvoronov.tvprogram.tvschedule.TVScheduleCategory;
-import static com.nkvoronov.tvprogram.common.StringUtils.*;
 import com.nkvoronov.tvprogram.database.MainDbSchema.*;
-import static com.nkvoronov.tvprogram.common.MainDataSource.TAG;
+import static com.nkvoronov.tvprogram.common.DateUtils.*;
+import static com.nkvoronov.tvprogram.common.StringUtils.*;
+import com.nkvoronov.tvprogram.tvschedule.TVScheduleCategory;
 import static com.nkvoronov.tvprogram.common.MainDataSource.RUS_LANG;
 import static com.nkvoronov.tvprogram.common.MainDataSource.UKR_LANG;
 import com.nkvoronov.tvprogram.database.MainDbSchema.ChannelsFavoritesTable;
@@ -28,7 +26,8 @@ public class MainBaseHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL("CREATE TABLE " + ConfigsTable.TABLE_NAME + "(" +
                 ConfigsTable.Cols.ID + " INTEGER PRIMARY KEY NOT NULL, " +
-                ConfigsTable.Cols.COUNT_DAYS + " INTEGER NOT NULL DEFAULT (7) " +
+                ConfigsTable.Cols.COUNT_DAYS + " INTEGER NOT NULL DEFAULT (7), " +
+                ConfigsTable.Cols.FULL_DESC + " INTEGER NOT NULL DEFAULT (0) " +
                 ")"
         );
 
@@ -157,7 +156,6 @@ public class MainBaseHelper extends SQLiteOpenHelper {
                 sql_filter +
                 "ORDER BY " +
                 "ca." + ChannelsTable.Cols.CHANNEL;
-        Log.d(TAG, sql);
         return sql;
     }
 
@@ -204,7 +202,6 @@ public class MainBaseHelper extends SQLiteOpenHelper {
                 sql_filter + " " +
                 "ORDER BY " +
                 "sch." + SchedulesTable.Cols.STARTING;
-        Log.d(TAG, sql);
         return sql;
     }
 
@@ -234,7 +231,6 @@ public class MainBaseHelper extends SQLiteOpenHelper {
                 sql_filter + " " +
                 "ORDER BY " +
                         "ca." + ChannelsTable.Cols.NAME;
-        Log.d(TAG, sql);
         return sql;
     }
 
@@ -257,7 +253,6 @@ public class MainBaseHelper extends SQLiteOpenHelper {
                 "JOIN " + ChannelsTable.TABLE_NAME + " ca ON (sch." + SchedulesTable.Cols.CHANNEL + "=ca." + ChannelsTable.Cols.CHANNEL + ") " +
                 "ORDER BY " +
                         "ca." + ChannelsTable.Cols.NAME + ", sch." + SchedulesTable.Cols.STARTING;
-        Log.d(TAG, sql);
         return sql;
     }
 
@@ -286,7 +281,6 @@ public class MainBaseHelper extends SQLiteOpenHelper {
                 sql_filter + " " +
                 "ORDER BY " +
                 "ca." + ChannelsTable.Cols.NAME + ", sch." + SchedulesTable.Cols.STARTING;
-        Log.d(TAG, sql);
         return sql;
     }
 
@@ -305,7 +299,6 @@ public class MainBaseHelper extends SQLiteOpenHelper {
                 "desc." + DescriptionTable.Cols.RATING + " AS " + DescriptionTable.Cols.RATING + " " +
                 "FROM " + DescriptionTable.TABLE_NAME + " desc " +
                 "WHERE desc." + DescriptionTable.Cols.ID + "=(SELECT sd." + ScheduleDescriptionTable.Cols.DESCRIPTION + " FROM " + ScheduleDescriptionTable.TABLE_NAME + " sd WHERE sd." + ScheduleDescriptionTable.Cols.SCHEDULE + "=" + schedule + ")";
-        Log.d(TAG, sql);
         return sql;
     }
 }

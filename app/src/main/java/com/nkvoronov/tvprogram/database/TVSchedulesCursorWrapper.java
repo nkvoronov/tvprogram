@@ -46,7 +46,6 @@ public class TVSchedulesCursorWrapper extends CursorWrapper {
         schedule.setTimeType(timeType);
         schedule.setFavoritesChannel(favorite_channel == 1);
         schedule.setFavorites(favorite == 1);
-        schedule.setDescriptionFromDB();
         return schedule;
     }
 }

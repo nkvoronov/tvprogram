@@ -130,7 +130,7 @@ public class TVSchedule {
 
     public void setIdFromDB() {
         mId = -1;
-        String title = addQuotes(getTitle(), "'");
+        String title = addQuotes(getTitle().replaceAll("'","''"), "'");
         String starting = addQuotes(getDateFormat(getStarting(), "yyyy-MM-dd HH:mm:ss"), "'");
         String ending = addQuotes(getDateFormat(getEnding(), "yyyy-MM-dd HH:mm:ss"), "'");
 
@@ -155,6 +155,7 @@ public class TVSchedule {
 
     public void setDescriptionFromDB() {
         TVScheduleDescription scheduleDescription = new TVScheduleDescription("");
+        scheduleDescription.setDataSource(mDataSource);
         scheduleDescription.loadFromDB(getId());
         setDescription(scheduleDescription);
     }

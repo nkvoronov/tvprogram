@@ -78,6 +78,7 @@ public class TVSchedulesList {
             while (!cursor.isAfterLast()) {
                 TVSchedule schedule = cursor.getSchedule();
                 add(schedule);
+                schedule.setDescriptionFromDB();
                 cursor.moveToNext();
             }
         } finally {
@@ -109,6 +110,7 @@ public class TVSchedulesList {
         for (TVSchedule schedule : getData()) {
             mDataSource.getDatabase().insert(SchedulesTable.TABLE_NAME, null, getContentSchedulesValues(schedule));
             if (schedule.getDescription() != null) {
+                schedule.getDescription().setDataSource(mDataSource);
                 schedule.setIdFromDB();
                 schedule.getDescription().setIdSchedule(schedule.getId());
                 schedule.getDescription().setIdFromDB();

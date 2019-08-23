@@ -56,7 +56,7 @@ public class MainDataSource {
     }
 
     public boolean isFullDesc() {
-        return isFullDesc();
+        return mAppConfig.isFullDesc();
     }
 
     public void setFullDesc(boolean fullDesc) {
