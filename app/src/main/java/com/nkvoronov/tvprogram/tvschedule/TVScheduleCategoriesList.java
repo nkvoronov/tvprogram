@@ -1,31 +1,31 @@
-package com.nkvoronov.tvprogram.tvprogram;
+package com.nkvoronov.tvprogram.tvschedule;
 
 import java.util.List;
 import java.util.ArrayList;
 import android.content.ContentValues;
-import com.nkvoronov.tvprogram.common.TVProgramDataSource;
-import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
-import com.nkvoronov.tvprogram.database.TVProgramCategoryCursorWrapper;
+import com.nkvoronov.tvprogram.common.MainDataSource;
+import com.nkvoronov.tvprogram.database.MainDbSchema.*;
+import com.nkvoronov.tvprogram.database.TVScheduleCategoryCursorWrapper;
 
-public class TVProgramCategoriesList {
-    private List<TVProgramCategory> mData;
-    private TVProgramDataSource mDataSource;
+public class TVScheduleCategoriesList {
+    private List<TVScheduleCategory> mData;
+    private MainDataSource mDataSource;
 
-    public TVProgramCategoriesList(TVProgramDataSource dataSource) {
+    public TVScheduleCategoriesList(MainDataSource dataSource) {
         mData = new ArrayList<>();
         mDataSource = dataSource;
     }
 
-    public List<TVProgramCategory> getData() {
+    public List<TVScheduleCategory> getData() {
         return mData;
     }
 
-    public TVProgramCategory get(int position) {
+    public TVScheduleCategory get(int position) {
         return getData().get(position);
     }
 
-    public TVProgramCategory getForId(int id) {
-        TVProgramCategory programCategory = null;
+    public TVScheduleCategory getForId(int id) {
+        TVScheduleCategory programCategory = null;
         for (int i = 0; i < size(); i++) {
             if (get(i).getId() == id) {
                 programCategory = get(i);
@@ -43,14 +43,14 @@ public class TVProgramCategoriesList {
         getData().clear();
     }
 
-    public void add(TVProgramCategory programCategory) {
+    public void add(TVScheduleCategory programCategory) {
         getData().add(programCategory);
     }
 
     public void loadFromDB() {
         clear();
 
-        TVProgramCategoryCursorWrapper cursor = new TVProgramCategoryCursorWrapper(mDataSource.getDatabase().query(CategoryTable.TABLE_NAME,
+        TVScheduleCategoryCursorWrapper cursor = new TVScheduleCategoryCursorWrapper(mDataSource.getDatabase().query(CategoryTable.TABLE_NAME,
                 null,
                 CategoryTable.Cols.ID + ">0",
                 null,
@@ -61,7 +61,7 @@ public class TVProgramCategoriesList {
         try {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
-                TVProgramCategory category = cursor.getCategory();
+                TVScheduleCategory category = cursor.getCategory();
                 add(category);
                 cursor.moveToNext();
             }
@@ -71,17 +71,16 @@ public class TVProgramCategoriesList {
     }
 
     public void saveToDB() {
-        for (TVProgramCategory programCategory : getData()) {
-            mDataSource.getDatabase().insert(CategoryTable.TABLE_NAME, null, getContentProgramCategoryValues(programCategory));
+        for (TVScheduleCategory programCategory : getData()) {
+            mDataSource.getDatabase().insert(CategoryTable.TABLE_NAME, null, getContentScheduleCategoryValues(programCategory));
         }
     }
 
-    public static ContentValues getContentProgramCategoryValues(TVProgramCategory category) {
+    public static ContentValues getContentScheduleCategoryValues(TVScheduleCategory category) {
         ContentValues values = new ContentValues();
         values.put(CategoryTable.Cols.ID, category.getId());
         values.put(CategoryTable.Cols.NAME, category.getName());
         values.put(CategoryTable.Cols.DICTIONARY, category.getDictionary());
-        values.put(CategoryTable.Cols.COLOR, category.getColor());
         return values;
     }
 }

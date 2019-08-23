@@ -6,17 +6,17 @@ import android.database.Cursor;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import android.database.CursorWrapper;
-import com.nkvoronov.tvprogram.tvprogram.TVProgram;
-import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
-import com.nkvoronov.tvprogram.database.TVProgramDbSchema.SchedulesTable;
+import com.nkvoronov.tvprogram.tvschedule.TVSchedule;
+import static com.nkvoronov.tvprogram.common.MainDataSource.TAG;
+import com.nkvoronov.tvprogram.database.MainDbSchema.SchedulesTable;
 
-public class TVProgramsCursorWrapper extends CursorWrapper {
+public class TVSchedulesCursorWrapper extends CursorWrapper {
 
-    public TVProgramsCursorWrapper(Cursor cursor) {
+    public TVSchedulesCursorWrapper(Cursor cursor) {
         super(cursor);
     }
 
-    public TVProgram getProgram() {
+    public TVSchedule getSchedule() {
         int id = getInt(getColumnIndex(SchedulesTable.Cols.ID));
         int index = getInt(getColumnIndex(SchedulesTable.Cols.CHANNEL));
         String name = getString(getColumnIndex(SchedulesTable.Cols.NAME));
@@ -40,13 +40,13 @@ public class TVProgramsCursorWrapper extends CursorWrapper {
             Log.d(TAG, e.getMessage());
         }
 
-        TVProgram program = new TVProgram(id, index, startDate, endDate, title);
-        program.setNameChannel(name);
-        program.setCategory(category);
-        program.setTimeType(timeType);
-        program.setFavoritChannel(favorite_channel == 1);
-        program.setFavorites(favorite == 1);
-        program.setDescriptionFromDB();
-        return program;
+        TVSchedule schedule = new TVSchedule(id, index, startDate, endDate, title);
+        schedule.setNameChannel(name);
+        schedule.setCategory(category);
+        schedule.setTimeType(timeType);
+        schedule.setFavoritesChannel(favorite_channel == 1);
+        schedule.setFavorites(favorite == 1);
+        schedule.setDescriptionFromDB();
+        return schedule;
     }
 }

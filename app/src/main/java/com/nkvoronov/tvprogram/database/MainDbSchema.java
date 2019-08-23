@@ -1,6 +1,6 @@
 package com.nkvoronov.tvprogram.database;
 
-public class TVProgramDbSchema {
+public class MainDbSchema {
     public static Object ConfigsTable;
     public static Object ChannelsTable;
     public static Object CategoryTable;
@@ -16,6 +16,7 @@ public class TVProgramDbSchema {
         public static final class Cols {
             public static final String ID = "id";
             public static final String COUNT_DAYS = "count_days";
+            public static final String FULL_DESC = "full_desc";
         }
     }
 
@@ -49,7 +50,6 @@ public class TVProgramDbSchema {
             public static final String ID = "id";
             public static final String NAME = "name";
             public static final String DICTIONARY = "dictionary";
-            public static final String COLOR = "color";
         }
     }
 
@@ -58,7 +58,6 @@ public class TVProgramDbSchema {
 
         public static final class Cols {
             public static final String ID = "id";
-            public static final String SHORT_DESC = "short_desc";
             public static final String DESCRIPTION = "description";
             public static final String IMAGE = "image";
             public static final String GENRES = "genres";

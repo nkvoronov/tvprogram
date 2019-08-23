@@ -9,7 +9,7 @@
     tools:context=".tvchannels.TVChannelsActivity">
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tvprogramchannels_tabs"
+        android:id="@+id/tvschedulechannels_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -24,7 +24,7 @@
         app:tabTextColor="@android:color/black" />
 
     <androidx.viewpager.widget.ViewPager
-        android:id="@+id/tvprogramchannels_pager"
+        android:id="@+id/tvschedulechannels_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

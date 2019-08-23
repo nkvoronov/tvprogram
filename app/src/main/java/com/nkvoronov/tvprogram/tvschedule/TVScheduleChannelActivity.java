@@ -1,4 +1,4 @@
-package com.nkvoronov.tvprogram.tvprogram;
+package com.nkvoronov.tvprogram.tvschedule;
 
 import java.util.Date;
 import android.os.Bundle;
@@ -13,10 +13,10 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.tabs.TabLayout;
 import com.nkvoronov.tvprogram.tvchannels.TVChannel;
-import com.nkvoronov.tvprogram.common.TVProgramDataSource;
+import com.nkvoronov.tvprogram.common.MainDataSource;
 
-public class TVProgramChannelActivity extends AppCompatActivity {
-    private static final String EXTRA_TVCHANNEL_INDEX = "com.nkvoronov.tvprogram.tvprogram.tvchannel_index";
+public class TVScheduleChannelActivity extends AppCompatActivity {
+    private static final String EXTRA_TVCHANNEL_INDEX = "com.nkvoronov.tvprogram.tvschedule.tvchannel_index";
 
     TVChannel mChannel;
     private int mChannelIndex;
@@ -25,11 +25,11 @@ public class TVProgramChannelActivity extends AppCompatActivity {
     private TextView mChannelName;
     private ImageView mChannelIcon;
     private ImageView mChannelFavorites;
-    private TVProgramDataSource mDataSource;
-    private TVProgramChannelPageAdapter mPageAdapter;
+    private MainDataSource mDataSource;
+    private TVScheduleChannelPageAdapter mPageAdapter;
 
     public static Intent newIntent(Context context, int channel_index) {
-        Intent intent = new Intent(context, TVProgramChannelActivity.class);
+        Intent intent = new Intent(context, TVScheduleChannelActivity.class);
         intent.putExtra(EXTRA_TVCHANNEL_INDEX, channel_index);
         return intent;
     }
@@ -43,8 +43,8 @@ public class TVProgramChannelActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tvprograms_channel);
-        mDataSource = TVProgramDataSource.get(this);
+        setContentView(R.layout.activity_tvschedules_channel);
+        mDataSource = MainDataSource.get(this);
         if (savedInstanceState != null) {
             mChannelIndex = (int) savedInstanceState.getSerializable(EXTRA_TVCHANNEL_INDEX);
         } else {
@@ -68,15 +68,15 @@ public class TVProgramChannelActivity extends AppCompatActivity {
                 setFavorites();
             }
         });
-        mTabLayout = findViewById(R.id.tvprogramchannels_tabs);
-        mViewPager = findViewById(R.id.tvprogramchannels_pager);
+        mTabLayout = findViewById(R.id.tvschedulechannels_tabs);
+        mViewPager = findViewById(R.id.tvschedulechannels_pager);
 
-        long[] info = mDataSource.getProgramInfo(mChannelIndex);
+        long[] info = mDataSource.getScheduleInfo(mChannelIndex);
         Date beginDate = new Date(info[0]);
         int days = (int)info[1];
         int current = (int)info[2];
 
-        mPageAdapter = new TVProgramChannelPageAdapter(this, getSupportFragmentManager(), mChannelIndex, beginDate, days);
+        mPageAdapter = new TVScheduleChannelPageAdapter(this, getSupportFragmentManager(), mChannelIndex, beginDate, days);
         mViewPager.setAdapter(mPageAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
 

@@ -24,12 +24,12 @@
             android:parentActivityName=".MainActivity">
         </activity>
         <activity
-            android:name=".tvprogram.TVProgramChannelActivity"
+            android:name=".tvschedule.TVScheduleChannelActivity"
             android:label="@string/title_tvchannel_win"
             android:parentActivityName=".tvchannels.TVChannelsActivity">
         </activity>
         <activity
-            android:name=".tvprogram.TVProgramDetailActivity"
+            android:name=".tvschedule.TVScheduleDetailActivity"
             android:label="@string/title_tvprogram_det_win">
         </activity>
         <activity

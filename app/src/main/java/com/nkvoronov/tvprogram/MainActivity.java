@@ -9,21 +9,20 @@ import androidx.core.view.MenuCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.tabs.TabLayout;
-import com.nkvoronov.tvprogram.common.TVProgramDataSource;
-import com.nkvoronov.tvprogram.tasks.UpdateProgramsTask;
+import com.nkvoronov.tvprogram.common.MainDataSource;
+import com.nkvoronov.tvprogram.tasks.UpdateSchedulesTask;
 import com.nkvoronov.tvprogram.tvchannels.TVChannelsActivity;
-import com.nkvoronov.tvprogram.tvprogram.TVProgramFavoritesFragment;
-import com.nkvoronov.tvprogram.tvprogram.TVProgramNowFragment;
-import com.nkvoronov.tvprogram.tvprogram.TVProgramPageAdapter;
-import com.nkvoronov.tvprogram.tvprogram.TVProgramSearchFragment;
+import com.nkvoronov.tvprogram.tvschedule.TVScheduleNowFragment;
+import com.nkvoronov.tvprogram.tvschedule.TVSchedulePageAdapter;
+import com.nkvoronov.tvprogram.tvschedule.TVScheduleFavoritesFragment;
 
 public class MainActivity extends AppCompatActivity {
     private ViewPager mMainViewPager;
     private TabLayout mMainTabLayout;
+    private MainDataSource mDataSource;
     private ProgressDialog mProgressDialog;
-    private UpdateProgramsTask mUpdateTask;
-    private TVProgramDataSource mDataSource;
-    private TVProgramPageAdapter mPageAdapter;
+    private UpdateSchedulesTask mUpdateTask;
+    private TVSchedulePageAdapter mPageAdapter;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -55,8 +54,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onUpdate() {
-        //Check favorites channels !!!
-        mUpdateTask.execute(-1);
+        if (mDataSource.checkFavoritesChannel()) {
+            mUpdateTask.execute(-1);
+        }
     }
 
     private void updateUI() {
@@ -64,9 +64,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updatePages() {
-        ((TVProgramNowFragment) mPageAdapter.instantiateItem(mMainViewPager, 0)).updateUI();
-        ((TVProgramFavoritesFragment) mPageAdapter.instantiateItem(mMainViewPager, 1)).updateUI();
-        //((TVProgramSearchFragment) mPageAdapter.instantiateItem(mMainViewPager, 2)).updateUI();
+        ((TVScheduleNowFragment) mPageAdapter.instantiateItem(mMainViewPager, 0)).updateUI();
+        ((TVScheduleFavoritesFragment) mPageAdapter.instantiateItem(mMainViewPager, 1)).updateUI();
+        // !!!!!!!!!!
+        //((TVScheduleSearchFragment) mPageAdapter.instantiateItem(mMainViewPager, 2)).updateUI();
     }
 
     private void onChannels() {
@@ -92,10 +93,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mDataSource = TVProgramDataSource.get(this);
-        mMainTabLayout = findViewById(R.id.tvprogram_tabs);
-        mMainViewPager = findViewById(R.id.tvprogram_pager);
-        mPageAdapter = new TVProgramPageAdapter(this, getSupportFragmentManager());
+        mDataSource = MainDataSource.get(this);
+        mMainTabLayout = findViewById(R.id.tvschedule_tabs);
+        mMainViewPager = findViewById(R.id.tvschedule_pager);
+        mPageAdapter = new TVSchedulePageAdapter(this, getSupportFragmentManager());
         mMainViewPager.setAdapter(mPageAdapter);
         mMainTabLayout.setupWithViewPager(mMainViewPager);
 
@@ -104,8 +105,8 @@ public class MainActivity extends AppCompatActivity {
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         mProgressDialog.setTitle(getString(R.string.prg_update_caption));
 
-        mUpdateTask = new UpdateProgramsTask(mDataSource);
-        mUpdateTask.setListeners(new UpdateProgramsTask.OnTaskListeners() {
+        mUpdateTask = new UpdateSchedulesTask(mDataSource);
+        mUpdateTask.setListeners(new UpdateSchedulesTask.OnTaskListeners() {
 
             @Override
             public void onStart() {

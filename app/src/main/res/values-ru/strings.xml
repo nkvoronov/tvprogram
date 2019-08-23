@@ -48,4 +48,5 @@
     <string name="del_from_favorites">Удалить из Избранного</string>
     <string name="text_author">Воронов Николай</string>
     <string name="text_author_email">nkvoronov@gmail.com</string>
+    <string name="lab_fulldesc">Получать полное описание</string>
 </resources>

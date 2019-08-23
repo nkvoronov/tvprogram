@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <Spinner
-        android:id="@+id/tvprogram_filter"
+        android:id="@+id/tvschedule_filter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
@@ -25,7 +25,7 @@
         android:layout_marginTop="2dp">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/tvprogram_view"
+            android:id="@+id/tvschedule_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/colorItemBackground"
@@ -35,7 +35,7 @@
         </androidx.recyclerview.widget.RecyclerView>
 
         <TextView
-            android:id="@+id/tvprogram_empty"
+            android:id="@+id/tvschedule_empty"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/colorItemBackground"

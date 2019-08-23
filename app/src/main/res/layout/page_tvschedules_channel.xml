@@ -7,7 +7,7 @@
     android:layout_height="match_parent" >
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/tvprogramchannel_view"
+        android:id="@+id/tvschedulechannel_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorItemBackground"
@@ -16,7 +16,7 @@
     </androidx.recyclerview.widget.RecyclerView>
 
     <TextView
-        android:id="@+id/tvprogramchannel_empty"
+        android:id="@+id/tvschedulechannel_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorItemBackground"

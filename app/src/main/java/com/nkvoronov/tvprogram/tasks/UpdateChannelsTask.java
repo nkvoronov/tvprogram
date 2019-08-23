@@ -4,20 +4,20 @@ import android.os.AsyncTask;
 import com.nkvoronov.tvprogram.common.HttpContent;
 import com.nkvoronov.tvprogram.tvchannels.TVChannel;
 import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
-import com.nkvoronov.tvprogram.common.TVProgramDataSource;
+import com.nkvoronov.tvprogram.common.MainDataSource;
 import static com.nkvoronov.tvprogram.common.HttpContent.ICONS_PRE;
 import static com.nkvoronov.tvprogram.common.HttpContent.CHANNELS_PRE;
-import static com.nkvoronov.tvprogram.common.TVProgramDataSource.ALL_LANG;
-import static com.nkvoronov.tvprogram.common.TVProgramDataSource.RUS_LANG;
-import static com.nkvoronov.tvprogram.common.TVProgramDataSource.UKR_LANG;
+import static com.nkvoronov.tvprogram.common.MainDataSource.ALL_LANG;
+import static com.nkvoronov.tvprogram.common.MainDataSource.RUS_LANG;
+import static com.nkvoronov.tvprogram.common.MainDataSource.UKR_LANG;
 
 public class UpdateChannelsTask extends AsyncTask<Void,String,Void> {
     private static final String CHANNELS_SELECT = "option[value^=channel_]";
 
     private OnTaskListeners mListeners;
-    private TVProgramDataSource mDataSource;
+    private MainDataSource mDataSource;
 
-    public UpdateChannelsTask(TVProgramDataSource dataSource) {
+    public UpdateChannelsTask(MainDataSource dataSource) {
         mDataSource = dataSource;
     }
 

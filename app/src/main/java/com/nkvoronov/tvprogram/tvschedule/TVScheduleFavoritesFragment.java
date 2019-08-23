@@ -1,4 +1,4 @@
-package com.nkvoronov.tvprogram.tvprogram;
+package com.nkvoronov.tvprogram.tvschedule;
 
 import android.os.Bundle;
 import android.view.View;
@@ -14,22 +14,22 @@ import com.nkvoronov.tvprogram.R;
 import android.view.LayoutInflater;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import com.nkvoronov.tvprogram.common.MainDataSource;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import static com.nkvoronov.tvprogram.common.DateUtils.*;
-import com.nkvoronov.tvprogram.common.TVProgramDataSource;
 
-public class TVProgramFavoritesFragment extends Fragment {
-    private static final String ARG_FAVORITES_PAGE_NUMBER = "com.nkvoronov.tvprogram.tvprogram.page_number_favorites";
+public class TVScheduleFavoritesFragment extends Fragment {
+    private static final String ARG_FAVORITES_PAGE_NUMBER = "com.nkvoronov.tvprogram.tvschedule.page_number_favorites";
 
     private int mPageIndex;
     private Spinner mSpinnerFilter;
-    private ProgramAdapter mAdapter;
+    private ScheduleAdapter mAdapter;
     private TextView mEmptyTextView;
-    private RecyclerView mProgramView;
-    private TVProgramDataSource mDataSource;
+    private RecyclerView mScheduleView;
+    private MainDataSource mDataSource;
 
-    public static TVProgramFavoritesFragment newInstance(int index) {
-        TVProgramFavoritesFragment fragment = new TVProgramFavoritesFragment();
+    public static TVScheduleFavoritesFragment newInstance(int index) {
+        TVScheduleFavoritesFragment fragment = new TVScheduleFavoritesFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_FAVORITES_PAGE_NUMBER, index);
         fragment.setArguments(args);
@@ -44,13 +44,13 @@ public class TVProgramFavoritesFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.page_tvprograms, container, false);
-        mDataSource = TVProgramDataSource.get(getContext());
-        mSpinnerFilter = root.findViewById(R.id.tvprogram_filter);
+        View root = inflater.inflate(R.layout.page_tvschedules, container, false);
+        mDataSource = MainDataSource.get(getContext());
+        mSpinnerFilter = root.findViewById(R.id.tvschedule_filter);
         mSpinnerFilter.setVisibility(View.GONE);
-        mProgramView = root.findViewById(R.id.tvprogram_view);
-        mEmptyTextView = root.findViewById(R.id.tvprogram_empty);
-        mProgramView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mScheduleView = root.findViewById(R.id.tvschedule_view);
+        mEmptyTextView = root.findViewById(R.id.tvschedule_empty);
+        mScheduleView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return root;
     }
 
@@ -61,20 +61,20 @@ public class TVProgramFavoritesFragment extends Fragment {
     }
 
     public void updateUI() {
-        TVProgramsList programs = mDataSource.getPrograms(2, String.valueOf(-1), null);
+        TVSchedulesList schedule = mDataSource.getSchedules(2, String.valueOf(-1), null);
         if (mAdapter == null) {
-            mAdapter = new TVProgramFavoritesFragment.ProgramAdapter(programs);
-            mProgramView.setAdapter(mAdapter);
+            mAdapter = new TVScheduleFavoritesFragment.ScheduleAdapter(schedule);
+            mScheduleView.setAdapter(mAdapter);
         } else {
-            mAdapter.setProgramList(programs);
+            mAdapter.setScheduleList(schedule);
             mAdapter.notifyDataSetChanged();
         }
     }
 
-    private class ProgramHolder extends RecyclerView.ViewHolder implements  View.OnClickListener{
+    private class ScheduleHolder extends RecyclerView.ViewHolder implements  View.OnClickListener{
         private TextView mStart;
         private TextView mTitle;
-        private TVProgram mProgram;
+        private TVSchedule mSchedule;
         private TextView mDuration;
         private TextView mChannelName;
         private ImageView mChannelIcon;
@@ -82,15 +82,15 @@ public class TVProgramFavoritesFragment extends Fragment {
         private ImageView mCategoryIcon;
         private ImageView mChannelFavorites;
 
-        public ProgramHolder(LayoutInflater inflater, ViewGroup parent) {
-            super(inflater.inflate(R.layout.list_item_tvprograms, parent, false));
+        public ScheduleHolder(LayoutInflater inflater, ViewGroup parent) {
+            super(inflater.inflate(R.layout.list_item_tvschedules, parent, false));
             itemView.setOnClickListener(this);
 
             mChannelIcon = itemView.findViewById(R.id.channel_icon);
             mChannelIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    openProgramChannel();
+                    openScheduleChannel();
                 }
             });
 
@@ -98,7 +98,7 @@ public class TVProgramFavoritesFragment extends Fragment {
             mChannelName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    openProgramChannel();
+                    openScheduleChannel();
                 }
             });
 
@@ -111,46 +111,46 @@ public class TVProgramFavoritesFragment extends Fragment {
 
         }
 
-        public void bind(TVProgram program) {
-            mProgram = program;
+        public void bind(TVSchedule schedule) {
+            mSchedule = schedule;
 
-            mChannelName.setText(mProgram.getNameChannel());
+            mChannelName.setText(mSchedule.getNameChannel());
             Glide
                     .with(getContext())
-                    .load(mDataSource.getChannelIconFile(mProgram.getIndex()))
+                    .load(mDataSource.getChannelIconFile(mSchedule.getIndex()))
                     .fitCenter()
                     .into(mChannelIcon);
 
-            if (mProgram.isFavoritChannel()) {
+            if (mSchedule.isFavoritesChannel()) {
                 mChannelFavorites.setImageResource(R.drawable.favorites_on);
             }
             else {
                 mChannelFavorites.setImageResource(R.drawable.favorites_off);
             }
 
-            if (mProgram.isFavorites()) {
+            if (mSchedule.isFavorites()) {
                 mFavoriteIcon.setVisibility(View.VISIBLE);
             } else {
                 mFavoriteIcon.setVisibility(View.GONE);
             }
 
-            mTitle.setText(mProgram.getTitle());
+            mTitle.setText(mSchedule.getTitle());
             mTitle.setTypeface(null, Typeface.NORMAL);
             mTitle.setTextColor(Color.BLACK);
 
-            if (mProgram.getTimeType() == 1) {
+            if (mSchedule.getTimeType() == 1) {
                 mTitle.setTypeface(null, Typeface.BOLD);
-            } else if (mProgram.getTimeType() == 0) {
+            } else if (mSchedule.getTimeType() == 0) {
                 mTitle.setTextColor(Color.GRAY);
                 mTitle.setTypeface(null, Typeface.ITALIC);
             }
 
-            mStart.setText(getDateFormat(mProgram.getStarting(), "EEE, d MMM HH:mm"));
-            mDuration.setText(getActivity().getString(R.string.dutation_txt, getDuration(mProgram.getStarting(), mProgram.getEnding())));
+            mStart.setText(getDateFormat(mSchedule.getStarting(), "EEE, d MMM HH:mm"));
+            mDuration.setText(getActivity().getString(R.string.dutation_txt, getDuration(mSchedule.getStarting(), mSchedule.getEnding())));
 
-            if (mProgram.getCategory() != 0) {
+            if (mSchedule.getCategory() != 0) {
                 mCategoryIcon.setVisibility(View.VISIBLE);
-                mDataSource.setCategoryDrawable(mCategoryIcon, mProgram.getCategory());
+                mDataSource.setCategoryDrawable(mCategoryIcon, mSchedule.getCategory());
             } else {
                 mCategoryIcon.setVisibility(View.GONE);
             }
@@ -158,51 +158,51 @@ public class TVProgramFavoritesFragment extends Fragment {
 
         @Override
         public void onClick(View view) {
-            openProgramDetail();
+            openScheduleDetail();
         }
 
-        private void openProgramDetail() {
-            Intent intent = TVProgramDetailActivity.newIntent(getActivity(), mProgram.getId(), mProgram.getIndex());
+        private void openScheduleDetail() {
+            Intent intent = TVScheduleDetailActivity.newIntent(getActivity(), mSchedule.getId(), mSchedule.getIndex());
             startActivity(intent);
         }
 
-        private void openProgramChannel() {
-            Intent intent = TVProgramChannelActivity.newIntent(getActivity(), mProgram.getIndex());
+        private void openScheduleChannel() {
+            Intent intent = TVScheduleChannelActivity.newIntent(getActivity(), mSchedule.getIndex());
             startActivity(intent);
         }
     }
 
-    private class ProgramAdapter extends RecyclerView.Adapter<ProgramHolder> {
-        private TVProgramsList mProgramsList;
+    private class ScheduleAdapter extends RecyclerView.Adapter<ScheduleHolder> {
+        private TVSchedulesList mSchedulesList;
 
-        public ProgramAdapter(TVProgramsList programs) {
-            mProgramsList = programs;
+        public ScheduleAdapter(TVSchedulesList schedules) {
+            mSchedulesList = schedules;
         }
 
         @Override
-        public ProgramHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ScheduleHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            return new ProgramHolder(layoutInflater, parent);
+            return new ScheduleHolder(layoutInflater, parent);
         }
 
         @Override
-        public void onBindViewHolder(ProgramHolder holder, int position) {
-            TVProgram program =  mProgramsList.get(position);
-            holder.bind(program);
+        public void onBindViewHolder(ScheduleHolder holder, int position) {
+            TVSchedule schedule =  mSchedulesList.get(position);
+            holder.bind(schedule);
         }
 
         @Override
         public int getItemCount() {
-            if (mProgramsList.size() == 0) {
+            if (mSchedulesList.size() == 0) {
                 mEmptyTextView.setVisibility(View.VISIBLE);
             } else {
                 mEmptyTextView.setVisibility(View.INVISIBLE);
             }
-            return mProgramsList.size();
+            return mSchedulesList.size();
         }
 
-        public void setProgramList(TVProgramsList programs) {
-            mProgramsList = programs;
+        public void setScheduleList(TVSchedulesList schedules) {
+            mSchedulesList = schedules;
         }
     }
 }

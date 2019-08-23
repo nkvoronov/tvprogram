@@ -11,14 +11,14 @@ import androidx.core.view.MenuCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.tabs.TabLayout;
-import com.nkvoronov.tvprogram.common.TVProgramDataSource;
+import com.nkvoronov.tvprogram.common.MainDataSource;
 import com.nkvoronov.tvprogram.tasks.UpdateChannelsTask;
 
 public class TVChannelsActivity extends AppCompatActivity implements TVChannelsFragment.ChangesChannels {
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
     ProgressDialog mProgressDialog;
-    private TVProgramDataSource mDataSource;
+    private MainDataSource mDataSource;
     private UpdateChannelsTask mUpdateTask;
     private TVChannelsPageAdapter mPageAdapter;
 
@@ -52,9 +52,9 @@ public class TVChannelsActivity extends AppCompatActivity implements TVChannelsF
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tvchannels);
-        mDataSource = TVProgramDataSource.get(this);
-        mTabLayout = findViewById(R.id.tvprogramchannels_tabs);
-        mViewPager = findViewById(R.id.tvprogramchannels_pager);
+        mDataSource = MainDataSource.get(this);
+        mTabLayout = findViewById(R.id.tvschedulechannels_tabs);
+        mViewPager = findViewById(R.id.tvschedulechannels_pager);
         mPageAdapter = new TVChannelsPageAdapter(this, getSupportFragmentManager());
         mViewPager.setAdapter(mPageAdapter);
         mTabLayout.setupWithViewPager(mViewPager);

@@ -2,20 +2,18 @@ package com.nkvoronov.tvprogram.database;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
-import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
-import com.nkvoronov.tvprogram.tvprogram.TVProgramDescription;
+import com.nkvoronov.tvprogram.database.MainDbSchema.*;
+import com.nkvoronov.tvprogram.tvschedule.TVScheduleDescription;
 
-public class TVProgramDescriptionCursorWrapper extends CursorWrapper {
+public class TVScheduleDescriptionCursorWrapper extends CursorWrapper {
 
-    public TVProgramDescriptionCursorWrapper(Cursor cursor) {
+    public TVScheduleDescriptionCursorWrapper(Cursor cursor) {
         super(cursor);
     }
 
-    public TVProgramDescription getDescription() {
+    public TVScheduleDescription getDescription() {
         int id = getInt(getColumnIndex(DescriptionTable.Cols.ID));
-        int program = getInt(getColumnIndex(ScheduleDescriptionTable.Cols.SCHEDULE));
-        String shortDesc = getString(getColumnIndex(DescriptionTable.Cols.SHORT_DESC));
-        String fullDesc = getString(getColumnIndex(DescriptionTable.Cols.DESCRIPTION));
+        String desc = getString(getColumnIndex(DescriptionTable.Cols.DESCRIPTION));
         String image = getString(getColumnIndex(DescriptionTable.Cols.IMAGE));
         String genres = getString(getColumnIndex(DescriptionTable.Cols.GENRES));
         String directors = getString(getColumnIndex(DescriptionTable.Cols.DIRECTORS));
@@ -24,8 +22,7 @@ public class TVProgramDescriptionCursorWrapper extends CursorWrapper {
         String year = getString(getColumnIndex(DescriptionTable.Cols.YEAR));
         String rating = getString(getColumnIndex(DescriptionTable.Cols.RATING));
 
-        TVProgramDescription description = new TVProgramDescription(id, program, shortDesc);
-        description.setDescription(fullDesc);
+        TVScheduleDescription description = new TVScheduleDescription(id, -1, desc);
         description.setImage(image);
         description.setGenres(genres);
         description.setDirectors(directors);

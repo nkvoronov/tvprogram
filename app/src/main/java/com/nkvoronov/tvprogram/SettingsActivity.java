@@ -6,15 +6,18 @@ import android.view.View;
 import java.util.ArrayList;
 import android.widget.Spinner;
 import android.content.Intent;
+import android.widget.CheckBox;
 import android.content.Context;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import androidx.appcompat.app.AppCompatActivity;
-import com.nkvoronov.tvprogram.common.TVProgramDataSource;
+import com.nkvoronov.tvprogram.common.MainDataSource;
 
 public class SettingsActivity extends AppCompatActivity {
+    private CheckBox mFullDesc;
     private Spinner  mSpinnerCountDays;
-    private TVProgramDataSource mDataSource;
+    private MainDataSource mDataSource;
 
     public static Intent newIntent(Context context) {
         Intent intent = new Intent(context, SettingsActivity.class);
@@ -61,7 +64,15 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        mDataSource = TVProgramDataSource.get(this);
+        mDataSource = MainDataSource.get(this);
         addSpinnerCountDays();
+        mFullDesc = findViewById(R.id.full_desc);
+        mFullDesc.setChecked(mDataSource.isFullDesc());
+        mFullDesc.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                mDataSource.setFullDesc(b);
+            }
+        });
     }
 }

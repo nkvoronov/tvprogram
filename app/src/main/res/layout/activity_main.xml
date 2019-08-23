@@ -8,7 +8,7 @@
     tools:context=".MainActivity">
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tvprogram_tabs"
+        android:id="@+id/tvschedule_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -23,7 +23,7 @@
         app:tabTextColor="@android:color/black" />
 
     <androidx.viewpager.widget.ViewPager
-        android:id="@+id/tvprogram_pager"
+        android:id="@+id/tvschedule_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

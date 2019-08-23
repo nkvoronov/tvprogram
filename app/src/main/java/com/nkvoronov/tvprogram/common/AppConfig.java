@@ -1,22 +1,24 @@
 package com.nkvoronov.tvprogram.common;
 
 import android.content.ContentValues;
-import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
+import com.nkvoronov.tvprogram.database.MainDbSchema.*;
 import com.nkvoronov.tvprogram.database.ConfigCursorWrapper;
 
 public class AppConfig {
     private static final String DEF_ID = "1";
 
     private int mCoutDays;
-    TVProgramDataSource mDataSource;
+    private boolean mFullDesc;
+    MainDataSource mDataSource;
 
-    public AppConfig(TVProgramDataSource dataSource) {
+    public AppConfig(MainDataSource dataSource) {
         mDataSource = dataSource;
         initConfig();
     }
 
     private void initConfig() {
         mCoutDays = 7;
+        mFullDesc = false;
         ConfigCursorWrapper cursor = new ConfigCursorWrapper(mDataSource.getDatabase().query(
                 ConfigsTable.TABLE_NAME,
                 null,
@@ -32,6 +34,7 @@ public class AppConfig {
             } else {
                 cursor.moveToFirst();
                 mCoutDays = cursor.getCountDays();
+                mFullDesc = cursor.getFullDesc();
             }
         } finally {
             cursor.close();
@@ -48,6 +51,15 @@ public class AppConfig {
         updateConfig();
     }
 
+    public boolean isFullDesc() {
+        return mFullDesc;
+    }
+
+    public void setFullDesc(boolean fullDesc) {
+        mFullDesc = fullDesc;
+        updateConfig();
+    }
+
     private void updateConfig() {
         mDataSource.getDatabase().update(ConfigsTable.TABLE_NAME, getConfigValues(false), ConfigsTable.Cols.ID + " = ?", new String[]{ DEF_ID });
     }
@@ -58,6 +70,7 @@ public class AppConfig {
             values.put(ConfigsTable.Cols.ID, DEF_ID);
         }
         values.put(ConfigsTable.Cols.COUNT_DAYS, getCoutDays());
+        values.put(ConfigsTable.Cols.FULL_DESC, isFullDesc() ? 1 : 0);
         return values;
     }
 }

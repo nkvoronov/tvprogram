@@ -13,17 +13,17 @@ import com.nkvoronov.tvprogram.R;
 import java.text.SimpleDateFormat;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
-import com.nkvoronov.tvprogram.tvprogram.TVProgram;
+import com.nkvoronov.tvprogram.tvschedule.TVSchedule;
 import com.nkvoronov.tvprogram.tvchannels.TVChannel;
-import com.nkvoronov.tvprogram.tvprogram.TVProgramsList;
+import com.nkvoronov.tvprogram.tvschedule.TVSchedulesList;
 import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
 import static com.nkvoronov.tvprogram.common.DateUtils.*;
-import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
-import com.nkvoronov.tvprogram.database.TVProgramBaseHelper;
-import com.nkvoronov.tvprogram.tvprogram.TVProgramCategoriesList;
-import static com.nkvoronov.tvprogram.common.StringUtils.addQuotes;
+import static com.nkvoronov.tvprogram.common.StringUtils.*;
+import com.nkvoronov.tvprogram.database.MainDbSchema.*;
+import com.nkvoronov.tvprogram.database.MainBaseHelper;
+import com.nkvoronov.tvprogram.tvschedule.TVScheduleCategoriesList;
 
-public class TVProgramDataSource {
+public class MainDataSource {
     public static final String RUS_LANG = "rus";
     public static final String UKR_LANG = "ukr";
     public static final String ALL_LANG = "all";
@@ -32,17 +32,17 @@ public class TVProgramDataSource {
     private Context mContext;
     private AppConfig mAppConfig;
     private SQLiteDatabase mDatabase;
-    private static TVProgramDataSource sTVProgramLab;
+    private static MainDataSource sTVProgramLab;
 
-    public TVProgramDataSource(Context context) {
+    public MainDataSource(Context context) {
         mContext = context.getApplicationContext();
-        mDatabase = new TVProgramBaseHelper(mContext).getWritableDatabase();
+        mDatabase = new MainBaseHelper(mContext).getWritableDatabase();
         mAppConfig = new AppConfig(this);
     }
 
-    public static TVProgramDataSource get(Context context) {
+    public static MainDataSource get(Context context) {
         if (sTVProgramLab == null) {
-            sTVProgramLab = new TVProgramDataSource(context);
+            sTVProgramLab = new MainDataSource(context);
         }
         return sTVProgramLab;
     }
@@ -53,6 +53,14 @@ public class TVProgramDataSource {
 
     public void setCoutDays(int coutDays) {
         mAppConfig.setCoutDays(coutDays);
+    }
+
+    public boolean isFullDesc() {
+        return isFullDesc();
+    }
+
+    public void setFullDesc(boolean fullDesc) {
+        mAppConfig.setFullDesc(fullDesc);
     }
 
     public Context getContext() {
@@ -67,25 +75,25 @@ public class TVProgramDataSource {
         if (channel.isFavorites()) {
             mDatabase.delete(ChannelsFavoritesTable.TABLE_NAME, ChannelsFavoritesTable.Cols.CHANNEL + " = ?", new String[]{String.valueOf(channel.getIndex())});
         } else {
-            mDatabase.insert(ChannelsFavoritesTable.TABLE_NAME, null, getContentChannelsFavValues(channel));
+            mDatabase.insert(ChannelsFavoritesTable.TABLE_NAME, null, getContentChannelsFavoritesValues(channel));
         }
     }
 
-    private ContentValues getContentChannelsFavValues(TVChannel channel) {
+    private ContentValues getContentChannelsFavoritesValues(TVChannel channel) {
         ContentValues values = new ContentValues();
         values.put(ChannelsFavoritesTable.Cols.CHANNEL, channel.getIndex());
         return values;
     }
 
-    public void programChangeFavorites(TVProgram program) {
-        if (program.isFavorites()) {
-            mDatabase.delete(SchedulesFavoritesTable.TABLE_NAME, SchedulesFavoritesTable.Cols.SCHEDULE + " = ?", new String[]{String.valueOf(program.getId())});
+    public void scheduleChangeFavorites(TVSchedule schedule) {
+        if (schedule.isFavorites()) {
+            mDatabase.delete(SchedulesFavoritesTable.TABLE_NAME, SchedulesFavoritesTable.Cols.SCHEDULE + " = ?", new String[]{String.valueOf(schedule.getId())});
         } else {
-            mDatabase.insert(SchedulesFavoritesTable.TABLE_NAME, null, getContentSchedulesFavValues(program));
+            mDatabase.insert(SchedulesFavoritesTable.TABLE_NAME, null, getContentSchedulesFavoritesValues(schedule));
         }
     }
 
-    private ContentValues getContentSchedulesFavValues(TVProgram program) {
+    private ContentValues getContentSchedulesFavoritesValues(TVSchedule program) {
         ContentValues values = new ContentValues();
         values.put(SchedulesFavoritesTable.Cols.SCHEDULE, program.getId());
         return values;
@@ -102,19 +110,19 @@ public class TVProgramDataSource {
         return channelList.getForIndex(index);
     }
 
-    public TVProgramsList getPrograms(int type, String filter, Date date) {
-        TVProgramsList programs = new TVProgramsList(this);
-        programs.loadFromDB(type, filter, date);
-        return programs;
+    public TVSchedulesList getSchedules(int type, String filter, Date date) {
+        TVSchedulesList schedules = new TVSchedulesList(this);
+        schedules.loadFromDB(type, filter, date);
+        return schedules;
     };
 
-    public TVProgram getProgram(int index, int programID) {
-        TVProgramsList programs = getPrograms(0, String.valueOf(index), null);
-        return programs.getForId(programID);
+    public TVSchedule getSchedule(int index, int scheduleID) {
+        TVSchedulesList schedules = getSchedules(0, String.valueOf(index), null);
+        return schedules.getForId(scheduleID);
     }
 
-    public TVProgramCategoriesList getCategories() {
-        TVProgramCategoriesList categories = new TVProgramCategoriesList(this);
+    public TVScheduleCategoriesList getCategories() {
+        TVScheduleCategoriesList categories = new TVScheduleCategoriesList(this);
         categories.loadFromDB();
         return categories;
     }
@@ -122,7 +130,7 @@ public class TVProgramDataSource {
     public List<String> getCategoriesList() {
         List<String> list = new ArrayList<>();
         list.add(mContext.getString(R.string.category_all));
-        TVProgramCategoriesList categories = getCategories();
+        TVScheduleCategoriesList categories = getCategories();
         for (int i = 0; i<categories.size(); i++) {
             list.add(categories.get(i).getName());
         }
@@ -138,7 +146,7 @@ public class TVProgramDataSource {
         return true;
     }
 
-    public boolean checkUpdateProgram(int channel) {
+    public boolean checkUpdateSchedule(int channel) {
         String index = new Integer(channel).toString();
         String now_date = addQuotes(getDateFormat(new Date(), "yyyy-MM-dd"), "'");
         boolean res = true;
@@ -160,7 +168,7 @@ public class TVProgramDataSource {
         return res;
     }
 
-    public long[] getProgramInfo(int channel) {
+    public long[] getScheduleInfo(int channel) {
         long[] info = {0, 0, 0};
         String sChannel = String.valueOf(channel);
         String sql =

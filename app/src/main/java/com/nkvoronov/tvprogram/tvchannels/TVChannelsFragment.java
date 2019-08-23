@@ -1,6 +1,5 @@
 package com.nkvoronov.tvprogram.tvchannels;
 
-import android.util.Log;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -20,9 +19,9 @@ import androidx.fragment.app.Fragment;
 import android.content.DialogInterface;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import com.nkvoronov.tvprogram.tasks.UpdateProgramsTask;
-import com.nkvoronov.tvprogram.common.TVProgramDataSource;
-import com.nkvoronov.tvprogram.tvprogram.TVProgramChannelActivity;
+import com.nkvoronov.tvprogram.tasks.UpdateSchedulesTask;
+import com.nkvoronov.tvprogram.common.MainDataSource;
+import com.nkvoronov.tvprogram.tvschedule.TVScheduleChannelActivity;
 
 public class TVChannelsFragment extends Fragment{
     private static final String ARG_TVCHANNELS_PAGE_NUMBER = "com.nkvoronov.tvprogram.tvchannels.page_number";
@@ -34,7 +33,7 @@ public class TVChannelsFragment extends Fragment{
     private ChannelAdapter mAdapter;
     private RecyclerView mChannelsView;
     private ChangesChannels mChangesChannels;
-    private TVProgramDataSource mDataSource;
+    private MainDataSource mDataSource;
 
     public interface ChangesChannels {
         void onUpdatePages(TVChannel channel);
@@ -70,7 +69,7 @@ public class TVChannelsFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.page_tvchannels, container, false);
-        mDataSource = TVProgramDataSource.get(getContext());
+        mDataSource = MainDataSource.get(getContext());
         mSpinnerFilter = root.findViewById(R.id.tvchannel_filter);
         mSpinnerFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
 
@@ -124,7 +123,7 @@ public class TVChannelsFragment extends Fragment{
         private TextView mChannelName;
         private ImageView mChannelFavorites;
         private ProgressDialog mProgressDialog;
-        private UpdateProgramsTask mUpdateTask;
+        private UpdateSchedulesTask mUpdateTask;
 
         public ChannelHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_tvchannels, parent, false));
@@ -145,8 +144,8 @@ public class TVChannelsFragment extends Fragment{
             mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             mProgressDialog.setTitle(getString(R.string.prg_update_caption));
 
-            mUpdateTask = new UpdateProgramsTask(mDataSource);
-            mUpdateTask.setListeners(new UpdateProgramsTask.OnTaskListeners() {
+            mUpdateTask = new UpdateSchedulesTask(mDataSource);
+            mUpdateTask.setListeners(new UpdateSchedulesTask.OnTaskListeners() {
 
                 @Override
                 public void onStart() {
@@ -193,7 +192,7 @@ public class TVChannelsFragment extends Fragment{
 
         @Override
         public void onClick(View view) {
-            if (mDataSource.checkUpdateProgram(mChannel.getIndex())) {
+            if (mDataSource.checkUpdateSchedule(mChannel.getIndex())) {
                 updateProgramForChannel();
             } else {
                 openProgramChannel();
@@ -201,7 +200,7 @@ public class TVChannelsFragment extends Fragment{
         }
 
         private void openProgramChannel() {
-            Intent intent = TVProgramChannelActivity.newIntent(getActivity(), mChannel.getIndex());
+            Intent intent = TVScheduleChannelActivity.newIntent(getActivity(), mChannel.getIndex());
             startActivity(intent);
         }
 

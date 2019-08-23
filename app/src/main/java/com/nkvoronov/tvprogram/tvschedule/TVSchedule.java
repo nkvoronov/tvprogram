@@ -1,13 +1,13 @@
-package com.nkvoronov.tvprogram.tvprogram;
+package com.nkvoronov.tvprogram.tvschedule;
 
 import java.util.Date;
 import android.database.Cursor;
-import com.nkvoronov.tvprogram.common.TVProgramDataSource;
-import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
+import com.nkvoronov.tvprogram.common.MainDataSource;
+import com.nkvoronov.tvprogram.database.MainDbSchema.*;
 import static com.nkvoronov.tvprogram.common.StringUtils.addQuotes;
 import static com.nkvoronov.tvprogram.common.DateUtils.getDateFormat;
 
-public class TVProgram {
+public class TVSchedule {
     private int mId;
     private int mIndex;
     private Date mEnding;
@@ -17,15 +17,15 @@ public class TVProgram {
     private int mTimeType;
     private String mNameChannel;
     private boolean mIsFavorites;
-    private boolean mIsFavoritChannel;
-    private TVProgramDataSource mDataSource;
-    private TVProgramDescription mDescription;
+    private boolean mIsFavoritesChannel;
+    private MainDataSource mDataSource;
+    private TVScheduleDescription mDescription;
 
-    public TVProgram(int id, int index, Date starting, Date ending, String title) {
+    public TVSchedule(int id, int index, Date starting, Date ending, String title) {
         mId = id;
         mIndex = index;
         mNameChannel = null;
-        mIsFavoritChannel = false;
+        mIsFavoritesChannel = false;
         mStarting = starting;
         mEnding = ending;
         mTitle = title;
@@ -100,12 +100,12 @@ public class TVProgram {
         mIsFavorites = favorites;
     }
 
-    public boolean isFavoritChannel() {
-        return mIsFavoritChannel;
+    public boolean isFavoritesChannel() {
+        return mIsFavoritesChannel;
     }
 
-    public void setFavoritChannel(boolean favoritChannel) {
-        mIsFavoritChannel = favoritChannel;
+    public void setFavoritesChannel(boolean favoritChannel) {
+        mIsFavoritesChannel = favoritChannel;
     }
 
     public int getTimeType() {
@@ -116,16 +116,16 @@ public class TVProgram {
         mTimeType = timeType;
     }
 
-    public void setDataSource(TVProgramDataSource dataSource) {
+    public void setDataSource(MainDataSource dataSource) {
         mDataSource = dataSource;
     }
 
-    public TVProgramDescription getDescription() {
+    public TVScheduleDescription getDescription() {
         return mDescription;
     }
 
-    public void setDescription(TVProgramDescription fullDescription) {
-        mDescription = fullDescription;
+    public void setDescription(TVScheduleDescription description) {
+        mDescription = description;
     }
 
     public void setIdFromDB() {
@@ -154,11 +154,13 @@ public class TVProgram {
     }
 
     public void setDescriptionFromDB() {
-        //mDescription = new TVProgramDescription("");
+        TVScheduleDescription scheduleDescription = new TVScheduleDescription("");
+        scheduleDescription.loadFromDB(getId());
+        setDescription(scheduleDescription);
     }
 
     public void changeFavorites() {
-        mDataSource.programChangeFavorites(this);
+        mDataSource.scheduleChangeFavorites(this);
         mIsFavorites = !mIsFavorites;
     }
 }

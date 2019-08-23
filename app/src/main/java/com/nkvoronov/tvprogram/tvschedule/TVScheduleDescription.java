@@ -1,33 +1,35 @@
-package com.nkvoronov.tvprogram.tvprogram;
+package com.nkvoronov.tvprogram.tvschedule;
 
 import android.database.Cursor;
 import android.content.ContentValues;
-import com.nkvoronov.tvprogram.common.TVProgramDataSource;
-import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
+import com.nkvoronov.tvprogram.common.MainDataSource;
+import com.nkvoronov.tvprogram.database.MainDbSchema.*;
 import static com.nkvoronov.tvprogram.common.StringUtils.addQuotes;
-import com.nkvoronov.tvprogram.database.TVProgramDescriptionCursorWrapper;
-import static com.nkvoronov.tvprogram.database.TVProgramBaseHelper.getSQLDescription;
+import com.nkvoronov.tvprogram.database.TVScheduleDescriptionCursorWrapper;
+import static com.nkvoronov.tvprogram.database.MainBaseHelper.getSQLDescription;
 
-public class TVProgramDescription {
-    private int mId;
+public class TVScheduleDescription {
     private String mYear;
     private String mImage;
-    private int mIdProgram;
+    private int mIdSchedule;
     private String mRating;
     private String mActors;
     private String mGenres;
     private String mCountry;
     private String mDirectors;
+    private int mIdDescription;
     private String mDescription;
     private String mUrlFullDesc;
-    private String mShortDescription;
-    private TVProgramDataSource mDataSource;
+    private MainDataSource mDataSource;
 
-    public TVProgramDescription(String description) {
-        mId = -1;
-        mIdProgram = -1;
-        mShortDescription = description;
-        mDescription = null;
+    public TVScheduleDescription(String description) {
+        this(-1, -1, description);
+    }
+
+    public TVScheduleDescription(int id, int schedule, String description) {
+        mIdDescription = id;
+        mIdSchedule = schedule;
+        mDescription = description;
         mYear = null;
         mImage = null;
         mActors = null;
@@ -39,36 +41,20 @@ public class TVProgramDescription {
         mDataSource = null;
     }
 
-    public TVProgramDescription(int id, int program, String description) {
-        mId = id;
-        mIdProgram = program;
-        mShortDescription = description;
-        mDescription = null;
-        mYear = null;
-        mImage = null;
-        mActors = null;
-        mGenres = null;
-        mCountry = null;
-        mDirectors = null;
-        mRating = null;
-        mUrlFullDesc = null;
-        mDataSource = null;
+    public int getIdDescription() {
+        return mIdDescription;
     }
 
-    public int getId() {
-        return mId;
+    public void setIdDescription(int id) {
+        mIdDescription = id;
     }
 
-    public void setId(int id) {
-        mId = id;
+    public int getIdSchedule() {
+        return mIdSchedule;
     }
 
-    public int getIdProgram() {
-        return mIdProgram;
-    }
-
-    public void setIdProgram(int program) {
-        mIdProgram = program;
+    public void setIdSchedule(int schedule) {
+        mIdSchedule = schedule;
     }
 
     public String getYear() {
@@ -111,14 +97,6 @@ public class TVProgramDescription {
         mCountry =country;
     }
 
-    public String getShortDescription() {
-        return mShortDescription;
-    }
-
-    public void setShortDescription(String description) {
-        mShortDescription = description;
-    }
-
     public String getDirectors() {
         return mDirectors;
     }
@@ -151,16 +129,16 @@ public class TVProgramDescription {
         mUrlFullDesc = urlFullDesc;
     }
 
-    public void setDataSource(TVProgramDataSource dataSource) {
+    public void setDataSource(MainDataSource dataSource) {
         mDataSource = dataSource;
     }
 
     public void setIdFromDB() {
-        mId = -1;
-        String short_desc = addQuotes(getShortDescription(), "'");
+        mIdDescription = -1;
+        String desc = addQuotes(getDescription(), "'");
         Cursor cursor = mDataSource.getDatabase().query(DescriptionTable.TABLE_NAME,
                 null,
-                "(" + DescriptionTable.Cols.SHORT_DESC + "=" + short_desc + ")",
+                "(" + DescriptionTable.Cols.DESCRIPTION + "=" + desc + ")",
                 null,
                 null,
                 null,
@@ -170,7 +148,7 @@ public class TVProgramDescription {
 
             if (cursor.getCount() == 1) {
                 cursor.moveToFirst();
-                mId = cursor.getInt(cursor.getColumnIndex(DescriptionTable.Cols.ID));
+                mIdDescription = cursor.getInt(cursor.getColumnIndex(DescriptionTable.Cols.ID));
             }
         } finally {
             cursor.close();
@@ -178,25 +156,25 @@ public class TVProgramDescription {
     }
 
 
-    public void loadFromNet(int id) {
-        TVProgramDescriptionCursorWrapper cursor = queryDescription(getSQLDescription(id), null);
+    public void loadFromDB(int schedule) {
+        TVScheduleDescriptionCursorWrapper cursor = queryDescription(getSQLDescription(schedule), null);
 
         try {
 
             if (cursor.getCount() == 1) {
                 cursor.moveToFirst();
-                TVProgramDescription description = cursor.getDescription();
+                TVScheduleDescription description = cursor.getDescription();
 
-                mId = description.getId();
-                mShortDescription = description.getShortDescription();
-                mDescription = description.getDescription();
-                mYear = description.getYear();
-                mImage = description.getImage();
-                mActors = description.getActors();
-                mGenres = description.getGenres();
-                mCountry = description.getCountry();
-                mDirectors = description.getDirectors();
-                mRating = description.getRating();
+                setIdSchedule(schedule);
+                setIdDescription(description.getIdDescription());
+                setDescription(description.getDescription());
+                setImage(description.getImage());
+                setActors(description.getActors());
+                setDirectors(description.getDirectors());
+                setGenres(description.getGenres());
+                setCountry(description.getCountry());
+                setYear(description.getYear());
+                setRating(description.getRating());
 
             }
         } finally {
@@ -204,9 +182,9 @@ public class TVProgramDescription {
         }
     }
 
-    private TVProgramDescriptionCursorWrapper queryDescription(String sql, String[] selectionArgs) {
+    private TVScheduleDescriptionCursorWrapper queryDescription(String sql, String[] selectionArgs) {
         Cursor cursor = mDataSource.getDatabase().rawQuery(sql, selectionArgs);
-        return new TVProgramDescriptionCursorWrapper(cursor);
+        return new TVScheduleDescriptionCursorWrapper(cursor);
     }
 
     public void saveToDB() {
@@ -215,7 +193,6 @@ public class TVProgramDescription {
 
     private ContentValues getContentProgramDescription() {
         ContentValues values = new ContentValues();
-        values.put(DescriptionTable.Cols.SHORT_DESC, getShortDescription());
         values.put(DescriptionTable.Cols.DESCRIPTION, getDescription());
         values.put(DescriptionTable.Cols.IMAGE, getImage());
         values.put(DescriptionTable.Cols.GENRES, getGenres());

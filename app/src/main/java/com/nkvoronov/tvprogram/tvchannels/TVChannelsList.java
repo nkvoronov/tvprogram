@@ -6,18 +6,18 @@ import java.util.ArrayList;
 import android.database.Cursor;
 import java.text.SimpleDateFormat;
 import android.content.ContentValues;
-import com.nkvoronov.tvprogram.common.TVProgramDataSource;
-import com.nkvoronov.tvprogram.database.TVProgramDbSchema.*;
+import com.nkvoronov.tvprogram.common.MainDataSource;
+import com.nkvoronov.tvprogram.database.MainDbSchema.*;
 import com.nkvoronov.tvprogram.database.TVChannelsCursorWrapper;
-import com.nkvoronov.tvprogram.database.TVChannelsAllCursorWrapper;
-import static com.nkvoronov.tvprogram.database.TVProgramBaseHelper.getSQLAllChannels;
-import static com.nkvoronov.tvprogram.database.TVProgramBaseHelper.getSQLFavoritesChannels;
+import com.nkvoronov.tvprogram.database.TVChannelsNameCursorWrapper;
+import static com.nkvoronov.tvprogram.database.MainBaseHelper.getSQLAllChannels;
+import static com.nkvoronov.tvprogram.database.MainBaseHelper.getSQLFavoritesChannels;
 
 public class TVChannelsList {
     private List<TVChannel> mData;
-    private TVProgramDataSource mDataSource;
+    private MainDataSource mDataSource;
 
-    public TVChannelsList(TVProgramDataSource dataSource) {
+    public TVChannelsList(MainDataSource dataSource) {
         mData = new ArrayList<>();
         mDataSource = dataSource;
     }
@@ -55,7 +55,7 @@ public class TVChannelsList {
     }
 
     public void loadFromDB(boolean isFavorites, int filter) {
-        TVChannelsAllCursorWrapper cursor;
+        TVChannelsCursorWrapper cursor;
         clear();
 
         if (isFavorites) {
@@ -76,16 +76,16 @@ public class TVChannelsList {
         }
     }
 
-    private TVChannelsAllCursorWrapper queryChannels(String sql, String[] selectionArgs) {
+    private TVChannelsCursorWrapper queryChannels(String sql, String[] selectionArgs) {
         Cursor cursor = mDataSource.getDatabase().rawQuery(sql, selectionArgs);
-        return new TVChannelsAllCursorWrapper(cursor);
+        return new TVChannelsCursorWrapper(cursor);
     }
 
     public void saveChannelToDB(TVChannel channel) {
         int typeUpdate = 0;
         String oldName = "";
 
-        TVChannelsCursorWrapper cursor = new TVChannelsCursorWrapper(mDataSource.getDatabase().query(
+        TVChannelsNameCursorWrapper cursor = new TVChannelsNameCursorWrapper(mDataSource.getDatabase().query(
                 ChannelsTable.TABLE_NAME,
                 null,
                 ChannelsTable.Cols.CHANNEL + " = ?",

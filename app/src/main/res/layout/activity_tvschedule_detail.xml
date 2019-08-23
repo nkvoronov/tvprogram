@@ -14,7 +14,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/tvprogram_title"
+            android:id="@+id/tvschedule_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -27,7 +27,7 @@
             android:textStyle="bold" />
 
         <ImageView
-            android:id="@+id/tvprogram_image_category"
+            android:id="@+id/tvschedule_image_category"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:contentDescription="@string/img_program_category_desc"
@@ -41,7 +41,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/tvprogram_image_desc"
+            android:id="@+id/tvschedule_image_desc"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center_vertical"
@@ -57,36 +57,36 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvprogram_date"
+                android:id="@+id/tvschedule_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/tvprogram_duration"
+                android:id="@+id/tvschedule_duration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#C62828" />
 
             <TextView
-                android:id="@+id/tvprogram_channel"
+                android:id="@+id/tvschedule_channel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/lab_channel" />
 
             <TextView
-                android:id="@+id/tvprogram_genre"
+                android:id="@+id/tvschedule_genre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:text="@string/lab_genre" />
 
             <TextView
-                android:id="@+id/tvprogram_country"
+                android:id="@+id/tvschedule_country"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:text="@string/lab_country" />
 
             <TextView
-                android:id="@+id/tvprogram_year"
+                android:id="@+id/tvschedule_year"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:text="@string/lab_year" />
@@ -96,13 +96,13 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/tvprogram_description"
+        android:id="@+id/tvschedule_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp" />
 
     <Button
-        android:id="@+id/tvprogram_action"
+        android:id="@+id/tvschedule_action"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

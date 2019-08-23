@@ -1,4 +1,4 @@
-package com.nkvoronov.tvprogram.tvprogram;
+package com.nkvoronov.tvprogram.tvschedule;
 
 import java.util.Date;
 import java.util.List;
@@ -9,13 +9,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import static com.nkvoronov.tvprogram.common.DateUtils.*;
 
-public class TVProgramChannelPageAdapter extends FragmentStatePagerAdapter {
+public class TVScheduleChannelPageAdapter extends FragmentStatePagerAdapter {
     private Date mMinDate;
     private int mChannelIndex;
     private final Context mContext;
     private List<String> mListTabsName;
 
-    public TVProgramChannelPageAdapter(Context context, FragmentManager fm, int index, Date date, int count) {
+    public TVScheduleChannelPageAdapter(Context context, FragmentManager fm, int index, Date date, int count) {
         super(fm);
         mContext = context;
         mChannelIndex = index;
@@ -29,7 +29,7 @@ public class TVProgramChannelPageAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        TVProgramChannelFragment page = TVProgramChannelFragment.newInstance(position, mChannelIndex, addDays(mMinDate, position));
+        TVScheduleChannelFragment page = TVScheduleChannelFragment.newInstance(position, mChannelIndex, addDays(mMinDate, position));
         return page;
     }
 

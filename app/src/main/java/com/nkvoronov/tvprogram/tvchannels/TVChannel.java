@@ -8,9 +8,9 @@ import java.io.InputStream;
 import java.io.DataInputStream;
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
-import com.nkvoronov.tvprogram.common.TVProgramDataSource;
-import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
-import static com.nkvoronov.tvprogram.common.TVProgramDataSource.ALL_LANG;
+import com.nkvoronov.tvprogram.common.MainDataSource;
+import static com.nkvoronov.tvprogram.common.MainDataSource.TAG;
+import static com.nkvoronov.tvprogram.common.MainDataSource.ALL_LANG;
 
 public class TVChannel {
     private int mIndex;
@@ -18,7 +18,7 @@ public class TVChannel {
     private String mIcon;
     private String mLang;
     private boolean mIsFavorites;
-    private TVProgramDataSource mDataSource;
+    private MainDataSource mDataSource;
 
     public TVChannel(int index, String name, String icon) {
         mIndex = index;
@@ -65,7 +65,7 @@ public class TVChannel {
         return  mIsFavorites;
     }
 
-    public void setDataSource(TVProgramDataSource dataSource) {
+    public void setDataSource(MainDataSource dataSource) {
         mDataSource = dataSource;
     }
 

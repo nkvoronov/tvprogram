@@ -2,25 +2,24 @@ package com.nkvoronov.tvprogram.tasks;
 
 import java.util.Date;
 import android.util.Log;
-import java.util.Objects;
 import java.util.Calendar;
 import android.os.AsyncTask;
 import java.text.ParseException;
 import org.jsoup.select.Elements;
 import java.text.SimpleDateFormat;
 import com.nkvoronov.tvprogram.common.HttpContent;
-import com.nkvoronov.tvprogram.tvprogram.TVProgram;
+import com.nkvoronov.tvprogram.tvschedule.TVSchedule;
 import com.nkvoronov.tvprogram.tvchannels.TVChannel;
-import com.nkvoronov.tvprogram.tvprogram.TVProgramDescription;
-import com.nkvoronov.tvprogram.tvprogram.TVProgramsList;
+import com.nkvoronov.tvprogram.tvschedule.TVScheduleDescription;
+import com.nkvoronov.tvprogram.tvschedule.TVSchedulesList;
 import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
-import com.nkvoronov.tvprogram.common.TVProgramDataSource;
-import com.nkvoronov.tvprogram.tvprogram.TVProgramCategory;
+import com.nkvoronov.tvprogram.common.MainDataSource;
+import com.nkvoronov.tvprogram.tvschedule.TVScheduleCategory;
 import static com.nkvoronov.tvprogram.common.HttpContent.HOST;
-import com.nkvoronov.tvprogram.tvprogram.TVProgramCategoriesList;
-import static com.nkvoronov.tvprogram.common.TVProgramDataSource.TAG;
+import com.nkvoronov.tvprogram.tvschedule.TVScheduleCategoriesList;
+import static com.nkvoronov.tvprogram.common.MainDataSource.TAG;
 
-public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
+public class UpdateSchedulesTask extends AsyncTask<Integer,String,Void> {
     public static final int DEF_CORRECTION = 120;
     public static final String STR_SCHEDULECHANNEL = "schedule_channel_%d_day_%s.html";
     public static final String STR_ELMDOCSELECT = "div[class~=(?:pasttime|onair|time)]";
@@ -32,11 +31,11 @@ public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
     private int counter;
     private String[] progress;
     private TVChannelsList mChannels;
-    private TVProgramsList mPrograms;
+    private TVSchedulesList mPrograms;
     private OnTaskListeners mListeners;
-    private TVProgramDataSource mDataSource;
+    private MainDataSource mDataSource;
 
-    public UpdateProgramsTask(TVProgramDataSource dataSource) {
+    public UpdateSchedulesTask(MainDataSource dataSource) {
         mDataSource = dataSource;
         mChannels = null;
         index = 0;
@@ -126,25 +125,25 @@ public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
                 e.fillInStackTrace();
                 Log.d(TAG, e.getMessage());
             }
-            TVProgram program = new TVProgram(-1, channel, startDate, endDate, etitle);
-            program.setFavorites(false);
-            getCategoryFromTitle(program);
+            TVSchedule schedule = new TVSchedule(-1, channel, startDate, endDate, etitle);
+            schedule.setFavorites(false);
+            getCategoryFromTitle(schedule);
 
             if (edesc.length() > 0 && !edesc.equals("")) {
-                if (program.getDescription() == null) {
-                    program.setDescription(new TVProgramDescription(edesc));
+                if (schedule.getDescription() == null) {
+                    schedule.setDescription(new TVScheduleDescription(""));
                 }
-                program.getDescription().setShortDescription(edesc);
+                schedule.getDescription().setDescription(edesc);
             }
 
-            if (efulldescurl.length() > 0 && !efulldescurl.equals("")) {
-                if (program.getDescription() == null) {
-                    program.setDescription(new TVProgramDescription(""));
+            if (efulldescurl.length() > 0 && !efulldescurl.equals("") && mDataSource.isFullDesc()) {
+                if (schedule.getDescription() == null) {
+                    schedule.setDescription(new TVScheduleDescription(""));
                 }
-                program.getDescription().setUrlFullDesc(efulldescurl);
-                getFullDesc(program);
+                schedule.getDescription().setUrlFullDesc(efulldescurl);
+                getFullDesc(schedule);
             }
-            mPrograms.add(program);
+            mPrograms.add(schedule);
         }
     }
 
@@ -153,23 +152,23 @@ public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
         int type_channels = values[0];
         index = 0;
         progress = new String[] {"", "", ""};
-        mPrograms = mDataSource.getPrograms(0, String.valueOf(type_channels), new Date());
+        mPrograms = mDataSource.getSchedules(0, String.valueOf(type_channels), new Date());
         mPrograms.clear();
         if (type_channels == -1) {
             mChannels = mDataSource.getChannels(true, 0);
             total = mChannels.size() * mDataSource.getCoutDays();
             for (TVChannel channel : mChannels.getData()) {
                 progress[0] = channel.getName();
-                mPrograms.preUpdateProgram(channel.getIndex());
+                mPrograms.preUpdateSchedules(channel.getIndex());
                 getContentForChannel(channel.getIndex(), new Date());
             }
         } else {
             total = 1 * mDataSource.getCoutDays();
             progress[0] = "-1";
-            mPrograms.preUpdateProgram(type_channels);
+            mPrograms.preUpdateSchedules(type_channels);
             getContentForChannel(type_channels, new Date());
         }
-        mPrograms.setProgramEnding();
+        mPrograms.setScheduleEnding();
         progress[0] = "0";
         progress[1] = "";
         progress[2] = String.valueOf(counter);
@@ -197,18 +196,18 @@ public class UpdateProgramsTask extends AsyncTask<Integer,String,Void> {
         return res;
     }
 
-    private void getCategoryFromTitle(TVProgram program) {
-        TVProgramCategoriesList categories = mDataSource.getCategories();
-        for (TVProgramCategory programCategory : categories.getData()) {
-            if (titleContainsDictWorlds(program.getTitle().toLowerCase(), programCategory.getDictionary())) {
-                program.setCategory(programCategory.getId());
+    private void getCategoryFromTitle(TVSchedule schedule) {
+        TVScheduleCategoriesList categories = mDataSource.getCategories();
+        for (TVScheduleCategory category : categories.getData()) {
+            if (titleContainsDictWorlds(schedule.getTitle().toLowerCase(), category.getDictionary())) {
+                schedule.setCategory(category.getId());
                 break;
             }
         }
     }
 
-    private void getFullDesc(TVProgram program) {
-        if (program.getDescription() != null) {
+    private void getFullDesc(TVSchedule schedule) {
+        if (schedule.getDescription() != null) {
             //
         }
     }

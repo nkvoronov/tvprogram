@@ -1,16 +1,14 @@
-package com.nkvoronov.tvprogram.tvprogram;
+package com.nkvoronov.tvprogram.tvschedule;
 
-public class TVProgramCategory {
+public class TVScheduleCategory {
     private int mId;
     private String mName;
-    private String mColor;
     private String mDictionary;
 
-    public TVProgramCategory(int id, String name, String dictionary, String color) {
+    public TVScheduleCategory(int id, String name, String dictionary) {
         mId = id;
         mName = name;
         mDictionary = dictionary;
-        mColor = color;
     }
 
     public int getId() {
@@ -35,13 +33,5 @@ public class TVProgramCategory {
 
     public void setDictionary(String dictionary) {
         mDictionary = dictionary;
-    }
-
-    public String getColor() {
-        return mColor;
-    }
-
-    public void setColor(String color) {
-        mColor = color;
     }
 }
