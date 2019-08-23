@@ -18,6 +18,7 @@ public class TVSchedule {
     private String mNameChannel;
     private boolean mIsFavorites;
     private boolean mIsFavoritesChannel;
+    private boolean mExDesc;
     private MainDataSource mDataSource;
     private TVScheduleDescription mDescription;
 
@@ -32,6 +33,7 @@ public class TVSchedule {
         mCategory = 0;
         mDescription = null;
         mIsFavorites = false;
+        mExDesc = false;
         mTimeType = 2;
         mDataSource = null;
     }
@@ -108,6 +110,14 @@ public class TVSchedule {
         mIsFavoritesChannel = favoritChannel;
     }
 
+    public boolean isExDesc() {
+        return mExDesc;
+    }
+
+    public void setExDesc(boolean exDesc) {
+        mExDesc = exDesc;
+    }
+
     public int getTimeType() {
         return mTimeType;
     }
@@ -154,10 +164,12 @@ public class TVSchedule {
     }
 
     public void setDescriptionFromDB() {
-        TVScheduleDescription scheduleDescription = new TVScheduleDescription("");
-        scheduleDescription.setDataSource(mDataSource);
-        scheduleDescription.loadFromDB(getId());
-        setDescription(scheduleDescription);
+        if (isExDesc()) {
+            TVScheduleDescription scheduleDescription = new TVScheduleDescription("");
+            scheduleDescription.setDataSource(mDataSource);
+            scheduleDescription.loadFromDB(getId());
+            setDescription(scheduleDescription);
+        }
     }
 
     public void changeFavorites() {

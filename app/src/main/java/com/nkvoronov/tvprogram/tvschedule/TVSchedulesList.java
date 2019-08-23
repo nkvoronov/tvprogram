@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 import android.database.Cursor;
 import android.content.ContentValues;
+import android.database.DatabaseUtils;
 import com.nkvoronov.tvprogram.common.MainDataSource;
 import com.nkvoronov.tvprogram.database.MainDbSchema.*;
 import com.nkvoronov.tvprogram.database.TVSchedulesCursorWrapper;
@@ -129,7 +130,7 @@ public class TVSchedulesList {
         values.put(SchedulesTable.Cols.CATEGORY, schedule.getCategory());
         values.put(SchedulesTable.Cols.STARTING, getDateFormat(schedule.getStarting(), "yyyy-MM-dd HH:mm:ss"));
         values.put(SchedulesTable.Cols.ENDING, getDateFormat(schedule.getEnding(), "yyyy-MM-dd HH:mm:ss"));
-        values.put(SchedulesTable.Cols.TITLE, schedule.getTitle());
+        values.put(SchedulesTable.Cols.TITLE, DatabaseUtils.sqlEscapeString(schedule.getTitle()));
         return values;
     }
 

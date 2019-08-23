@@ -93,6 +93,7 @@ public class MainDbSchema {
             public static final String TITLE = "title";
             public static final String TIME_TYPE = "time_type";
             public static final String FAVORITE = "favorite";
+            public static final String EXDESC = "exdesc";
         }
     }
 

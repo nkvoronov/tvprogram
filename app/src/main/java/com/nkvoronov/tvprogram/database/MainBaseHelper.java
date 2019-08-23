@@ -195,7 +195,8 @@ public class MainBaseHelper extends SQLiteOpenHelper {
                 "sch." + SchedulesTable.Cols.ENDING + " AS " + SchedulesTable.Cols.ENDING + ", " +
                 "sch." + SchedulesTable.Cols.TITLE + " AS " + SchedulesTable.Cols.TITLE + ", " +
                 "CASE WHEN (sch." + SchedulesTable.Cols.STARTING + "<=datetime('now','localtime')) AND (sch." + SchedulesTable.Cols.ENDING + ">=datetime('now','localtime')) THEN 1 WHEN sch." + SchedulesTable.Cols.STARTING + "<=datetime('now','localtime') THEN 0 else 2 END AS " + SchedulesTable.Cols.TIME_TYPE + ", " +
-                "CASE WHEN (SELECT sf." + SchedulesFavoritesTable.Cols.ID + " FROM " + SchedulesFavoritesTable.TABLE_NAME + " sf WHERE sch." + SchedulesTable.Cols.ID + "=sf." + SchedulesFavoritesTable.Cols.SCHEDULE + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.FAVORITE + " " +
+                "CASE WHEN (SELECT sf." + SchedulesFavoritesTable.Cols.ID + " FROM " + SchedulesFavoritesTable.TABLE_NAME + " sf WHERE sch." + SchedulesTable.Cols.ID + "=sf." + SchedulesFavoritesTable.Cols.SCHEDULE + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.FAVORITE + ", " +
+                "CASE WHEN (SELECT sd." + ScheduleDescriptionTable.Cols.ID + " FROM " + ScheduleDescriptionTable.TABLE_NAME + " sd WHERE sch." + SchedulesTable.Cols.ID + "=sd." + ScheduleDescriptionTable.Cols.SCHEDULE + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.EXDESC + " " +
                 "FROM " +
                 SchedulesTable.TABLE_NAME + " sch " +
                 "JOIN " + ChannelsTable.TABLE_NAME + " ca ON (sch." + SchedulesTable.Cols.CHANNEL + "=ca." + ChannelsTable.Cols.CHANNEL + ") " +
@@ -222,7 +223,8 @@ public class MainBaseHelper extends SQLiteOpenHelper {
                 "sch." + SchedulesTable.Cols.ENDING + " AS " + SchedulesTable.Cols.ENDING + ", " +
                 "sch." + SchedulesTable.Cols.TITLE + " AS " + SchedulesTable.Cols.TITLE + ", " +
                 "1 AS " + SchedulesTable.Cols.TIME_TYPE + ", " +
-                "CASE WHEN (SELECT sf." + SchedulesFavoritesTable.Cols.ID + " FROM " + SchedulesFavoritesTable.TABLE_NAME + " sf WHERE sch." + SchedulesTable.Cols.ID + "=sf." + SchedulesFavoritesTable.Cols.SCHEDULE + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.FAVORITE + " " +
+                "CASE WHEN (SELECT sf." + SchedulesFavoritesTable.Cols.ID + " FROM " + SchedulesFavoritesTable.TABLE_NAME + " sf WHERE sch." + SchedulesTable.Cols.ID + "=sf." + SchedulesFavoritesTable.Cols.SCHEDULE + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.FAVORITE + ", " +
+                "0 AS " + SchedulesTable.Cols.EXDESC + " " +
                 "FROM " +
                 SchedulesTable.TABLE_NAME + " sch " +
                 "JOIN " + ChannelsFavoritesTable.TABLE_NAME + " cf ON (sch." + SchedulesTable.Cols.CHANNEL + "=cf." + ChannelsFavoritesTable.Cols.CHANNEL + ") " +
@@ -246,7 +248,8 @@ public class MainBaseHelper extends SQLiteOpenHelper {
                 "sch." + SchedulesTable.Cols.ENDING + " AS " + SchedulesTable.Cols.ENDING + ", " +
                 "sch." + SchedulesTable.Cols.TITLE + " AS " + SchedulesTable.Cols.TITLE + ", " +
                 "CASE WHEN (sch." + SchedulesTable.Cols.STARTING + "<=datetime('now','localtime')) AND (sch." + SchedulesTable.Cols.ENDING + ">=datetime('now','localtime')) THEN 1 WHEN sch." + SchedulesTable.Cols.STARTING + "<=datetime('now','localtime') THEN 0 else 2 END AS " + SchedulesTable.Cols.TIME_TYPE + ", " +
-                " 1 AS " + SchedulesTable.Cols.FAVORITE + " " +
+                " 1 AS " + SchedulesTable.Cols.FAVORITE + ", " +
+                "0 AS " + SchedulesTable.Cols.EXDESC + " " +
                 "FROM " +
                 SchedulesTable.TABLE_NAME + " sch " +
                 "JOIN " + SchedulesFavoritesTable.TABLE_NAME + " sf ON (sch." + SchedulesTable.Cols.ID + "=sf." + SchedulesFavoritesTable.Cols.SCHEDULE + ") " +
@@ -274,7 +277,8 @@ public class MainBaseHelper extends SQLiteOpenHelper {
                 "sch." + SchedulesTable.Cols.ENDING + " AS " + SchedulesTable.Cols.ENDING + ", " +
                 "sch." + SchedulesTable.Cols.TITLE + " AS " + SchedulesTable.Cols.TITLE + ", " +
                 "CASE WHEN (sch." + SchedulesTable.Cols.STARTING + "<=datetime('now','localtime')) AND (sch." + SchedulesTable.Cols.ENDING + ">=datetime('now','localtime')) THEN 1 WHEN sch." + SchedulesTable.Cols.STARTING + "<=datetime('now','localtime') THEN 0 else 2 END AS " + SchedulesTable.Cols.TIME_TYPE + ", " +
-                "CASE WHEN (SELECT sf." + SchedulesFavoritesTable.Cols.ID + " FROM " + SchedulesFavoritesTable.TABLE_NAME + " sf WHERE sch." + SchedulesTable.Cols.ID + "=sf." + SchedulesFavoritesTable.Cols.SCHEDULE + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.FAVORITE + " " +
+                "CASE WHEN (SELECT sf." + SchedulesFavoritesTable.Cols.ID + " FROM " + SchedulesFavoritesTable.TABLE_NAME + " sf WHERE sch." + SchedulesTable.Cols.ID + "=sf." + SchedulesFavoritesTable.Cols.SCHEDULE + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.FAVORITE + ", " +
+                "0 AS " + SchedulesTable.Cols.EXDESC + " " +
                 "FROM " +
                 SchedulesTable.TABLE_NAME + " sch " +
                 "JOIN " + ChannelsTable.TABLE_NAME + " ca ON (sch." + SchedulesTable.Cols.CHANNEL + "=ca." + ChannelsTable.Cols.CHANNEL + ") " +
@@ -288,6 +292,7 @@ public class MainBaseHelper extends SQLiteOpenHelper {
         String schedule = String.valueOf(scheduleId);
         String sql =
                 "SELECT " +
+                "sd." + ScheduleDescriptionTable.Cols.SCHEDULE + " AS " + ScheduleDescriptionTable.Cols.SCHEDULE + ", " +
                 "desc." + DescriptionTable.Cols.ID + " AS " + DescriptionTable.Cols.ID + ", " +
                 "desc." + DescriptionTable.Cols.DESCRIPTION + " AS " + DescriptionTable.Cols.DESCRIPTION + ", " +
                 "desc." + DescriptionTable.Cols.IMAGE + " AS " + DescriptionTable.Cols.IMAGE + ", " +
@@ -297,8 +302,9 @@ public class MainBaseHelper extends SQLiteOpenHelper {
                 "desc." + DescriptionTable.Cols.COUNTRY + " AS " + DescriptionTable.Cols.COUNTRY + ", " +
                 "desc." + DescriptionTable.Cols.YEAR + " AS " + DescriptionTable.Cols.YEAR + ", " +
                 "desc." + DescriptionTable.Cols.RATING + " AS " + DescriptionTable.Cols.RATING + " " +
-                "FROM " + DescriptionTable.TABLE_NAME + " desc " +
-                "WHERE desc." + DescriptionTable.Cols.ID + "=(SELECT sd." + ScheduleDescriptionTable.Cols.DESCRIPTION + " FROM " + ScheduleDescriptionTable.TABLE_NAME + " sd WHERE sd." + ScheduleDescriptionTable.Cols.SCHEDULE + "=" + schedule + ")";
+                "FROM " + ScheduleDescriptionTable.TABLE_NAME + " sd " +
+                "JOIN " + DescriptionTable.TABLE_NAME + " desc ON (sd." + ScheduleDescriptionTable.Cols.DESCRIPTION + "=desc." + DescriptionTable.Cols.ID + ") " +
+                "WHERE sd." + ScheduleDescriptionTable.Cols.SCHEDULE + "=" + schedule;
         return sql;
     }
 }

@@ -27,6 +27,7 @@ public class TVSchedulesCursorWrapper extends CursorWrapper {
         String title = getString(getColumnIndex(SchedulesTable.Cols.TITLE));
         int timeType = getInt(getColumnIndex(SchedulesTable.Cols.TIME_TYPE));
         int favorite = getInt(getColumnIndex(SchedulesTable.Cols.FAVORITE));
+        int description = getInt(getColumnIndex(SchedulesTable.Cols.EXDESC));
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date startDate = null;
@@ -46,6 +47,7 @@ public class TVSchedulesCursorWrapper extends CursorWrapper {
         schedule.setTimeType(timeType);
         schedule.setFavoritesChannel(favorite_channel == 1);
         schedule.setFavorites(favorite == 1);
+        schedule.setExDesc(description == 1);
         return schedule;
     }
 }

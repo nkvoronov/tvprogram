@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import android.database.Cursor;
 import java.text.SimpleDateFormat;
 import android.content.ContentValues;
+import android.database.DatabaseUtils;
 import com.nkvoronov.tvprogram.common.MainDataSource;
 import com.nkvoronov.tvprogram.database.MainDbSchema.*;
 import com.nkvoronov.tvprogram.database.TVChannelsCursorWrapper;

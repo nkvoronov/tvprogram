@@ -131,7 +131,7 @@ public class UpdateSchedulesTask extends AsyncTask<Integer,String,Void> {
                 if (schedule.getDescription() == null) {
                     schedule.setDescription(new TVScheduleDescription(""));
                 }
-                Log.d(TAG, "DESC - " + edesc);
+                //Log.d(TAG, "DESC - " + edesc);
                 schedule.getDescription().setDescription(edesc);
             }
 
@@ -139,8 +139,8 @@ public class UpdateSchedulesTask extends AsyncTask<Integer,String,Void> {
                 if (schedule.getDescription() == null) {
                     schedule.setDescription(new TVScheduleDescription(""));
                 }
-                Log.d(TAG, "URL_DESC - " + efulldescurl);
-                schedule.getDescription().setUrlFullDesc(efulldescurl);
+                String link = HOST + efulldescurl;
+                schedule.getDescription().setUrlFullDesc(link);
                 getFullDesc(schedule);
             }
             mPrograms.add(schedule);
@@ -208,7 +208,12 @@ public class UpdateSchedulesTask extends AsyncTask<Integer,String,Void> {
 
     private void getFullDesc(TVSchedule schedule) {
         if (schedule.getDescription() != null) {
-            //
+//            if (schedule.getDescription().getDescription() == null) {
+//                schedule.getDescription().setDescription("<a href=\"" + schedule.getDescription().getUrlFullDesc() + "\">link</a>");
+//            } else {
+//                schedule.getDescription().setDescription(schedule.getDescription().getDescription() + "<br><a href=\"" + schedule.getDescription().getUrlFullDesc() + "\">link</a>");
+//            }
+//            Log.d(TAG, "URL_DESC - " + schedule.getDescription().getUrlFullDesc());
         }
     }
 }
