@@ -138,7 +138,7 @@ public class TVSchedule {
     }
 
     public void setIdFromDB() {
-        mId = -1;
+        setId(-1);
         String title = getTitle();
         String starting = getDateFormat(getStarting(), "yyyy-MM-dd HH:mm:ss");
         String ending = getDateFormat(getEnding(), "yyyy-MM-dd HH:mm:ss");
@@ -155,7 +155,7 @@ public class TVSchedule {
 
             if (cursor.getCount() == 1) {
                 cursor.moveToFirst();
-                mId = cursor.getInt(cursor.getColumnIndex(SchedulesTable.Cols.ID));
+                setId(cursor.getInt(cursor.getColumnIndex(SchedulesTable.Cols.ID)));
             }
         } finally {
             cursor.close();
@@ -164,10 +164,10 @@ public class TVSchedule {
 
     public void setDescriptionFromDB() {
         if (isExDesc()) {
-            TVScheduleDescription scheduleDescription = new TVScheduleDescription("");
+            TVScheduleDescription scheduleDescription = new TVScheduleDescription(-1, getId(), "");
             scheduleDescription.setDataSource(mDataSource);
-            scheduleDescription.loadFromDB(getId());
             setDescription(scheduleDescription);
+            getDescription().loadFromDB();
         }
     }
 

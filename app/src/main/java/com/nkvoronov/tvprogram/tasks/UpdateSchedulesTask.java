@@ -1,10 +1,12 @@
 package com.nkvoronov.tvprogram.tasks;
 
 import java.util.Date;
+import org.jsoup.Jsoup;
 import android.util.Log;
 import java.util.Calendar;
 import android.os.AsyncTask;
 import java.text.ParseException;
+import com.nkvoronov.tvprogram.R;
 import org.jsoup.select.Elements;
 import java.text.SimpleDateFormat;
 import com.nkvoronov.tvprogram.common.HttpContent;
@@ -15,6 +17,7 @@ import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
 import com.nkvoronov.tvprogram.tvschedule.TVSchedulesList;
 import com.nkvoronov.tvprogram.tvschedule.TVScheduleCategory;
 import static com.nkvoronov.tvprogram.common.HttpContent.HOST;
+import static com.nkvoronov.tvprogram.common.DateUtils.addDays;
 import com.nkvoronov.tvprogram.tvschedule.TVScheduleDescription;
 import static com.nkvoronov.tvprogram.common.MainDataSource.TAG;
 import com.nkvoronov.tvprogram.tvschedule.TVScheduleCategoriesList;
@@ -31,7 +34,7 @@ public class UpdateSchedulesTask extends AsyncTask<Integer,String,Void> {
     private int counter;
     private String[] progress;
     private TVChannelsList mChannels;
-    private TVSchedulesList mPrograms;
+    private TVSchedulesList mSchedules;
     private OnTaskListeners mListeners;
     private MainDataSource mDataSource;
 
@@ -104,6 +107,7 @@ public class UpdateSchedulesTask extends AsyncTask<Integer,String,Void> {
             String etitle = "";
             String efulldescurl = "";
             String edesc = "";
+            String hdesc = "";
             try {
                 Elements titleItem = item.nextElementSibling().select(STR_ELMDOCTITLE);
                 if (titleItem != null) {
@@ -117,7 +121,9 @@ public class UpdateSchedulesTask extends AsyncTask<Integer,String,Void> {
             try {
                 Elements descItem = item.nextElementSibling().nextElementSibling().select(STR_ELMDOCDESC);
                 if (descItem != null) {
-                    edesc = descItem.text();
+                    edesc = descItem.html();
+                    hdesc = descItem.select("b").text();
+                    edesc = Jsoup.parse(edesc.replaceAll("<br>", ";").replace(hdesc, "")).text().replaceAll(";", "<br>");
                 }
             } catch (Exception e) {
                 e.fillInStackTrace();
@@ -131,7 +137,10 @@ public class UpdateSchedulesTask extends AsyncTask<Integer,String,Void> {
                 if (schedule.getDescription() == null) {
                     schedule.setDescription(new TVScheduleDescription(""));
                 }
-                //Log.d(TAG, "DESC - " + edesc);
+                String[] list = hdesc.split(",");
+                schedule.getDescription().setCountry(list[0].trim());
+                schedule.getDescription().setYear(list[1].trim());
+                schedule.getDescription().setGenres(list[2].trim().replace(" / ", "/"));
                 schedule.getDescription().setDescription(edesc);
             }
 
@@ -143,7 +152,7 @@ public class UpdateSchedulesTask extends AsyncTask<Integer,String,Void> {
                 schedule.getDescription().setUrlFullDesc(link);
                 getFullDesc(schedule);
             }
-            mPrograms.add(schedule);
+            mSchedules.add(schedule);
         }
     }
 
@@ -152,28 +161,28 @@ public class UpdateSchedulesTask extends AsyncTask<Integer,String,Void> {
         int type_channels = values[0];
         index = 0;
         progress = new String[] {"", "", ""};
-        mPrograms = mDataSource.getSchedules(0, String.valueOf(type_channels), new Date());
-        mPrograms.clear();
+        mSchedules = mDataSource.getSchedules(0, String.valueOf(-1), null);
+        mSchedules.clear();
         if (type_channels == -1) {
             mChannels = mDataSource.getChannels(true, 0);
             total = mChannels.size() * mDataSource.getCoutDays();
             for (TVChannel channel : mChannels.getData()) {
                 progress[0] = channel.getName();
-                mPrograms.preUpdateSchedules(channel.getIndex());
-                getContentForChannel(channel.getIndex(), new Date());
+                mSchedules.preUpdateSchedules(channel.getIndex());
+                getContentForChannel(channel.getIndex(), addDays(new Date(), 0));
             }
         } else {
             total = 1 * mDataSource.getCoutDays();
             progress[0] = "-1";
-            mPrograms.preUpdateSchedules(type_channels);
-            getContentForChannel(type_channels, new Date());
+            mSchedules.preUpdateSchedules(type_channels);
+            getContentForChannel(type_channels, addDays(new Date(), 0));
         }
-        mPrograms.setScheduleEnding();
+        mSchedules.setScheduleEnding();
         progress[0] = "0";
         progress[1] = "";
         progress[2] = String.valueOf(counter);
         publishProgress(progress);
-        mPrograms.saveToDB();
+        mSchedules.saveToDB();
         return null;
     }
 
@@ -208,12 +217,12 @@ public class UpdateSchedulesTask extends AsyncTask<Integer,String,Void> {
 
     private void getFullDesc(TVSchedule schedule) {
         if (schedule.getDescription() != null) {
-//            if (schedule.getDescription().getDescription() == null) {
-//                schedule.getDescription().setDescription("<a href=\"" + schedule.getDescription().getUrlFullDesc() + "\">link</a>");
-//            } else {
-//                schedule.getDescription().setDescription(schedule.getDescription().getDescription() + "<br><a href=\"" + schedule.getDescription().getUrlFullDesc() + "\">link</a>");
-//            }
-//            Log.d(TAG, "URL_DESC - " + schedule.getDescription().getUrlFullDesc());
+            String txt = mDataSource.getContext().getString(R.string.txt_details);
+            if (schedule.getDescription().getDescription() == null) {
+                schedule.getDescription().setDescription("<a href=\"" + schedule.getDescription().getUrlFullDesc() + "\">" + txt + "</a>");
+            } else {
+                schedule.getDescription().setDescription(schedule.getDescription().getDescription() + "<br><br><a href=\"" + schedule.getDescription().getUrlFullDesc() + "\">" + txt + "</a>");
+            }
         }
     }
 }

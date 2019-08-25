@@ -165,7 +165,6 @@ public class MainBaseHelper extends SQLiteOpenHelper {
                 ChannelsTable.TABLE_NAME + " ca " +
                 sql_where;
 
-        Log.d(TAG, "getSQLAllChannels - " + sql);
         return sql;
     }
 
@@ -195,7 +194,7 @@ public class MainBaseHelper extends SQLiteOpenHelper {
             if (date != null) {
                 String sDate1 = DatabaseUtils.sqlEscapeString(getDateFormat(date, "yyyy-MM-dd"));
                 String sDate2 = DatabaseUtils.sqlEscapeString(getDateFormat(addDays(date, 1), "yyyy-MM-dd"));
-                sql_where = sql_where + " and ((sch." + SchedulesTable.Cols.STARTING + ">=" + sDate1 + ") AND (sch." + SchedulesTable.Cols.STARTING + "<" + sDate2 + "))";
+                sql_where = sql_where + " AND ((sch." + SchedulesTable.Cols.STARTING + ">=" + sDate1 + ") AND (sch." + SchedulesTable.Cols.STARTING + "<" + sDate2 + "))";
             }
             sql_execdesc = "0 AS " + SchedulesTable.Cols.EXDESC + " ";
             sql_where = sql_where + sql_order;

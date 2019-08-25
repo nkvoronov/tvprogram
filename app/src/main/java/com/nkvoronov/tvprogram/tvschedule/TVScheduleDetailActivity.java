@@ -1,6 +1,7 @@
 package com.nkvoronov.tvprogram.tvschedule;
 
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.content.Context;
 import android.widget.TextView;
 import android.widget.ImageView;
 import com.nkvoronov.tvprogram.R;
+import android.text.method.LinkMovementMethod;
 import androidx.appcompat.app.AppCompatActivity;
 import com.nkvoronov.tvprogram.common.MainDataSource;
 import static com.nkvoronov.tvprogram.common.DateUtils.getDateFormat;
@@ -16,7 +18,6 @@ public class TVScheduleDetailActivity extends AppCompatActivity {
     private static final String EXTRA_TVSCHEDULE_ID = "com.nkvoronov.tvprogram.tvschedule.tvschedule_id";
 
     private int mScheduleId;
-    private int mChannelIndex;
     private TVSchedule mSchedule;
     private TextView mScheduleDate;
     private Button mButtonExecute;
@@ -73,6 +74,7 @@ public class TVScheduleDetailActivity extends AppCompatActivity {
         mScheduleCountry = findViewById(R.id.tvschedule_country);
         mScheduleYear = findViewById(R.id.tvschedule_year);
         mScheduleDescription = findViewById(R.id.tvschedule_description);
+        mScheduleDescription.setMovementMethod(LinkMovementMethod.getInstance());
 
         mButtonExecute = findViewById(R.id.tvschedule_action);
         mButtonExecute.setOnClickListener(new View.OnClickListener() {
@@ -114,7 +116,7 @@ public class TVScheduleDetailActivity extends AppCompatActivity {
 
             if (mSchedule.getDescription().getDescription() != null) {
                 mScheduleDescription.setVisibility(View.VISIBLE);
-                mScheduleDescription.setText(mSchedule.getDescription().getDescription());
+                mScheduleDescription.setText(Html.fromHtml(mSchedule.getDescription().getDescription()));
             }
         }
 

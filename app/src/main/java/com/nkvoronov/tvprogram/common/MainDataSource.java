@@ -118,7 +118,9 @@ public class MainDataSource {
 
     public TVSchedule getSchedule(int scheduleID) {
         TVSchedulesList schedules = new TVSchedulesList(this);
-        return schedules.getForId(scheduleID);
+        TVSchedule schedule = schedules.getForId(scheduleID);
+        schedule.setDescriptionFromDB();
+        return schedule;
     }
 
     public TVScheduleCategoriesList getCategories() {

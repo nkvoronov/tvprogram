@@ -135,9 +135,8 @@ public class TVScheduleDescription {
     }
 
     public void setIdFromDB() {
-        mIdDescription = -1;
+        setIdDescription(-1);
         String desc = getDescription();
-        Log.d(TAG, "setIdFromDB - " + desc);
         Cursor cursor = mDataSource.getDatabase().query(DescriptionTable.TABLE_NAME,
                 null,
                 DescriptionTable.Cols.DESCRIPTION + "=?",
@@ -148,9 +147,9 @@ public class TVScheduleDescription {
 
         try {
 
-            if (cursor.getCount() == 1) {
+            if (cursor.getCount() != 0) {
                 cursor.moveToFirst();
-                mIdDescription = cursor.getInt(cursor.getColumnIndex(DescriptionTable.Cols.ID));
+                setIdDescription(cursor.getInt(cursor.getColumnIndex(DescriptionTable.Cols.ID)));
             }
         } finally {
             cursor.close();
@@ -158,8 +157,8 @@ public class TVScheduleDescription {
     }
 
 
-    public void loadFromDB(int schedule) {
-        TVScheduleDescriptionCursorWrapper cursor = queryDescription(getSQLDescription(schedule), null);
+    public void loadFromDB() {
+        TVScheduleDescriptionCursorWrapper cursor = queryDescription(getSQLDescription(getIdSchedule()), null);
 
         try {
 
@@ -190,10 +189,14 @@ public class TVScheduleDescription {
     }
 
     public void saveToDB() {
-        mDataSource.getDatabase().insert(DescriptionTable.TABLE_NAME, null, getContentProgramDescription());
+        mDataSource.getDatabase().insert(DescriptionTable.TABLE_NAME, null, getContentScheduleDescription());
     }
 
-    private ContentValues getContentProgramDescription() {
+    public void updateDB() {
+        mDataSource.getDatabase().update(DescriptionTable.TABLE_NAME, getContentScheduleDescription(), DescriptionTable.Cols.ID + "=?", new String[]{String.valueOf(getIdDescription())});
+    }
+
+    private ContentValues getContentScheduleDescription() {
         ContentValues values = new ContentValues();
         values.put(DescriptionTable.Cols.DESCRIPTION, getDescription());
         values.put(DescriptionTable.Cols.IMAGE, getImage());

@@ -2,14 +2,15 @@ package com.nkvoronov.tvprogram.tvschedule;
 
 import java.util.Date;
 import java.util.List;
+import android.util.Log;
 import java.util.ArrayList;
 import android.database.Cursor;
 import android.content.ContentValues;
-import android.database.DatabaseUtils;
 import com.nkvoronov.tvprogram.common.MainDataSource;
 import com.nkvoronov.tvprogram.database.MainDbSchema.*;
-import com.nkvoronov.tvprogram.database.TVSchedulesCursorWrapper;
+import static com.nkvoronov.tvprogram.common.MainDataSource.TAG;
 import static com.nkvoronov.tvprogram.database.MainBaseHelper.*;
+import com.nkvoronov.tvprogram.database.TVSchedulesCursorWrapper;
 import static com.nkvoronov.tvprogram.common.DateUtils.getDateFormat;
 
 public class TVSchedulesList {
@@ -37,6 +38,7 @@ public class TVSchedulesList {
             if (cursor.getCount() != 0) {
                 cursor.moveToFirst();
                 schedule = cursor.getSchedule();
+                schedule.setDataSource(mDataSource);
             }
         } finally {
             cursor.close();
@@ -123,6 +125,8 @@ public class TVSchedulesList {
                 if (schedule.getDescription().getIdDescription() == -1) {
                     schedule.getDescription().saveToDB();
                     schedule.getDescription().setIdFromDB();
+                } else {
+                    schedule.getDescription().updateDB();
                 }
                 mDataSource.getDatabase().insert(ScheduleDescriptionTable.TABLE_NAME, null, getContentScheduleDescriptionValues(schedule.getDescription()));
             }

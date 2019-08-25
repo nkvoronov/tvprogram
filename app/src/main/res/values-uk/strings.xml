@@ -49,4 +49,5 @@
     <string name="text_author">Воронов Микола</string>
     <string name="text_author_email">nkvoronov@gmail.com</string>
     <string name="lab_fulldesc">Отримувати повний опис</string>
+    <string name="txt_details">Детальніше</string>
 </resources>
