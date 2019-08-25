@@ -31,12 +31,17 @@ public class TVSchedulesList {
 
     public TVSchedule getForId(int id) {
         TVSchedule schedule = null;
-        for (int i = 0; i < size(); i++) {
-            if (get(i).getId() == id) {
-                schedule = get(i);
-                break;
+        TVSchedulesCursorWrapper cursor = querySchedules(getSQLProgramsForChannelToDay(id, "", null),null);
+
+        try {
+            if (cursor.getCount() != 0) {
+                cursor.moveToFirst();
+                schedule = cursor.getSchedule();
             }
+        } finally {
+            cursor.close();
         }
+
         return schedule;
     }
 
@@ -59,13 +64,13 @@ public class TVSchedulesList {
 
         switch (type) {
             case 0:
-                cursor = querySchedules(getSQLProgramsForChannelToDay(filter, date),null);
+                cursor = querySchedules(getSQLProgramsForChannelToDay(-1, filter, date),null);
                 break;
             case 1:
                 cursor = querySchedules(getSQLNowPrograms(filter),null);
                 break;
             case 2:
-                cursor = querySchedules(getSQLFavoritesPrograms(filter),null);
+                cursor = querySchedules(getSQLFavoritesPrograms(),null);
                 break;
             case 3:
                 cursor = querySchedules(getSQLSearchPrograms(filter),null);
@@ -130,7 +135,7 @@ public class TVSchedulesList {
         values.put(SchedulesTable.Cols.CATEGORY, schedule.getCategory());
         values.put(SchedulesTable.Cols.STARTING, getDateFormat(schedule.getStarting(), "yyyy-MM-dd HH:mm:ss"));
         values.put(SchedulesTable.Cols.ENDING, getDateFormat(schedule.getEnding(), "yyyy-MM-dd HH:mm:ss"));
-        values.put(SchedulesTable.Cols.TITLE, DatabaseUtils.sqlEscapeString(schedule.getTitle()));
+        values.put(SchedulesTable.Cols.TITLE, schedule.getTitle());
         return values;
     }
 

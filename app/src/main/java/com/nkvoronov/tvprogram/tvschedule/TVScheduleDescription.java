@@ -6,7 +6,6 @@ import android.content.ContentValues;
 import com.nkvoronov.tvprogram.common.MainDataSource;
 import com.nkvoronov.tvprogram.database.MainDbSchema.*;
 import static com.nkvoronov.tvprogram.common.MainDataSource.TAG;
-import static com.nkvoronov.tvprogram.common.StringUtils.addQuotes;
 import com.nkvoronov.tvprogram.database.TVScheduleDescriptionCursorWrapper;
 import static com.nkvoronov.tvprogram.database.MainBaseHelper.getSQLDescription;
 
@@ -137,12 +136,12 @@ public class TVScheduleDescription {
 
     public void setIdFromDB() {
         mIdDescription = -1;
-        String desc = addQuotes(getDescription().replaceAll("'", "''"), "'");
+        String desc = getDescription();
         Log.d(TAG, "setIdFromDB - " + desc);
         Cursor cursor = mDataSource.getDatabase().query(DescriptionTable.TABLE_NAME,
                 null,
-                "(" + DescriptionTable.Cols.DESCRIPTION + "=" + desc + ")",
-                null,
+                DescriptionTable.Cols.DESCRIPTION + "=?",
+                new String[]{desc},
                 null,
                 null,
                 null);
@@ -196,8 +195,7 @@ public class TVScheduleDescription {
 
     private ContentValues getContentProgramDescription() {
         ContentValues values = new ContentValues();
-        Log.d(TAG, "getContentProgramDescription - " + getDescription().replaceAll("'", "''"));
-        values.put(DescriptionTable.Cols.DESCRIPTION, getDescription().replaceAll("'", "''"));
+        values.put(DescriptionTable.Cols.DESCRIPTION, getDescription());
         values.put(DescriptionTable.Cols.IMAGE, getImage());
         values.put(DescriptionTable.Cols.GENRES, getGenres());
         values.put(DescriptionTable.Cols.ACTORS, getActors());

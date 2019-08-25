@@ -184,7 +184,7 @@ public class TVScheduleSearchFragment extends Fragment {
         }
 
         private void openScheduleDetail() {
-            Intent intent = TVScheduleDetailActivity.newIntent(getActivity(), mSchedule.getId(), mSchedule.getIndex());
+            Intent intent = TVScheduleDetailActivity.newIntent(getActivity(), mSchedule.getId());
             startActivity(intent);
         }
 

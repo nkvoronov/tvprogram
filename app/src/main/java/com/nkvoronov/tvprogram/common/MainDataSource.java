@@ -12,15 +12,15 @@ import java.text.ParseException;
 import com.nkvoronov.tvprogram.R;
 import java.text.SimpleDateFormat;
 import android.content.ContentValues;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
-import com.nkvoronov.tvprogram.tvschedule.TVSchedule;
 import com.nkvoronov.tvprogram.tvchannels.TVChannel;
-import com.nkvoronov.tvprogram.tvschedule.TVSchedulesList;
-import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
-import static com.nkvoronov.tvprogram.common.DateUtils.*;
-import static com.nkvoronov.tvprogram.common.StringUtils.*;
+import com.nkvoronov.tvprogram.tvschedule.TVSchedule;
 import com.nkvoronov.tvprogram.database.MainDbSchema.*;
 import com.nkvoronov.tvprogram.database.MainBaseHelper;
+import com.nkvoronov.tvprogram.tvchannels.TVChannelsList;
+import static com.nkvoronov.tvprogram.common.DateUtils.*;
+import com.nkvoronov.tvprogram.tvschedule.TVSchedulesList;
 import com.nkvoronov.tvprogram.tvschedule.TVScheduleCategoriesList;
 
 public class MainDataSource {
@@ -99,15 +99,15 @@ public class MainDataSource {
         return values;
     }
 
-    public TVChannelsList getChannels(boolean isFavorites, int filter) {
+    public TVChannelsList getChannels(boolean isFavorites, int lang) {
         TVChannelsList channels = new TVChannelsList(this);
-        channels.loadFromDB(isFavorites, filter);
+        channels.loadFromDB(isFavorites, lang);
         return channels;
     };
 
     public TVChannel getChannel(int index) {
-        TVChannelsList channelList = getChannels(false, 0);
-        return channelList.getForIndex(index);
+        TVChannelsList channels = new TVChannelsList(this);
+        return channels.getForIndex(index);
     }
 
     public TVSchedulesList getSchedules(int type, String filter, Date date) {
@@ -116,8 +116,8 @@ public class MainDataSource {
         return schedules;
     };
 
-    public TVSchedule getSchedule(int index, int scheduleID) {
-        TVSchedulesList schedules = getSchedules(0, String.valueOf(index), null);
+    public TVSchedule getSchedule(int scheduleID) {
+        TVSchedulesList schedules = new TVSchedulesList(this);
         return schedules.getForId(scheduleID);
     }
 
@@ -148,12 +148,12 @@ public class MainDataSource {
 
     public boolean checkUpdateSchedule(int channel) {
         String index = new Integer(channel).toString();
-        String now_date = addQuotes(getDateFormat(new Date(), "yyyy-MM-dd"), "'");
+        String now_date = DatabaseUtils.sqlEscapeString(getDateFormat(new Date(), "yyyy-MM-dd"));
         boolean res = true;
         Cursor cursor = mDatabase.query(SchedulesTable.TABLE_NAME,
                 null,
-                "(" + SchedulesTable.Cols.CHANNEL + "=" + index + ") AND (" + SchedulesTable.Cols.STARTING + ">=" + now_date + ")",
-                null,
+                "(" + SchedulesTable.Cols.CHANNEL + "=?) AND (" + SchedulesTable.Cols.STARTING + ">=?)",
+                new String[] {index, now_date},
                 null,
                 null,
                 null);

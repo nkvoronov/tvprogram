@@ -1,13 +1,15 @@
 package com.nkvoronov.tvprogram.database;
 
 import java.util.Date;
+import android.util.Log;
 import android.content.Context;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.nkvoronov.tvprogram.database.MainDbSchema.*;
 import static com.nkvoronov.tvprogram.common.DateUtils.*;
-import static com.nkvoronov.tvprogram.common.StringUtils.*;
 import com.nkvoronov.tvprogram.tvschedule.TVScheduleCategory;
+import static com.nkvoronov.tvprogram.common.MainDataSource.TAG;
 import static com.nkvoronov.tvprogram.common.MainDataSource.RUS_LANG;
 import static com.nkvoronov.tvprogram.common.MainDataSource.UKR_LANG;
 import com.nkvoronov.tvprogram.database.MainDbSchema.ChannelsFavoritesTable;
@@ -135,13 +137,21 @@ public class MainBaseHelper extends SQLiteOpenHelper {
         database.insert(CategoryTable.TABLE_NAME, null, getContentScheduleCategoryValues(new TVScheduleCategory(6, "Досуг", "истори,планет,разрушители,знаки,катастроф")));
     }
 
-    public static String getSQLAllChannels(int filter) {
-        String sql_filter = "";
-        if (filter == 1) {
-            sql_filter = "WHERE ca." + ChannelsTable.Cols.LANG + "=" + addQuotes(RUS_LANG, "'") + " ";
-        }
-        if (filter == 2) {
-            sql_filter = "WHERE ca." + ChannelsTable.Cols.LANG + "=" + addQuotes(UKR_LANG, "'") + " ";
+    public static String getSQLAllChannels(int index, int lang) {
+        String sql_where = "";
+
+        if (index == -1) {
+            String sql_order = "ORDER BY ca." + ChannelsTable.Cols.CHANNEL;
+            if (lang == 1) {
+                sql_where = "WHERE ca." + ChannelsTable.Cols.LANG + "=" + DatabaseUtils.sqlEscapeString(RUS_LANG) + " ";
+            }
+            if (lang == 2) {
+                sql_where = "WHERE ca." + ChannelsTable.Cols.LANG + "=" + DatabaseUtils.sqlEscapeString(UKR_LANG) + " ";
+            }
+            sql_where = sql_where + sql_order;
+        } else {
+            String channel = String.valueOf(index);
+            sql_where = "WHERE ca." + ChannelsTable.Cols.CHANNEL + "=" + channel + " ";
         }
 
         String sql =
@@ -153,13 +163,13 @@ public class MainBaseHelper extends SQLiteOpenHelper {
                 "CASE WHEN (SELECT cf." + ChannelsFavoritesTable.Cols.ID + " FROM " + ChannelsFavoritesTable.TABLE_NAME + " cf WHERE cf." + ChannelsFavoritesTable.Cols.CHANNEL + "=ca." + ChannelsTable.Cols.CHANNEL + ") IS NULL THEN 0 ELSE 1 END AS " + ChannelsTable.Cols.FAVORITE + " " +
                 "FROM " +
                 ChannelsTable.TABLE_NAME + " ca " +
-                sql_filter +
-                "ORDER BY " +
-                "ca." + ChannelsTable.Cols.CHANNEL;
+                sql_where;
+
+        Log.d(TAG, "getSQLAllChannels - " + sql);
         return sql;
     }
 
-    public static String getSQLFavoritesChannels(int countDay) {
+    public static String getSQLFavoritesChannels() {
         String sql =
                 "SELECT " +
                 "ca." + ChannelsTable.Cols.CHANNEL + " AS " + ChannelsTable.Cols.CHANNEL + ", " +
@@ -175,13 +185,24 @@ public class MainBaseHelper extends SQLiteOpenHelper {
         return sql;
     }
 
-    public static String getSQLProgramsForChannelToDay(String filter, Date date) {
-        String sql_filter = "";
-        sql_filter = "WHERE (sch." + SchedulesTable.Cols.CHANNEL + "=" + filter + ")";
-        if (date != null) {
-            String sDate1 = addQuotes(getDateFormat(date, "yyyy-MM-dd"), "'");
-            String sDate2 = addQuotes(getDateFormat(addDays(date, 1), "yyyy-MM-dd"), "'");
-            sql_filter = sql_filter + " and ((sch." + SchedulesTable.Cols.STARTING + ">=" + sDate1 + ") AND (sch." + SchedulesTable.Cols.STARTING + "<" + sDate2 + "))";
+    public static String getSQLProgramsForChannelToDay(int id, String filter, Date date) {
+        String sql_where = "";
+        String sql_execdesc = "";
+
+        if (id == -1) {
+            String sql_order = " ORDER BY sch." + SchedulesTable.Cols.STARTING;
+            sql_where = "WHERE (sch." + SchedulesTable.Cols.CHANNEL + "=" + filter + ")";
+            if (date != null) {
+                String sDate1 = DatabaseUtils.sqlEscapeString(getDateFormat(date, "yyyy-MM-dd"));
+                String sDate2 = DatabaseUtils.sqlEscapeString(getDateFormat(addDays(date, 1), "yyyy-MM-dd"));
+                sql_where = sql_where + " and ((sch." + SchedulesTable.Cols.STARTING + ">=" + sDate1 + ") AND (sch." + SchedulesTable.Cols.STARTING + "<" + sDate2 + "))";
+            }
+            sql_execdesc = "0 AS " + SchedulesTable.Cols.EXDESC + " ";
+            sql_where = sql_where + sql_order;
+        } else {
+            String idSchedule = String.valueOf(id);
+            sql_execdesc = "CASE WHEN (SELECT sd." + ScheduleDescriptionTable.Cols.ID + " FROM " + ScheduleDescriptionTable.TABLE_NAME + " sd WHERE sch." + SchedulesTable.Cols.ID + "=sd." + ScheduleDescriptionTable.Cols.SCHEDULE + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.EXDESC + " ";
+            sql_where = "WHERE sch." + SchedulesTable.Cols.ID + "=" + idSchedule;
         }
 
         String sql =
@@ -196,22 +217,26 @@ public class MainBaseHelper extends SQLiteOpenHelper {
                 "sch." + SchedulesTable.Cols.TITLE + " AS " + SchedulesTable.Cols.TITLE + ", " +
                 "CASE WHEN (sch." + SchedulesTable.Cols.STARTING + "<=datetime('now','localtime')) AND (sch." + SchedulesTable.Cols.ENDING + ">=datetime('now','localtime')) THEN 1 WHEN sch." + SchedulesTable.Cols.STARTING + "<=datetime('now','localtime') THEN 0 else 2 END AS " + SchedulesTable.Cols.TIME_TYPE + ", " +
                 "CASE WHEN (SELECT sf." + SchedulesFavoritesTable.Cols.ID + " FROM " + SchedulesFavoritesTable.TABLE_NAME + " sf WHERE sch." + SchedulesTable.Cols.ID + "=sf." + SchedulesFavoritesTable.Cols.SCHEDULE + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.FAVORITE + ", " +
-                "CASE WHEN (SELECT sd." + ScheduleDescriptionTable.Cols.ID + " FROM " + ScheduleDescriptionTable.TABLE_NAME + " sd WHERE sch." + SchedulesTable.Cols.ID + "=sd." + ScheduleDescriptionTable.Cols.SCHEDULE + ") IS NOT NULL THEN 1 ELSE 0 END AS " + SchedulesTable.Cols.EXDESC + " " +
+                sql_execdesc +
                 "FROM " +
                 SchedulesTable.TABLE_NAME + " sch " +
                 "JOIN " + ChannelsTable.TABLE_NAME + " ca ON (sch." + SchedulesTable.Cols.CHANNEL + "=ca." + ChannelsTable.Cols.CHANNEL + ") " +
-                sql_filter + " " +
-                "ORDER BY " +
-                "sch." + SchedulesTable.Cols.STARTING;
+                sql_where;
+
         return sql;
     }
 
     public static String getSQLNowPrograms(String filter) {
-        String sql_filter = "";
+        String sql_where = "";
+
+        String sql_order = "ORDER BY ca." + ChannelsTable.Cols.NAME;
         int category = Integer.parseInt(filter);
         if (category > 0) {
-            sql_filter = "AND (sch." + SchedulesTable.Cols.CATEGORY + "=" + filter + ")";
+            sql_where = "AND (sch." + SchedulesTable.Cols.CATEGORY + "=" + filter + ") " + sql_order;
+        } else {
+            sql_where = sql_order;
         }
+
         String sql =
                 "SELECT " +
                 "sch." + SchedulesTable.Cols.ID + " AS " + SchedulesTable.Cols.ID + ", " +
@@ -230,13 +255,16 @@ public class MainBaseHelper extends SQLiteOpenHelper {
                 "JOIN " + ChannelsFavoritesTable.TABLE_NAME + " cf ON (sch." + SchedulesTable.Cols.CHANNEL + "=cf." + ChannelsFavoritesTable.Cols.CHANNEL + ") " +
                 "JOIN " + ChannelsTable.TABLE_NAME + " ca ON (cf." + ChannelsFavoritesTable.Cols.CHANNEL + "=ca." + ChannelsTable.Cols.CHANNEL + ") " +
                 "WHERE (sch." + SchedulesTable.Cols.STARTING + "<=datetime('now','localtime')) AND (sch." + SchedulesTable.Cols.ENDING + ">datetime('now','localtime')) " +
-                sql_filter + " " +
-                "ORDER BY " +
-                        "ca." + ChannelsTable.Cols.NAME;
+                sql_where;
+
         return sql;
     }
 
-    public static String getSQLFavoritesPrograms(String filter) {
+    public static String getSQLFavoritesPrograms() {
+        String sql_where = "";
+        String sql_order = "ORDER BY ca." + ChannelsTable.Cols.NAME + ", sch." + SchedulesTable.Cols.STARTING;
+        sql_where = sql_order;
+
         String sql =
                 "SELECT " +
                 "sch." + SchedulesTable.Cols.ID + " AS " + SchedulesTable.Cols.ID + ", " +
@@ -248,24 +276,26 @@ public class MainBaseHelper extends SQLiteOpenHelper {
                 "sch." + SchedulesTable.Cols.ENDING + " AS " + SchedulesTable.Cols.ENDING + ", " +
                 "sch." + SchedulesTable.Cols.TITLE + " AS " + SchedulesTable.Cols.TITLE + ", " +
                 "CASE WHEN (sch." + SchedulesTable.Cols.STARTING + "<=datetime('now','localtime')) AND (sch." + SchedulesTable.Cols.ENDING + ">=datetime('now','localtime')) THEN 1 WHEN sch." + SchedulesTable.Cols.STARTING + "<=datetime('now','localtime') THEN 0 else 2 END AS " + SchedulesTable.Cols.TIME_TYPE + ", " +
-                " 1 AS " + SchedulesTable.Cols.FAVORITE + ", " +
+                "1 AS " + SchedulesTable.Cols.FAVORITE + ", " +
                 "0 AS " + SchedulesTable.Cols.EXDESC + " " +
                 "FROM " +
                 SchedulesTable.TABLE_NAME + " sch " +
                 "JOIN " + SchedulesFavoritesTable.TABLE_NAME + " sf ON (sch." + SchedulesTable.Cols.ID + "=sf." + SchedulesFavoritesTable.Cols.SCHEDULE + ") " +
                 "JOIN " + ChannelsTable.TABLE_NAME + " ca ON (sch." + SchedulesTable.Cols.CHANNEL + "=ca." + ChannelsTable.Cols.CHANNEL + ") " +
-                "ORDER BY " +
-                        "ca." + ChannelsTable.Cols.NAME + ", sch." + SchedulesTable.Cols.STARTING;
+                sql_where;
+
         return sql;
     }
 
     public static String getSQLSearchPrograms(String filter) {
-        String sql_filter = "";
+        String sql_where = "";
+        String sql_order = "ORDER BY ca." + ChannelsTable.Cols.NAME + ", sch." + SchedulesTable.Cols.STARTING;
         if (!filter.equals("")) {
-            sql_filter = "WHERE sch." + SchedulesTable.Cols.TITLE + " LIKE  '%" + filter + "%' ";
+            sql_where = "WHERE sch." + SchedulesTable.Cols.TITLE + " LIKE " + DatabaseUtils.sqlEscapeString("%" + filter + "%") + " " + sql_order;
         } else {
-            sql_filter = "WHERE sch." + SchedulesTable.Cols.ID + "=-1 ";
+            sql_where = "WHERE sch." + SchedulesTable.Cols.ID + "=-1 ";
         }
+
         String sql =
                 "SELECT " +
                 "sch." + SchedulesTable.Cols.ID + " AS " + SchedulesTable.Cols.ID + ", " +
@@ -282,14 +312,14 @@ public class MainBaseHelper extends SQLiteOpenHelper {
                 "FROM " +
                 SchedulesTable.TABLE_NAME + " sch " +
                 "JOIN " + ChannelsTable.TABLE_NAME + " ca ON (sch." + SchedulesTable.Cols.CHANNEL + "=ca." + ChannelsTable.Cols.CHANNEL + ") " +
-                sql_filter + " " +
-                "ORDER BY " +
-                "ca." + ChannelsTable.Cols.NAME + ", sch." + SchedulesTable.Cols.STARTING;
+                sql_where;
+
         return sql;
     }
 
     public static String getSQLDescription(int scheduleId) {
         String schedule = String.valueOf(scheduleId);
+
         String sql =
                 "SELECT " +
                 "sd." + ScheduleDescriptionTable.Cols.SCHEDULE + " AS " + ScheduleDescriptionTable.Cols.SCHEDULE + ", " +
@@ -305,6 +335,7 @@ public class MainBaseHelper extends SQLiteOpenHelper {
                 "FROM " + ScheduleDescriptionTable.TABLE_NAME + " sd " +
                 "JOIN " + DescriptionTable.TABLE_NAME + " desc ON (sd." + ScheduleDescriptionTable.Cols.DESCRIPTION + "=desc." + DescriptionTable.Cols.ID + ") " +
                 "WHERE sd." + ScheduleDescriptionTable.Cols.SCHEDULE + "=" + schedule;
+
         return sql;
     }
 }

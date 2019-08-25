@@ -4,7 +4,6 @@ import java.util.Date;
 import android.database.Cursor;
 import com.nkvoronov.tvprogram.common.MainDataSource;
 import com.nkvoronov.tvprogram.database.MainDbSchema.*;
-import static com.nkvoronov.tvprogram.common.StringUtils.addQuotes;
 import static com.nkvoronov.tvprogram.common.DateUtils.getDateFormat;
 
 public class TVSchedule {
@@ -140,14 +139,14 @@ public class TVSchedule {
 
     public void setIdFromDB() {
         mId = -1;
-        String title = addQuotes(getTitle().replaceAll("'","''"), "'");
-        String starting = addQuotes(getDateFormat(getStarting(), "yyyy-MM-dd HH:mm:ss"), "'");
-        String ending = addQuotes(getDateFormat(getEnding(), "yyyy-MM-dd HH:mm:ss"), "'");
+        String title = getTitle();
+        String starting = getDateFormat(getStarting(), "yyyy-MM-dd HH:mm:ss");
+        String ending = getDateFormat(getEnding(), "yyyy-MM-dd HH:mm:ss");
 
         Cursor cursor = mDataSource.getDatabase().query(SchedulesTable.TABLE_NAME,
                 null,
-                "(" + SchedulesTable.Cols.TITLE + "=" + title + ") and (" + SchedulesTable.Cols.STARTING + "=" + starting + ") and (" + SchedulesTable.Cols.ENDING + "=" + ending + ")",
-                null,
+                "(" + SchedulesTable.Cols.TITLE + "=?) AND (" + SchedulesTable.Cols.STARTING + "=?) AND (" + SchedulesTable.Cols.ENDING + "=?)",
+                new String[]{title, starting, ending},
                 null,
                 null,
                 null);

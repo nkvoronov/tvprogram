@@ -14,7 +14,6 @@ import static com.nkvoronov.tvprogram.common.DateUtils.getDateFormat;
 
 public class TVScheduleDetailActivity extends AppCompatActivity {
     private static final String EXTRA_TVSCHEDULE_ID = "com.nkvoronov.tvprogram.tvschedule.tvschedule_id";
-    private static final String EXTRA_TVCHANNEL_INDEX = "com.nkvoronov.tvprogram.tvschedule.tvchannel_index_det";
 
     private int mScheduleId;
     private int mChannelIndex;
@@ -32,10 +31,9 @@ public class TVScheduleDetailActivity extends AppCompatActivity {
     private ImageView mScheduleCategoryIcon;
     private MainDataSource mDataSource;
 
-    public static Intent newIntent(Context context, int scheduleId, int channelIndex) {
+    public static Intent newIntent(Context context, int scheduleId) {
         Intent intent = new Intent(context, TVScheduleDetailActivity.class);
         intent.putExtra(EXTRA_TVSCHEDULE_ID, scheduleId);
-        intent.putExtra(EXTRA_TVCHANNEL_INDEX, channelIndex);
         return intent;
     }
 
@@ -43,7 +41,6 @@ public class TVScheduleDetailActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putSerializable(EXTRA_TVSCHEDULE_ID, mScheduleId);
-        savedInstanceState.putSerializable(EXTRA_TVCHANNEL_INDEX, mChannelIndex);
     }
 
     @Override
@@ -53,12 +50,10 @@ public class TVScheduleDetailActivity extends AppCompatActivity {
         mDataSource = MainDataSource.get(this);
         if (savedInstanceState != null) {
             mScheduleId = (int) savedInstanceState.getSerializable(EXTRA_TVSCHEDULE_ID);
-            mChannelIndex = (int) savedInstanceState.getSerializable(EXTRA_TVCHANNEL_INDEX);
         } else {
             mScheduleId = (int) getIntent().getSerializableExtra(EXTRA_TVSCHEDULE_ID);
-            mChannelIndex = (int) getIntent().getSerializableExtra(EXTRA_TVCHANNEL_INDEX);
         }
-        mSchedule = mDataSource.getSchedule(mChannelIndex, mScheduleId);
+        mSchedule = mDataSource.getSchedule(mScheduleId);
         mScheduleTitle = findViewById(R.id.tvschedule_title);
 
         mScheduleCategoryIcon = findViewById(R.id.tvschedule_image_category);
