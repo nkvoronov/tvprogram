@@ -1,16 +1,22 @@
 package com.nkvoronov.tvprogram.common;
 
 import java.io.File;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import android.util.Log;
 import java.util.ArrayList;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.DataInputStream;
 import android.content.Context;
 import android.database.Cursor;
+import java.io.FileOutputStream;
 import android.widget.ImageView;
 import java.text.ParseException;
 import com.nkvoronov.tvprogram.R;
 import java.text.SimpleDateFormat;
+import java.io.FileNotFoundException;
 import android.content.ContentValues;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
@@ -144,14 +150,65 @@ public class MainDataSource {
         return new File(filesDir, "IMG_" + Integer.toString(index) + ".gif");
     }
 
+    public void saveFileFromNet(File file, String surl) {
+        try {
+            if (!file.exists()) {
+                URL url = new URL(surl);
+                InputStream inputStream = url.openStream();
+                DataInputStream dataInputStream = new DataInputStream(inputStream);
+                FileOutputStream fileOutputStream = new FileOutputStream(file);
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = dataInputStream.read(buffer)) > 0) {
+                    fileOutputStream.write(buffer, 0, length);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            Log.d(TAG, e.getMessage());
+            e.fillInStackTrace();
+        } catch (IOException e) {
+            Log.d(TAG, e.getMessage());
+            e.fillInStackTrace();
+        }
+    }
+
+    public void clearDB() {
+        mDatabase.delete(DescriptionTable.TABLE_NAME, null, null);
+        mDatabase.delete(ScheduleDescriptionTable.TABLE_NAME, null, null);
+        mDatabase.delete(SchedulesFavoritesTable.TABLE_NAME, null, null);
+        mDatabase.delete(SchedulesTable.TABLE_NAME, null, null);
+        mDatabase.delete(ChannelsFavoritesTable.TABLE_NAME, null, null);
+        mDatabase.delete(ChannelsTable.TABLE_NAME, null, null);
+    }
+
     public boolean checkFavoritesChannel() {
-        return true;
+        boolean isExFav = false;
+
+        String sql =
+                "SELECT " +
+                "count(" + ChannelsFavoritesTable.Cols.ID + ") AS cnt " +
+                "FROM " +
+                ChannelsFavoritesTable.TABLE_NAME;
+
+        Cursor cursor = mDatabase.rawQuery(sql, null, null);
+
+        try {
+            if (cursor.getCount() != 0) {
+                cursor.moveToFirst();
+                int cnt = cursor.getInt(cursor.getColumnIndex("cnt"));
+                isExFav = cnt > 0;
+            }
+        } finally {
+            cursor.close();
+        }
+        return isExFav;
     }
 
     public boolean checkUpdateSchedule(int channel) {
         String index = new Integer(channel).toString();
         String now_date = DatabaseUtils.sqlEscapeString(getDateFormat(new Date(), "yyyy-MM-dd"));
-        boolean res = true;
+        boolean isUpdate = true;
+
         Cursor cursor = mDatabase.query(SchedulesTable.TABLE_NAME,
                 null,
                 "(" + SchedulesTable.Cols.CHANNEL + "=?) AND (" + SchedulesTable.Cols.STARTING + ">=?)",
@@ -159,29 +216,31 @@ public class MainDataSource {
                 null,
                 null,
                 null);
+
         try {
            if (cursor.getCount() != 0) {
-               res = false;
+               isUpdate = false;
            }
         } finally {
             cursor.close();
         }
-
-        return res;
+        return isUpdate;
     }
 
     public long[] getScheduleInfo(int channel) {
         long[] info = {0, 0, 0};
         String sChannel = String.valueOf(channel);
+
         String sql =
                 "SELECT " +
-                "min(" + SchedulesTable.Cols.STARTING + ") as min, " +
-                "max(" + SchedulesTable.Cols.STARTING + ") as max " +
+                "min(" + SchedulesTable.Cols.STARTING + ") AS min, " +
+                "max(" + SchedulesTable.Cols.STARTING + ") AS max " +
                 "FROM " +
                 SchedulesTable.TABLE_NAME + " " +
                 "WHERE " + SchedulesTable.Cols.CHANNEL + "=" + sChannel;
 
         Cursor cursor = mDatabase.rawQuery(sql, null, null);
+
         try {
             if (cursor.getCount() != 0) {
                 cursor.moveToFirst();

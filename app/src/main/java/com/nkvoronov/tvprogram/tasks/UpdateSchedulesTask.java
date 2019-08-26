@@ -140,7 +140,7 @@ public class UpdateSchedulesTask extends AsyncTask<Integer,String,Void> {
                 String[] list = hdesc.split(",");
                 schedule.getDescription().setCountry(list[0].trim());
                 schedule.getDescription().setYear(list[1].trim());
-                schedule.getDescription().setGenres(list[2].trim().replace(" / ", "/"));
+                schedule.getDescription().setGenres(list[2].trim().replace(" / ", ", "));
                 schedule.getDescription().setDescription(edesc);
             }
 

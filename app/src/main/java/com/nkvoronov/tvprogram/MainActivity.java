@@ -1,11 +1,15 @@
 package com.nkvoronov.tvprogram;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
+import android.widget.Toast;
 import android.view.MenuItem;
 import android.content.Intent;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import androidx.core.view.MenuCompat;
+import android.content.DialogInterface;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.tabs.TabLayout;
@@ -14,6 +18,7 @@ import com.nkvoronov.tvprogram.tasks.UpdateSchedulesTask;
 import com.nkvoronov.tvprogram.tvchannels.TVChannelsActivity;
 import com.nkvoronov.tvprogram.tvschedule.TVScheduleNowFragment;
 import com.nkvoronov.tvprogram.tvschedule.TVSchedulePageAdapter;
+import static com.nkvoronov.tvprogram.common.MainDataSource.TAG;
 import com.nkvoronov.tvprogram.tvschedule.TVScheduleFavoritesFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -56,7 +61,29 @@ public class MainActivity extends AppCompatActivity {
     private void onUpdate() {
         if (mDataSource.checkFavoritesChannel()) {
             mUpdateTask.execute(-1);
+        } else {
+            onChannelsUpdate();
         }
+    }
+
+    private void onChannelsUpdate() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.prg_update_caption));
+        builder.setMessage(getString(R.string.program_not_favorites));
+        builder.setPositiveButton(getString(R.string.bt_yes), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                onChannels();
+            }
+        });
+        builder.setNegativeButton(getString(R.string.bt_no), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(getApplicationContext(), getString(R.string.bt_no), Toast.LENGTH_LONG).show();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void updateUI() {

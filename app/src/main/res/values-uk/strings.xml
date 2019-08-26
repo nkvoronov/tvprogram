@@ -50,4 +50,6 @@
     <string name="text_author_email">nkvoronov@gmail.com</string>
     <string name="lab_fulldesc">Використовувати повний опис</string>
     <string name="txt_details">Детальніше</string>
+    <string name="clear_data_db">Очистити базу даних</string>
+    <string name="program_not_favorites">Обрані канали не знайдені, вибрати?</string>
 </resources>

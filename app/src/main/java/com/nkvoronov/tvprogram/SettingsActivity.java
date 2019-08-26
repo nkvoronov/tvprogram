@@ -4,6 +4,7 @@ import java.util.List;
 import android.os.Bundle;
 import android.view.View;
 import java.util.ArrayList;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.content.Intent;
 import android.widget.CheckBox;
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.nkvoronov.tvprogram.common.MainDataSource;
 
 public class SettingsActivity extends AppCompatActivity {
+    private Button mClearDB;
     private CheckBox mFullDesc;
     private Spinner  mSpinnerCountDays;
     private MainDataSource mDataSource;
@@ -74,5 +76,16 @@ public class SettingsActivity extends AppCompatActivity {
                 mDataSource.setFullDesc(b);
             }
         });
+        mClearDB = findViewById(R.id.bt_cleardatadb);
+        mClearDB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clearDB();
+            }
+        });
+    }
+
+    private void clearDB() {
+        mDataSource.clearDB();
     }
 }

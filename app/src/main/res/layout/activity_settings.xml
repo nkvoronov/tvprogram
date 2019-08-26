@@ -44,6 +44,16 @@
         android:id="@+id/full_desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/lab_fulldesc" />
+
+    <Button
+        android:id="@+id/bt_cleardatadb"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/clear_data_db" />
 
 </LinearLayout>

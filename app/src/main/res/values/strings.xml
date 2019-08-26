@@ -49,4 +49,6 @@
     <string name="text_author_email">nkvoronov@gmail.com</string>
     <string name="lab_fulldesc">Use Full Description</string>
     <string name="txt_details">More details</string>
+    <string name="clear_data_db">Clear Data Base</string>
+    <string name="program_not_favorites">Favorites channels not found, select ?</string>
 </resources>

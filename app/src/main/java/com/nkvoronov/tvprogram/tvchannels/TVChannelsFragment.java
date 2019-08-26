@@ -168,7 +168,7 @@ public class TVChannelsFragment extends Fragment{
                     if (mProgressDialog.isShowing()) {
                         mProgressDialog.dismiss();
                     }
-                    openProgramChannel();
+                    openScheduleChannel();
                 }
             });
         }
@@ -193,18 +193,18 @@ public class TVChannelsFragment extends Fragment{
         @Override
         public void onClick(View view) {
             if (mDataSource.checkUpdateSchedule(mChannel.getIndex())) {
-                updateProgramForChannel();
+                updateScheduleForChannel();
             } else {
-                openProgramChannel();
+                openScheduleChannel();
             }
         }
 
-        private void openProgramChannel() {
+        private void openScheduleChannel() {
             Intent intent = TVScheduleChannelActivity.newIntent(getActivity(), mChannel.getIndex());
             startActivity(intent);
         }
 
-        public void updateProgramForChannel() {
+        public void updateScheduleForChannel() {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle(getActivity().getString(R.string.prg_update_caption));
             builder.setMessage(getActivity().getString(R.string.program_not_date, mChannel.getName()));
