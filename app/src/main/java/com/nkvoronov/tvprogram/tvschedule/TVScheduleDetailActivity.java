@@ -85,6 +85,7 @@ public class TVScheduleDetailActivity extends AppCompatActivity {
             }
         });
         updateUI();
+        mButtonExecute.setEnabled(mSchedule.getTimeType()>0);
 
         mScheduleTitle.setText(mSchedule.getTitle());
         mScheduleDate.setText(getDateFormat(mSchedule.getStarting(), "EEE, d MMM"));

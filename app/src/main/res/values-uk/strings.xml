@@ -48,6 +48,6 @@
     <string name="del_from_favorites">Видалити з Обраного</string>
     <string name="text_author">Воронов Микола</string>
     <string name="text_author_email">nkvoronov@gmail.com</string>
-    <string name="lab_fulldesc">Отримувати повний опис</string>
+    <string name="lab_fulldesc">Використовувати повний опис</string>
     <string name="txt_details">Детальніше</string>
 </resources>

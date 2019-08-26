@@ -260,9 +260,9 @@ public class MainBaseHelper extends SQLiteOpenHelper {
     }
 
     public static String getSQLFavoritesPrograms() {
-        String sql_where = "";
+        String sql_where = "WHERE sch." + SchedulesTable.Cols.STARTING + "<=datetime('now','localtime') ";
         String sql_order = "ORDER BY ca." + ChannelsTable.Cols.NAME + ", sch." + SchedulesTable.Cols.STARTING;
-        sql_where = sql_order;
+        sql_where = sql_where + sql_order;
 
         String sql =
                 "SELECT " +
@@ -274,7 +274,7 @@ public class MainBaseHelper extends SQLiteOpenHelper {
                 "sch." + SchedulesTable.Cols.STARTING + " AS " + SchedulesTable.Cols.STARTING + ", " +
                 "sch." + SchedulesTable.Cols.ENDING + " AS " + SchedulesTable.Cols.ENDING + ", " +
                 "sch." + SchedulesTable.Cols.TITLE + " AS " + SchedulesTable.Cols.TITLE + ", " +
-                "CASE WHEN (sch." + SchedulesTable.Cols.STARTING + "<=datetime('now','localtime')) AND (sch." + SchedulesTable.Cols.ENDING + ">=datetime('now','localtime')) THEN 1 WHEN sch." + SchedulesTable.Cols.STARTING + "<=datetime('now','localtime') THEN 0 else 2 END AS " + SchedulesTable.Cols.TIME_TYPE + ", " +
+                "CASE WHEN (sch." + SchedulesTable.Cols.STARTING + "<=datetime('now','localtime')) AND (sch." + SchedulesTable.Cols.ENDING + ">=datetime('now','localtime')) THEN 1 else 2 END AS " + SchedulesTable.Cols.TIME_TYPE + ", " +
                 "1 AS " + SchedulesTable.Cols.FAVORITE + ", " +
                 "0 AS " + SchedulesTable.Cols.EXDESC + " " +
                 "FROM " +

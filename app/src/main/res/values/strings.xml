@@ -47,6 +47,6 @@
     <string name="del_from_favorites">Del From Favorites</string>
     <string name="text_author">Voronov Nikolay</string>
     <string name="text_author_email">nkvoronov@gmail.com</string>
-    <string name="lab_fulldesc">Get Full Description</string>
+    <string name="lab_fulldesc">Use Full Description</string>
     <string name="txt_details">More details</string>
 </resources>

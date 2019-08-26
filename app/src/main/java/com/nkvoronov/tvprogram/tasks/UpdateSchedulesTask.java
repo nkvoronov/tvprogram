@@ -120,7 +120,7 @@ public class UpdateSchedulesTask extends AsyncTask<Integer,String,Void> {
             }
             try {
                 Elements descItem = item.nextElementSibling().nextElementSibling().select(STR_ELMDOCDESC);
-                if (descItem != null) {
+                if (descItem != null && !mDataSource.isFullDesc()) {
                     edesc = descItem.html();
                     hdesc = descItem.select("b").text();
                     edesc = Jsoup.parse(edesc.replaceAll("<br>", ";").replace(hdesc, "")).text().replaceAll(";", "<br>");
@@ -133,7 +133,7 @@ public class UpdateSchedulesTask extends AsyncTask<Integer,String,Void> {
             schedule.setFavorites(false);
             getCategoryFromTitle(schedule);
 
-            if (edesc.length() > 0 && !edesc.equals("")) {
+            if (edesc.length() > 0 && !edesc.equals("") && !mDataSource.isFullDesc()) {
                 if (schedule.getDescription() == null) {
                     schedule.setDescription(new TVScheduleDescription(""));
                 }
@@ -144,13 +144,21 @@ public class UpdateSchedulesTask extends AsyncTask<Integer,String,Void> {
                 schedule.getDescription().setDescription(edesc);
             }
 
-            if (efulldescurl.length() > 0 && !efulldescurl.equals("") && mDataSource.isFullDesc()) {
+            if (efulldescurl.length() > 0 && !efulldescurl.equals("")) {
                 if (schedule.getDescription() == null) {
                     schedule.setDescription(new TVScheduleDescription(""));
                 }
                 String link = HOST + efulldescurl;
                 schedule.getDescription().setUrlFullDesc(link);
-                getFullDesc(schedule);
+                String txt = mDataSource.getContext().getString(R.string.txt_details);
+                if (schedule.getDescription().getDescription() == null) {
+                    schedule.getDescription().setDescription("<a href=\"" + schedule.getDescription().getUrlFullDesc() + "\">" + txt + "</a>");
+                } else {
+                    schedule.getDescription().setDescription(schedule.getDescription().getDescription() + "<br><br><a href=\"" + schedule.getDescription().getUrlFullDesc() + "\">" + txt + "</a>");
+                }
+                if (mDataSource.isFullDesc()) {
+                    getFullDesc(schedule);
+                }
             }
             mSchedules.add(schedule);
         }
@@ -217,12 +225,7 @@ public class UpdateSchedulesTask extends AsyncTask<Integer,String,Void> {
 
     private void getFullDesc(TVSchedule schedule) {
         if (schedule.getDescription() != null) {
-            String txt = mDataSource.getContext().getString(R.string.txt_details);
-            if (schedule.getDescription().getDescription() == null) {
-                schedule.getDescription().setDescription("<a href=\"" + schedule.getDescription().getUrlFullDesc() + "\">" + txt + "</a>");
-            } else {
-                schedule.getDescription().setDescription(schedule.getDescription().getDescription() + "<br><br><a href=\"" + schedule.getDescription().getUrlFullDesc() + "\">" + txt + "</a>");
-            }
+            //
         }
     }
 }
