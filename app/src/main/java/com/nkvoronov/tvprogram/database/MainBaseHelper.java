@@ -77,7 +77,9 @@ public class MainBaseHelper extends SQLiteOpenHelper {
                 DescriptionTable.Cols.ACTORS + " VARCHAR, " +
                 DescriptionTable.Cols.COUNTRY + " VARCHAR, " +
                 DescriptionTable.Cols.YEAR + " VARCHAR, " +
-                DescriptionTable.Cols.RATING + " VARCHAR " +
+                DescriptionTable.Cols.RATING + " VARCHAR, " +
+                DescriptionTable.Cols.TYPE + " VARCHAR, " +
+                DescriptionTable.Cols.CATALOG + " INTEGER " +
                 ")"
         );
 
@@ -330,7 +332,9 @@ public class MainBaseHelper extends SQLiteOpenHelper {
                 "desc." + DescriptionTable.Cols.DIRECTORS + " AS " + DescriptionTable.Cols.DIRECTORS + ", " +
                 "desc." + DescriptionTable.Cols.COUNTRY + " AS " + DescriptionTable.Cols.COUNTRY + ", " +
                 "desc." + DescriptionTable.Cols.YEAR + " AS " + DescriptionTable.Cols.YEAR + ", " +
-                "desc." + DescriptionTable.Cols.RATING + " AS " + DescriptionTable.Cols.RATING + " " +
+                "desc." + DescriptionTable.Cols.RATING + " AS " + DescriptionTable.Cols.RATING + ", " +
+                "desc." + DescriptionTable.Cols.TYPE + " AS " + DescriptionTable.Cols.TYPE + ", " +
+                "desc." + DescriptionTable.Cols.CATALOG + " AS " + DescriptionTable.Cols.CATALOG + " " +
                 "FROM " + ScheduleDescriptionTable.TABLE_NAME + " sd " +
                 "JOIN " + DescriptionTable.TABLE_NAME + " desc ON (sd." + ScheduleDescriptionTable.Cols.DESCRIPTION + "=desc." + DescriptionTable.Cols.ID + ") " +
                 "WHERE sd." + ScheduleDescriptionTable.Cols.SCHEDULE + "=" + schedule;

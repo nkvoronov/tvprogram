@@ -22,6 +22,8 @@ public class TVScheduleDescriptionCursorWrapper extends CursorWrapper {
         String country = getString(getColumnIndex(DescriptionTable.Cols.COUNTRY));
         String year = getString(getColumnIndex(DescriptionTable.Cols.YEAR));
         String rating = getString(getColumnIndex(DescriptionTable.Cols.RATING));
+        String type = getString(getColumnIndex(DescriptionTable.Cols.TYPE));
+        int catalog = getInt(getColumnIndex(DescriptionTable.Cols.CATALOG));
 
         TVScheduleDescription description = new TVScheduleDescription(id, schedule, desc);
         description.setImage(image);
@@ -31,6 +33,8 @@ public class TVScheduleDescriptionCursorWrapper extends CursorWrapper {
         description.setCountry(country);
         description.setYear(year);
         description.setRating(rating);
+        description.setType(type);
+        description.setIdCatalog(catalog);
         return description;
     }
 }

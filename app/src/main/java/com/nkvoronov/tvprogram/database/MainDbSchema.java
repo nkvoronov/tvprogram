@@ -66,6 +66,8 @@ public class MainDbSchema {
             public static final String COUNTRY = "country";
             public static final String YEAR = "year";
             public static final String RATING = "rating";
+            public static final String TYPE = "type";
+            public static final String CATALOG = "catalog";
         }
     }
 

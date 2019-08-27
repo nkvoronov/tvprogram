@@ -11,16 +11,17 @@ import static com.nkvoronov.tvprogram.database.MainBaseHelper.getSQLDescription;
 
 public class TVScheduleDescription {
     private String mYear;
+    private String mType;
     private String mImage;
-    private int mIdSchedule;
+    private int mIdCatalog;
     private String mRating;
     private String mActors;
     private String mGenres;
+    private int mIdSchedule;
     private String mCountry;
     private String mDirectors;
     private int mIdDescription;
     private String mDescription;
-    private String mUrlFullDesc;
     private MainDataSource mDataSource;
 
     public TVScheduleDescription(String description) {
@@ -31,14 +32,15 @@ public class TVScheduleDescription {
         mIdDescription = id;
         mIdSchedule = schedule;
         mDescription = description;
-        mYear = null;
         mImage = null;
-        mActors = null;
         mGenres = null;
-        mCountry = null;
         mDirectors = null;
+        mActors = null;
+        mCountry = null;
+        mYear = null;
         mRating = null;
-        mUrlFullDesc = null;
+        mType = null;
+        mIdCatalog = 0;
         mDataSource = null;
     }
 
@@ -122,12 +124,20 @@ public class TVScheduleDescription {
         mDescription = description;
     }
 
-    public String getUrlFullDesc() {
-        return mUrlFullDesc;
+    public String getType() {
+        return mType;
     }
 
-    public void setUrlFullDesc(String urlFullDesc) {
-        mUrlFullDesc = urlFullDesc;
+    public void setType(String type) {
+        mType = type;
+    }
+
+    public int getIdCatalog() {
+        return mIdCatalog;
+    }
+
+    public void setIdCatalog(int idCatalog) {
+        mIdCatalog = idCatalog;
     }
 
     public void setDataSource(MainDataSource dataSource) {
@@ -135,15 +145,28 @@ public class TVScheduleDescription {
     }
 
     public void setIdFromDB() {
+        Cursor cursor = null;
         setIdDescription(-1);
-        String desc = getDescription();
-        Cursor cursor = mDataSource.getDatabase().query(DescriptionTable.TABLE_NAME,
-                null,
-                DescriptionTable.Cols.DESCRIPTION + "=?",
-                new String[]{desc},
-                null,
-                null,
-                null);
+        if (getType() == null || getIdCatalog() == 0) {
+            String desc = getDescription();
+            cursor = mDataSource.getDatabase().query(DescriptionTable.TABLE_NAME,
+                    null,
+                    DescriptionTable.Cols.DESCRIPTION + "=?",
+                    new String[]{desc},
+                    null,
+                    null,
+                    null);
+        } else {
+            String type = getType();
+            String catalog = String.valueOf(getIdCatalog());
+            cursor = mDataSource.getDatabase().query(DescriptionTable.TABLE_NAME,
+                    null,
+                    "(" + DescriptionTable.Cols.TYPE + "=?) AND (" + DescriptionTable.Cols.CATALOG + "=?)",
+                    new String[]{type, catalog},
+                    null,
+                    null,
+                    null);
+        }
 
         try {
 
@@ -161,7 +184,6 @@ public class TVScheduleDescription {
         TVScheduleDescriptionCursorWrapper cursor = queryDescription(getSQLDescription(getIdSchedule()), null);
 
         try {
-
             if (cursor.getCount() == 1) {
                 cursor.moveToFirst();
                 TVScheduleDescription description = cursor.getDescription();
@@ -176,7 +198,8 @@ public class TVScheduleDescription {
                 setCountry(description.getCountry());
                 setYear(description.getYear());
                 setRating(description.getRating());
-
+                setType(description.getType());
+                setIdCatalog(description.getIdCatalog());
             }
         } finally {
             cursor.close();
@@ -206,6 +229,8 @@ public class TVScheduleDescription {
         values.put(DescriptionTable.Cols.COUNTRY, getCountry());
         values.put(DescriptionTable.Cols.YEAR, getYear());
         values.put(DescriptionTable.Cols.RATING, getRating());
+        values.put(DescriptionTable.Cols.TYPE, getType());
+        values.put(DescriptionTable.Cols.CATALOG, getIdCatalog());
         return values;
     }
 }
