@@ -211,7 +211,7 @@ public class UpdateSchedulesTask extends AsyncTask<Integer,String,Void> {
                 schedule.getDescription().setGenres(list[2].trim().replace(" / ", ", "));
             }
 
-            schedule.getDescription().setDescription(description.replaceFirst("<br>", ""));
+            schedule.getDescription().setDescription(description.replaceFirst("<br>", mDataSource.getContext().getString(R.string.lab_artists) + " "));
         }
         if (url_description.length() > 0 && !url_description.equals("")) {
             if (schedule.getDescription() == null) {
@@ -221,8 +221,21 @@ public class UpdateSchedulesTask extends AsyncTask<Integer,String,Void> {
             String link = HOST + url_description;
             //Parse url
             String[] list_url = url_description.replace(".html", "").split("_");
-            schedule.getDescription().setType(list_url[0].trim());
-            schedule.getDescription().setIdCatalog(Integer.parseInt(list_url[1].trim()));
+            String type = list_url[0].trim();
+            schedule.getDescription().setType(type);
+            String catalog = list_url[1].trim();
+            schedule.getDescription().setIdCatalog(Integer.parseInt(catalog));
+            if (schedule.getCategory() == 0) {
+                if (type.equals("film")) {
+                    schedule.setCategory(1);
+                }
+                if (type.equals("series")) {
+                    schedule.setCategory(2);
+                }
+                if (type.equals("show")) {
+                    schedule.setCategory(7);
+                }
+            }
 
             if (!mDataSource.isFullDesc()) {
                 String txt = mDataSource.getContext().getString(R.string.txt_details);

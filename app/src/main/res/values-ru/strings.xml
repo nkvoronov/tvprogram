@@ -20,7 +20,7 @@
     <string name="lang_all">Все</string>
     <string name="lang_rus">Русский</string>
     <string name="title_tvchannel_win">Канал</string>
-    <string name="category_all">Все категории</string>
+    <string name="cat_all">Все категории</string>
     <string name="not_found">Ничего не найдено</string>
     <string name="search_hint">Поиск в названиях и описаниях</string>
     <string name="channel_progress_msg">Kаналы обновляются, пожалуйста, подождите.</string>
@@ -52,4 +52,12 @@
     <string name="txt_details">Подробнее</string>
     <string name="clear_data_db">Очистить базу данных</string>
     <string name="program_not_favorites">Избранные каналы не найдены, выбать ?</string>
+    <string name="cat_cartoons">Мультфильм</string>
+    <string name="cat_cognitive">Позновательное</string>
+    <string name="cat_movie">Фильм</string>
+    <string name="cat_news">Новости</string>
+    <string name="cat_show">Шоу</string>
+    <string name="cat_sport">Спорт</string>
+    <string name="cat_tvshow">Сериал</string>
+    <string name="lab_artists">В ролях:</string>
 </resources>

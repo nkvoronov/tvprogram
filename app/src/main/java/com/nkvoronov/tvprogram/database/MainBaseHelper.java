@@ -6,6 +6,8 @@ import android.content.Context;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.nkvoronov.tvprogram.R;
 import com.nkvoronov.tvprogram.database.MainDbSchema.*;
 import static com.nkvoronov.tvprogram.common.DateUtils.*;
 import com.nkvoronov.tvprogram.tvschedule.TVScheduleCategory;
@@ -18,9 +20,11 @@ import static com.nkvoronov.tvprogram.tvschedule.TVScheduleCategoriesList.getCon
 public class MainBaseHelper extends SQLiteOpenHelper {
     private static final int VERSION = 1;
     private static final String DATABASE_NAME = "tvProgramBase.db";
+    private Context mContext;
 
     public MainBaseHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION);
+        mContext = context;
     }
 
     @Override
@@ -130,13 +134,14 @@ public class MainBaseHelper extends SQLiteOpenHelper {
     }
 
     private void insertDataCategories(SQLiteDatabase database) {
-        database.insert(CategoryTable.TABLE_NAME, null, getContentScheduleCategoryValues(new TVScheduleCategory(0, "Без категории", "")));
-        database.insert(CategoryTable.TABLE_NAME, null, getContentScheduleCategoryValues(new TVScheduleCategory(1, "Фильм", "х/ф,д/ф")));
-        database.insert(CategoryTable.TABLE_NAME, null, getContentScheduleCategoryValues(new TVScheduleCategory(2, "Сериал", "т/с,х/с,д/с")));
-        database.insert(CategoryTable.TABLE_NAME, null, getContentScheduleCategoryValues(new TVScheduleCategory(3, "Мультфильм", "м/с,м/ф,мульт")));
-        database.insert(CategoryTable.TABLE_NAME, null, getContentScheduleCategoryValues(new TVScheduleCategory(4, "Спорт", "спорт,футбол,хокей,uefa")));
-        database.insert(CategoryTable.TABLE_NAME, null, getContentScheduleCategoryValues(new TVScheduleCategory(5, "Новости", "новост,факты,тсн,новини,время,известия")));
-        database.insert(CategoryTable.TABLE_NAME, null, getContentScheduleCategoryValues(new TVScheduleCategory(6, "Досуг", "истори,планет,разрушители,знаки,катастроф")));
+        database.insert(CategoryTable.TABLE_NAME, null, getContentScheduleCategoryValues(new TVScheduleCategory(0, "", "")));
+        database.insert(CategoryTable.TABLE_NAME, null, getContentScheduleCategoryValues(new TVScheduleCategory(1, mContext.getString(R.string.cat_movie), "х/ф,д/ф")));
+        database.insert(CategoryTable.TABLE_NAME, null, getContentScheduleCategoryValues(new TVScheduleCategory(2, mContext.getString(R.string.cat_tvshow), "т/с,х/с,д/с")));
+        database.insert(CategoryTable.TABLE_NAME, null, getContentScheduleCategoryValues(new TVScheduleCategory(3, mContext.getString(R.string.cat_cartoons), "м/с,м/ф,мульт")));
+        database.insert(CategoryTable.TABLE_NAME, null, getContentScheduleCategoryValues(new TVScheduleCategory(4, mContext.getString(R.string.cat_sport), "спорт,футбол,хокей,uefa")));
+        database.insert(CategoryTable.TABLE_NAME, null, getContentScheduleCategoryValues(new TVScheduleCategory(5, mContext.getString(R.string.cat_news), "новост,факты,факти,тсн,новини,время,известия")));
+        database.insert(CategoryTable.TABLE_NAME, null, getContentScheduleCategoryValues(new TVScheduleCategory(6, mContext.getString(R.string.cat_cognitive), "истори,iсторі,планет,разрушители,руйнівники,знаки,катастроф")));
+        database.insert(CategoryTable.TABLE_NAME, null, getContentScheduleCategoryValues(new TVScheduleCategory(7, mContext.getString(R.string.cat_show), "")));
     }
 
     public static String getSQLAllChannels(int index, int lang) {

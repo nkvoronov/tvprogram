@@ -137,7 +137,7 @@ public class MainDataSource {
 
     public List<String> getCategoriesList() {
         List<String> list = new ArrayList<>();
-        list.add(mContext.getString(R.string.category_all));
+        list.add(mContext.getString(R.string.cat_all));
         TVScheduleCategoriesList categories = getCategories();
         for (int i = 0; i<categories.size(); i++) {
             list.add(categories.get(i).getName());
@@ -291,7 +291,10 @@ public class MainDataSource {
                 id_res = R.drawable.category_news;
                 break;
             case 6:
-                id_res = R.drawable.category_hobbies;
+                id_res = R.drawable.category_cognitive;
+                break;
+            case 7:
+                id_res = R.drawable.category_show;
                 break;
             default:
                 break;
