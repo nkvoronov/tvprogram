@@ -39,7 +39,7 @@ public class MainDbSchema {
 
         public static final class Cols {
             public static final String ID = "id";
-            public static final String CHANNEL = "channel";
+            public static final String CHANNEL = "channel_index";
         }
     }
 
@@ -76,8 +76,8 @@ public class MainDbSchema {
 
         public static final class Cols {
             public static final String ID = "id";
-            public static final String SCHEDULE = "schedule";
-            public static final String DESCRIPTION = "description";
+            public static final String SCHEDULE = "schedule_id";
+            public static final String DESCRIPTION = "description_id";
         }
     }
 
@@ -86,7 +86,7 @@ public class MainDbSchema {
 
         public static final class Cols {
             public static final String ID = "id";
-            public static final String CHANNEL = "channel";
+            public static final String CHANNEL = "channel_index";
             public static final String NAME = "name";
             public static final String FAVORITE_CHANNEL = "favorite_channel";
             public static final String CATEGORY = "category";
@@ -104,7 +104,7 @@ public class MainDbSchema {
 
         public static final class Cols {
             public static final String ID = "id";
-            public static final String SCHEDULE = "schedule";
+            public static final String SCHEDULE = "schedule_id";
         }
     }
 }

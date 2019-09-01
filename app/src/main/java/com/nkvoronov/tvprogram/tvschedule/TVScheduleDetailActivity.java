@@ -115,9 +115,16 @@ public class TVScheduleDetailActivity extends AppCompatActivity {
                 mScheduleYear.setText(getString(R.string.lab_year, mSchedule.getDescription().getYear()));
             }
 
+            String description = "";
+            String acrors = "";
+
+            if (mSchedule.getDescription().getActors() != null) {
+                acrors = "<b>" + getString(R.string.lab_artists) + "</b> " + mSchedule.getDescription().getActors() + "<br><br>";
+            }
+
             if (mSchedule.getDescription().getDescription() != null) {
                 mScheduleDescription.setVisibility(View.VISIBLE);
-                mScheduleDescription.setText(Html.fromHtml(mSchedule.getDescription().getDescription()));
+                mScheduleDescription.setText(Html.fromHtml(acrors + mSchedule.getDescription().getDescription()));
             }
         }
 

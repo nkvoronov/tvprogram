@@ -211,7 +211,9 @@ public class UpdateSchedulesTask extends AsyncTask<Integer,String,Void> {
                 schedule.getDescription().setGenres(list[2].trim().replace(" / ", ", "));
             }
 
-            schedule.getDescription().setDescription(description.replaceFirst("<br>", mDataSource.getContext().getString(R.string.lab_artists) + " "));
+            String[] list_desc = description.replaceFirst("<br>", "").split(" <br> <br>");
+            schedule.getDescription().setActors(list_desc[0]);
+            schedule.getDescription().setDescription(list_desc[1]);
         }
         if (url_description.length() > 0 && !url_description.equals("")) {
             if (schedule.getDescription() == null) {
