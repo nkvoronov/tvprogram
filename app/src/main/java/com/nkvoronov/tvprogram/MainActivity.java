@@ -1,7 +1,6 @@
 package com.nkvoronov.tvprogram;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.widget.Toast;
 import android.view.MenuItem;
@@ -18,7 +17,6 @@ import com.nkvoronov.tvprogram.tasks.UpdateSchedulesTask;
 import com.nkvoronov.tvprogram.tvchannels.TVChannelsActivity;
 import com.nkvoronov.tvprogram.tvschedule.TVScheduleNowFragment;
 import com.nkvoronov.tvprogram.tvschedule.TVSchedulePageAdapter;
-import static com.nkvoronov.tvprogram.common.MainDataSource.TAG;
 import com.nkvoronov.tvprogram.tvschedule.TVScheduleFavoritesFragment;
 
 public class MainActivity extends AppCompatActivity {

@@ -1,9 +1,7 @@
 package com.nkvoronov.tvprogram.tvchannels;
 
 import java.io.File;
-import android.util.Log;
 import com.nkvoronov.tvprogram.common.MainDataSource;
-import static com.nkvoronov.tvprogram.common.MainDataSource.TAG;
 import static com.nkvoronov.tvprogram.common.MainDataSource.ALL_LANG;
 
 public class TVChannel {

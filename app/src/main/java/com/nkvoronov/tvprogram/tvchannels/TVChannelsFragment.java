@@ -18,9 +18,9 @@ import android.view.LayoutInflater;
 import androidx.fragment.app.Fragment;
 import android.content.DialogInterface;
 import androidx.recyclerview.widget.RecyclerView;
+import com.nkvoronov.tvprogram.common.MainDataSource;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.nkvoronov.tvprogram.tasks.UpdateSchedulesTask;
-import com.nkvoronov.tvprogram.common.MainDataSource;
 import com.nkvoronov.tvprogram.tvschedule.TVScheduleChannelActivity;
 
 public class TVChannelsFragment extends Fragment{

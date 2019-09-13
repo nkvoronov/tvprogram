@@ -14,6 +14,7 @@ public class TVScheduleDescriptionCursorWrapper extends CursorWrapper {
     public TVScheduleDescription getDescription() {
         int id = getInt(getColumnIndex(DescriptionTable.Cols.ID));
         int schedule = getInt(getColumnIndex(ScheduleDescriptionTable.Cols.SCHEDULE));
+        String title = getString(getColumnIndex(DescriptionTable.Cols.TITLE));
         String desc = getString(getColumnIndex(DescriptionTable.Cols.DESCRIPTION));
         String image = getString(getColumnIndex(DescriptionTable.Cols.IMAGE));
         String genres = getString(getColumnIndex(DescriptionTable.Cols.GENRES));
@@ -26,6 +27,7 @@ public class TVScheduleDescriptionCursorWrapper extends CursorWrapper {
         int catalog = getInt(getColumnIndex(DescriptionTable.Cols.CATALOG));
 
         TVScheduleDescription description = new TVScheduleDescription(id, schedule, desc);
+        description.setTitle(title);
         description.setImage(image);
         description.setGenres(genres);
         description.setDirectors(directors);

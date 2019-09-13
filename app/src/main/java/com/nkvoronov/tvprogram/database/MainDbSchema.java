@@ -58,6 +58,7 @@ public class MainDbSchema {
 
         public static final class Cols {
             public static final String ID = "id";
+            public static final String TITLE = "title";
             public static final String DESCRIPTION = "description";
             public static final String IMAGE = "image";
             public static final String GENRES = "genres";

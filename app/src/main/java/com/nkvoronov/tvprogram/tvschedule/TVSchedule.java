@@ -171,6 +171,25 @@ public class TVSchedule {
         }
     }
 
+    public void copyFullDesc(TVSchedule schedule) {
+        if (schedule != null) {
+            if (getDescription() == null) {
+                setDescription(new TVScheduleDescription(""));
+            }
+            getDescription().setTitle(schedule.getDescription().getTitle());
+            getDescription().setDescription(schedule.getDescription().getDescription());
+            getDescription().setImage(schedule.getDescription().getImage());
+            getDescription().setGenres(schedule.getDescription().getGenres());
+            getDescription().setDirectors(schedule.getDescription().getDirectors());
+            getDescription().setActors(schedule.getDescription().getActors());
+            getDescription().setCountry(schedule.getDescription().getCountry());
+            getDescription().setYear(schedule.getDescription().getYear());
+            getDescription().setRating(schedule.getDescription().getRating());
+            getDescription().setType(schedule.getDescription().getType());
+            getDescription().setIdCatalog(schedule.getDescription().getIdCatalog());
+        }
+    }
+
     public void changeFavorites() {
         mDataSource.scheduleChangeFavorites(this);
         mIsFavorites = !mIsFavorites;

@@ -1,11 +1,10 @@
 package com.nkvoronov.tvprogram.tvschedule;
 
-import android.util.Log;
+import java.io.File;
 import android.database.Cursor;
 import android.content.ContentValues;
 import com.nkvoronov.tvprogram.common.MainDataSource;
 import com.nkvoronov.tvprogram.database.MainDbSchema.*;
-import static com.nkvoronov.tvprogram.common.MainDataSource.TAG;
 import com.nkvoronov.tvprogram.database.TVScheduleDescriptionCursorWrapper;
 import static com.nkvoronov.tvprogram.database.MainBaseHelper.getSQLDescription;
 
@@ -22,6 +21,7 @@ public class TVScheduleDescription {
     private String mDirectors;
     private int mIdDescription;
     private String mDescription;
+    private String mTitle;
     private MainDataSource mDataSource;
 
     public TVScheduleDescription(String description) {
@@ -40,6 +40,7 @@ public class TVScheduleDescription {
         mYear = null;
         mRating = null;
         mType = null;
+        mTitle = null;
         mIdCatalog = 0;
         mDataSource = null;
     }
@@ -140,6 +141,14 @@ public class TVScheduleDescription {
         mIdCatalog = idCatalog;
     }
 
+    public String getTitle() {
+        return mTitle;
+    }
+
+    public void setTitle(String title) {
+        mTitle = title;
+    }
+
     public void setDataSource(MainDataSource dataSource) {
         mDataSource = dataSource;
     }
@@ -190,6 +199,7 @@ public class TVScheduleDescription {
 
                 setIdSchedule(description.getIdSchedule());
                 setIdDescription(description.getIdDescription());
+                setTitle(description.getTitle());
                 setDescription(description.getDescription());
                 setImage(description.getImage());
                 setActors(description.getActors());
@@ -221,6 +231,7 @@ public class TVScheduleDescription {
 
     private ContentValues getContentScheduleDescription() {
         ContentValues values = new ContentValues();
+        values.put(DescriptionTable.Cols.TITLE, getTitle());
         values.put(DescriptionTable.Cols.DESCRIPTION, getDescription());
         values.put(DescriptionTable.Cols.IMAGE, getImage());
         values.put(DescriptionTable.Cols.GENRES, getGenres());
@@ -232,5 +243,10 @@ public class TVScheduleDescription {
         values.put(DescriptionTable.Cols.TYPE, getType());
         values.put(DescriptionTable.Cols.CATALOG, getIdCatalog());
         return values;
+    }
+
+    public void saveImageToFile() {
+        File imageFile = mDataSource.getDescriptionImageFile(getType(), getIdCatalog());
+        mDataSource.saveFileFromNet(imageFile, getImage());
     }
 }

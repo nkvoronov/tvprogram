@@ -40,10 +40,10 @@
     <string name="img_program_desc">Image for program</string>
     <string name="img_program_category_desc">Category program</string>
     <string name="img_favorite_program_desc">Favorite icon program</string>
-    <string name="lab_channel">Channel: %1$s</string>
-    <string name="lab_genre">Genre: %1$s</string>
-    <string name="lab_country">Country: %1$s</string>
-    <string name="lab_year">Year: %1$s</string>
+    <string name="lab_channel">Channel:</string>
+    <string name="lab_genres">Genre:</string>
+    <string name="lab_country">Country:</string>
+    <string name="lab_year">Year:</string>
     <string name="del_from_favorites">Del From Favorites</string>
     <string name="text_author">Voronov Nikolay</string>
     <string name="text_author_email">nkvoronov@gmail.com</string>
@@ -58,5 +58,8 @@
     <string name="cat_show">Show</string>
     <string name="cat_sport">Sport</string>
     <string name="cat_tvshow">TV Show</string>
-    <string name="lab_artists">Cast:</string>
+    <string name="lab_actors">Actors:</string>
+    <string name="lab_title">Title:</string>
+    <string name="lab_rating">Rating:</string>
+    <string name="lab_directors">Director(s):</string>
 </resources>

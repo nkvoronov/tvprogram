@@ -2,13 +2,11 @@ package com.nkvoronov.tvprogram.tvschedule;
 
 import java.util.Date;
 import java.util.List;
-import android.util.Log;
 import java.util.ArrayList;
 import android.database.Cursor;
 import android.content.ContentValues;
 import com.nkvoronov.tvprogram.common.MainDataSource;
 import com.nkvoronov.tvprogram.database.MainDbSchema.*;
-import static com.nkvoronov.tvprogram.common.MainDataSource.TAG;
 import static com.nkvoronov.tvprogram.database.MainBaseHelper.*;
 import com.nkvoronov.tvprogram.database.TVSchedulesCursorWrapper;
 import static com.nkvoronov.tvprogram.common.DateUtils.getDateFormat;
@@ -112,6 +110,18 @@ public class TVSchedulesList {
             }
             i++;
         }
+    }
+
+    public TVSchedule getScheduleForType(String type, int catalog) {
+        for (TVSchedule schedule : getData()) {
+            if (schedule.getDescription() != null &&
+                    schedule.getDescription().getType() != null &&
+                    schedule.getDescription().getType().equals(type) &&
+                    schedule.getDescription().getIdCatalog() == catalog) {
+                return schedule;
+            }
+        }
+        return null;
     }
 
     public void saveToDB() {

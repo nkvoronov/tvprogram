@@ -147,13 +147,18 @@ public class MainDataSource {
 
     public File getChannelIconFile(int index) {
         File filesDir = mContext.getFilesDir();
-        return new File(filesDir, "IMG_" + Integer.toString(index) + ".gif");
+        return new File(filesDir, "ICON_" + Integer.toString(index) + ".gif");
     }
 
-    public void saveFileFromNet(File file, String surl) {
+    public File getDescriptionImageFile(String type, int catalog) {
+        File filesDir = mContext.getFilesDir();
+        return new File(filesDir, "IMAGE_" + type + "_" + Integer.toString(catalog) + ".jpg");
+    }
+
+    public void saveFileFromNet(File file, String string_url) {
         try {
             if (!file.exists()) {
-                URL url = new URL(surl);
+                URL url = new URL(string_url);
                 InputStream inputStream = url.openStream();
                 DataInputStream dataInputStream = new DataInputStream(inputStream);
                 FileOutputStream fileOutputStream = new FileOutputStream(file);

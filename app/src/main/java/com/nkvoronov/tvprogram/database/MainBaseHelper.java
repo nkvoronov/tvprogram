@@ -1,17 +1,14 @@
 package com.nkvoronov.tvprogram.database;
 
 import java.util.Date;
-import android.util.Log;
 import android.content.Context;
+import com.nkvoronov.tvprogram.R;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import com.nkvoronov.tvprogram.R;
 import com.nkvoronov.tvprogram.database.MainDbSchema.*;
 import static com.nkvoronov.tvprogram.common.DateUtils.*;
 import com.nkvoronov.tvprogram.tvschedule.TVScheduleCategory;
-import static com.nkvoronov.tvprogram.common.MainDataSource.TAG;
 import static com.nkvoronov.tvprogram.common.MainDataSource.RUS_LANG;
 import static com.nkvoronov.tvprogram.common.MainDataSource.UKR_LANG;
 import com.nkvoronov.tvprogram.database.MainDbSchema.ChannelsFavoritesTable;
@@ -74,6 +71,7 @@ public class MainBaseHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL("CREATE TABLE " + DescriptionTable.TABLE_NAME + "(" +
                 DescriptionTable.Cols.ID + " INTEGER CONSTRAINT PK_DESCRIPTION PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                DescriptionTable.Cols.TITLE + " VARCHAR, " +
                 DescriptionTable.Cols.DESCRIPTION + " VARCHAR, " +
                 DescriptionTable.Cols.IMAGE + " VARCHAR , " +
                 DescriptionTable.Cols.GENRES + " VARCHAR, " +
@@ -330,6 +328,7 @@ public class MainBaseHelper extends SQLiteOpenHelper {
                 "SELECT " +
                 "sd." + ScheduleDescriptionTable.Cols.SCHEDULE + " AS " + ScheduleDescriptionTable.Cols.SCHEDULE + ", " +
                 "desc." + DescriptionTable.Cols.ID + " AS " + DescriptionTable.Cols.ID + ", " +
+                "desc." + DescriptionTable.Cols.TITLE + " AS " + DescriptionTable.Cols.TITLE + ", " +
                 "desc." + DescriptionTable.Cols.DESCRIPTION + " AS " + DescriptionTable.Cols.DESCRIPTION + ", " +
                 "desc." + DescriptionTable.Cols.IMAGE + " AS " + DescriptionTable.Cols.IMAGE + ", " +
                 "desc." + DescriptionTable.Cols.GENRES + " AS " + DescriptionTable.Cols.GENRES + ", " +
